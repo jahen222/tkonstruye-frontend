@@ -78,12 +78,34 @@
       </div>
     </form>
     <h3 class="mb-0">Restablecer Contraseña</h3>
-    <form class="w-100" @submit="handleProfileForgotPassword">
+    <form class="w-100 pb-50" @submit="handleProfileForgotPassword">
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
-            <label>Correo Electrónico::</label>
+            <label>Correo Electrónico:</label>
             <input type="email" v-model="forgotPasswordEmail" />
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-12">
+          <div class="field-wrap w-100"></div>
+          <button class="thm-btn thm-bg" type="submit">
+            Enviar<i class="flaticon-arrow-pointing-to-right"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <h3 class="mb-0">Imagen de Perfil</h3>
+    <form class="w-100" @submit="handleProfileUploadPhoto">
+      <div class="row">
+        <div class="col-md-6 col-sm-6 col-lg-6">
+          <div class="field-wrap w-100">
+            <label>Imagen o Foto:</label>
+            <input
+              type="file"
+              name="files"
+              @change="onPhotoChange"
+              alt="photo"
+            />
           </div>
         </div>
         <div class="col-md-12 col-sm-12 col-lg-12">
@@ -103,7 +125,9 @@ import { PROFILE_GET_ME, PROFILE_GET_COMMUNES } from "./constants/querys";
 import {
   PROFILE_UPDATE_USER_DATA,
   PROFILE_UPDATE_COMPANY_DATA,
-  PROFILE_FORGOT_PASSWORD
+  PROFILE_FORGOT_PASSWORD,
+  PROFILE_UPLOAD_PHOTO,
+  PROFILE_UPDATE_PHOTO
 } from "./constants/mutations";
 
 export default {
@@ -135,7 +159,8 @@ export default {
       },
       communes: [],
       userCommune: "",
-      forgotPasswordEmail: ""
+      forgotPasswordEmail: "",
+      photo: null
     };
   },
   apollo: {
@@ -249,6 +274,57 @@ export default {
             type: "success",
             duration: 3000
           });
+        })
+        .catch(({ graphQLErrors }) => {
+          graphQLErrors.map(error =>
+            this.$toast.open({
+              message: error.message,
+              type: "error",
+              duration: 3000
+            })
+          );
+        });
+    },
+    onPhotoChange(e) {
+      this.photo = e.target.files[0];
+    },
+    handleProfileUploadPhoto(e) {
+      e.preventDefault();
+      const file = this.photo;
+      this.$apollo
+        .mutate({
+          mutation: PROFILE_UPLOAD_PHOTO,
+          variables: {
+            file
+          }
+        })
+        .then(data => {
+          const photo = data.data.upload.id;
+          const { id } = this.$data.me.detail;
+          this.$apollo
+            .mutate({
+              mutation: PROFILE_UPDATE_PHOTO,
+              variables: {
+                id,
+                photo
+              }
+            })
+            .then(() => {
+              this.$toast.open({
+                message: "Usuario actualizado exitosamente",
+                type: "success",
+                duration: 3000
+              });
+            })
+            .catch(({ graphQLErrors }) => {
+              graphQLErrors.map(error =>
+                this.$toast.open({
+                  message: error.message,
+                  type: "error",
+                  duration: 3000
+                })
+              );
+            });
         })
         .catch(({ graphQLErrors }) => {
           graphQLErrors.map(error =>

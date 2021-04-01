@@ -75,3 +75,27 @@ export const PROFILE_FORGOT_PASSWORD = gql`
     }
   }
 `;
+
+export const PROFILE_UPLOAD_PHOTO = gql`
+  mutation upload($file: Upload!) {
+    upload(file: $file) {
+      id
+      name
+    }
+  }
+`;
+
+export const PROFILE_UPDATE_PHOTO = gql`
+  mutation updateUser($id: ID!, $photo: ID) {
+    updateUser(
+      input: { where: { id: $id }, data: { photo: $photo } }
+    ) {
+      user {
+        id
+        photo{
+          url
+        }
+      }
+    }
+  }
+`;
