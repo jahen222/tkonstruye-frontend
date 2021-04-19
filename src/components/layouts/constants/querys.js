@@ -29,4 +29,14 @@ export const RESPONSIVEHEADER_GET_LOGO = gql`
   }
 `;
 
+export const STICKYMENU_GET_LOGO = gql`
+  query config {
+    config {
+      logo {
+        url
+      }
+    }
+  }
+`;
+
 

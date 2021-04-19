@@ -6,12 +6,12 @@
       >
         <div class="logo">
           <h1 class="mb-0">
-            <a href="index.html" title="Home"
+            <a href="/" title="Home"
               ><img
                 class="img-fluid"
-                src="../../assets/blubuild/images/logo.png"
+                :src="getLogo"
                 alt="Logo"
-                srcset="../../assets/blubuild/images/retina-logo.png"
+                :srcset="getLogo"
             /></a>
           </h1>
         </div>
@@ -88,7 +88,35 @@
 </template>
 
 <script>
+import { STICKYMENU_GET_LOGO } from "./constants/querys";
+
 export default {
-  name: "StickyMenu"
+  name: "StickyMenu",
+  data() {
+    return {
+      api_url: process.env.VUE_APP_STRAPI_API_URL,
+      config: {
+        logo: {
+          url: ""
+        }
+      }
+    };
+  },
+  apollo: {
+    config: {
+      query: STICKYMENU_GET_LOGO
+    }
+  },
+  computed: {
+    getLogo() {
+      return this.api_url + this.config.logo.url;
+    }
+  }
 };
 </script>
+
+<style scoped>
+.logo {
+  width: 180px;
+}
+</style>

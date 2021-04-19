@@ -17,7 +17,7 @@
           </ul>
           <ul
             class="topbar-links mb-0 list-unstyled d-inline-flex"
-            v-if="getUsername !==''"
+            v-if="getUsername !== ''"
           >
             <li>
               <a href="#" title="">Bienvenido {{ getUsername }}</a>
@@ -59,7 +59,7 @@
           >
             <div class="logo">
               <h1 class="mb-0">
-                <a href="index.html" title="Home"
+                <a href="/" title="Home"
                   ><img
                     class="img-fluid"
                     :src="getLogo"
@@ -173,8 +173,13 @@
             </ul>
           </div>
           <div class="header-right-btns">
-            <a class="get-quote" href="javascript:void(0);" title=""
-              ><i class="far fa-comments"></i>Get A Quote<i
+            <a
+              class="get-quote"
+              href="javascript:void(0);"
+              title=""
+              data-toggle="modal"
+              data-target="#commonWizard"
+              ><i class="far fa-comments"></i>Pide Presupuesto<i
                 class="flaticon-arrow-pointing-to-right"
               ></i
             ></a>
@@ -419,6 +424,7 @@
         </div>
       </div>
     </div>
+    <Wizard />
   </header>
 </template>
 
@@ -428,6 +434,7 @@ import Cookies from "js-cookie";
 import { mapMutations } from "vuex";
 import { HEADER_GET_LOGO, HEADER_GET_ROLES } from "./constants/querys";
 import { HEADER_USER_LOGIN, HEADER_USER_REGISTER } from "./constants/mutations";
+import Wizard from "../common/Wizard";
 
 export default {
   name: "Header",
@@ -447,6 +454,9 @@ export default {
       phone: "",
       error: ""
     };
+  },
+  components: {
+    Wizard
   },
   apollo: {
     config: {

@@ -33,7 +33,9 @@
             <vue-typeahead-bootstrap
               v-model="userCommune"
               :data="getCommunes"
-            />
+              ref="userCommune"
+            >
+            </vue-typeahead-bootstrap>
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
@@ -103,7 +105,7 @@
             <input
               type="file"
               name="files"
-              @change="onPhotoChange"
+              @change="handlePhotoChange"
               alt="photo"
             />
           </div>
@@ -187,47 +189,60 @@ export default {
         slogan
       } = this.$data.me.detail;
       let commune = null;
-      if (this.userCommune !== "") {
-        commune = this.userCommune.split("-")[0];
-      }
-      this.$apollo
-        .mutate({
-          mutation: PROFILE_UPDATE_USER_DATA,
-          variables: {
-            id,
-            username,
-            email,
-            phone,
-            name,
-            rut,
-            slogan,
-            commune
-          }
-        })
-        .then(data => {
-          const user = data.data.updateUser;
-          delete user.name;
-          delete user.phone;
-          delete user.rut;
-          delete user.slogan;
-          delete user.commune;
+      let validate = true;
 
-          this.updateUser(user);
-          this.$toast.open({
-            message: "Usuario actualizado exitosamente",
-            type: "success",
-            duration: 3000
-          });
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(error =>
-            this.$toast.open({
-              message: error.message,
-              type: "error",
-              duration: 3000
-            })
-          );
+      if (this.getCommunes.some(commune => commune === this.userCommune)) {
+        commune = this.userCommune.split("-")[0];
+      } 
+      else if (this.userCommune !== "") {
+        this.$toast.open({
+          message: "Seleccione una comuna válida",
+          type: "error",
+          duration: 3000
         });
+        validate = false;
+      }
+
+      if (validate) {
+        this.$apollo
+          .mutate({
+            mutation: PROFILE_UPDATE_USER_DATA,
+            variables: {
+              id,
+              username,
+              email,
+              phone,
+              name,
+              rut,
+              slogan,
+              commune
+            }
+          })
+          .then(data => {
+            const user = data.data.updateUser;
+            delete user.name;
+            delete user.phone;
+            delete user.rut;
+            delete user.slogan;
+            delete user.commune;
+
+            this.updateUser(user);
+            this.$toast.open({
+              message: "Usuario actualizado exitosamente",
+              type: "success",
+              duration: 3000
+            });
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(error =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000
+              })
+            );
+          });
+      }
     },
     handleProfileUpdateCompanyData(e) {
       e.preventDefault();
@@ -285,7 +300,7 @@ export default {
           );
         });
     },
-    onPhotoChange(e) {
+    handlePhotoChange(e) {
       this.photo = e.target.files[0];
     },
     handleProfileUploadPhoto(e) {

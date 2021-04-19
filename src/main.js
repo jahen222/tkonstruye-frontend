@@ -5,8 +5,9 @@ import VueApollo from "vue-apollo";
 import apolloClient from "./scripts/vue-apollo";
 import Cookies from "js-cookie";
 import store from "./store";
-import VueToast from 'vue-toast-notification';
-import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
+import VueToast from "vue-toast-notification";
+import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
+import AsyncComputed from "vue-async-computed";
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.css";
 // Blubuild theme styles
@@ -33,7 +34,7 @@ import "./assets/blubuild/js/custom-scripts.js";
 import "./assets/blubuild/js/counterup.min.js";
 import "./assets/blubuild/js/jquery.fancybox.min.js";
 // Notification
-import 'vue-toast-notification/dist/theme-sugar.css';
+import "vue-toast-notification/dist/theme-sugar.css";
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
@@ -55,7 +56,8 @@ router.beforeEach((to, from, next) => {
 Vue.config.productionTip = false;
 Vue.use(VueApollo);
 Vue.use(VueToast);
-Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap)
+Vue.component("vue-typeahead-bootstrap", VueTypeaheadBootstrap);
+Vue.use(AsyncComputed);
 
 new Vue({
   store,
