@@ -368,7 +368,7 @@ export default {
 
         if (
           this.me.detail.commune !== null &&
-          this.me.detail.commune.id == commune.id
+          this.me.detail.commune.id === commune.id
         ) {
           this.userCommune = cat;
         }

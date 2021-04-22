@@ -3021,6 +3021,47 @@ blockquote > p::after {
 }
 .reply-form .field-wrap + button {margin-top: 3.125rem;}
 
+/*=== Wizard Form ===*/
+.wizard-form > h3 + form {margin-top: 1.5625rem;}
+.wizard-form .field-wrap {margin-top: 1.4375rem;}
+.wizard-form .field-wrap label {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #777;
+  margin-bottom: .75rem;
+}
+.wizard-form .field-wrap input,
+.wizard-form .field-wrap select, 
+.wizard-form .field-wrap textarea {
+  width: 100%;
+  border: 1px solid #ededed;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  color: #777;
+  background-color: white;
+  height: 2.1875rem;
+  padding: .5rem 1.125rem;
+}
+.wizard-form .field-wrap textarea {
+  padding: 1.125rem;
+  height: 12.5rem;
+}
+.wizard-form .field-wrap + button {margin-top: 3.125rem;}
+
+/* .wizard-form .field-wrap input:hover,
+.wizard-form .field-wrap select:hover, 
+.wizard-form .field-wrap textarea:hover {
+  border: 1px solid var(#777);
+} */
+
+.wizard-form .field-wrap input:focus,
+.wizard-form .field-wrap select:focus, 
+.wizard-form .field-wrap textarea:focus {
+  border: 1px solid var(--color2);
+}
+
 /*===== Sidebar =====*/
 .widget2 {
   background-color: #f8f8f9;

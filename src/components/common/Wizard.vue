@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="commonWizard"
+    id="wizardModal"
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
@@ -20,15 +20,20 @@
           </button>
         </div>
         <div class="modal-body">
-          <div id="dashboardProfile" class="post-detail reply-form w-100">
-            <form class="w-100 pb-50 pb-custom">
+          <div id="dashboardProfile" class="post-detail wizard-form w-100">
+            <form class="w-100 pb-50 pb-custom" @submit="handleWizardData">
               <div class="row">
                 <div class="col-md-12 col-sm-12 col-lg-12">
                   <div class="field-wrap w-100">
-                    <label>¿Qué tipo de trabajo necesitas?</label>
+                    <label>
+                      <i class="fas fa-question-circle"></i> ¿Qué tipo de
+                      trabajo necesitas?</label
+                    >
                     <vue-typeahead-bootstrap
-                      v-if="categories.length > 0"
+                      v-if="getCategories.length > 0"
                       :data="getCategories"
+                      :required="true"
+                      :placeholder="'Por ejemplo: Pintores, Construcción...'"
                       v-model="category"
                     >
                     </vue-typeahead-bootstrap>
@@ -36,18 +41,24 @@
                 </div>
                 <div
                   class="col-md-12 col-sm-12 col-lg-12"
-                  v-if="subCategories.length > 0"
+                  v-if="getSubCategories ? getSubCategories.length > 0 : false"
                 >
                   <div class="field-wrap w-100">
-                    <label>Tipo de trabajo</label>
-                    <div class="input-group mb-3">
-                      <select class="custom-select" v-model="subCategory">
+                    <label>
+                      <i class="fas fa-question-circle"></i> Tipo de
+                      trabajo</label
+                    >
+                    <div class="input-group">
+                      <select :required="true" v-model="subCategory">
+                        <option value="" disabled hidden>
+                          Selecciona una opción:
+                        </option>
                         <option
-                          v-for="item in getSubCategories"
-                          v-bind:key="item.id"
-                          :value="item.id"
+                          v-for="(subCategory, index) in getSubCategories"
+                          v-bind:key="index"
+                          :value="subCategory"
                         >
-                          {{ item.name }}
+                          {{ subCategory }}
                         </option>
                       </select>
                     </div>
@@ -55,27 +66,80 @@
                 </div>
                 <div
                   class="col-md-12 col-sm-12 col-lg-12"
-                  v-for="item in wizardFields"
-                  v-bind:key="item.id"
+                  v-for="(wizardField, index) in getWizardFields"
+                  v-bind:key="index"
                 >
                   <div class="field-wrap w-100">
-                    <label>{{item.label}}</label>
-                    <div class="input-group mb-3" v-if="item.type == 'select'">
-                      <select class="custom-select">
+                    <label>
+                      <i class="fas fa-question-circle"></i>
+                      {{ wizardField.label }}</label
+                    >
+                    <div class="input-group" v-if="wizardField.type === 'text'">
+                      <input
+                        type="text"
+                        :id="wizardField.label + index"
+                        :maxlength="wizardField.isTextLength"
+                        :required="wizardField.isRequired"
+                        placeholder="Ingresa aquí tu respuesta."
+                      />
+                    </div>
+                    <div
+                      class="input-group"
+                      v-if="wizardField.type === 'number'"
+                    >
+                      <input
+                        type="number"
+                        :id="wizardField.label + index"
+                        :min="wizardField.isNumberMin"
+                        :max="wizardField.isNumberMax"
+                        :required="wizardField.isRequired"
+                        placeholder="Ingresa aquí la cantidad."
+                      />
+                    </div>
+                    <div
+                      class="input-group"
+                      v-if="wizardField.type === 'select'"
+                    >
+                      <select
+                        :id="wizardField.label + index"
+                        :required="wizardField.isRequired"
+                      >
                         <option
-                          v-for="item2 in item.isSelect"
-                          v-bind:key="item2"
-                          :value="Object.keys(item.isSelect)[Object.values(item.isSelect).indexOf(item2)]"
+                          class="option-disabled"
+                          value=""
+                          disabled
+                          selected
+                          hidden
                         >
-                          {{ item2 }}
+                          Selecciona una opción:
+                        </option>
+                        <option
+                          v-for="(option, index) in wizardField.isSelect"
+                          v-bind:key="index"
+                          :value="option"
+                        >
+                          {{ option }}
                         </option>
                       </select>
+                    </div>
+                    <div
+                      class="input-group"
+                      v-if="wizardField.type === 'textarea'"
+                    >
+                      <textarea
+                        :id="wizardField.label + index"
+                        :maxlength="wizardField.isTextLength"
+                        :required="wizardField.isRequired"
+                        placeholder="Ingresa aquí tu respuesta."
+                      ></textarea>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                   <button class="thm-btn thm-bg" type="submit">
-                    Pedir Presupuesto<i class="flaticon-arrow-pointing-to-right"></i>
+                    Pedir Presupuesto<i
+                      class="flaticon-arrow-pointing-to-right"
+                    ></i>
                   </button>
                 </div>
               </div>
@@ -88,6 +152,8 @@
 </template>
 
 <script>
+import $ from "jquery";
+import Cookies from "js-cookie";
 import {
   WIZARD_GET_CATEGORIES,
   WIZARD_GET_SUBCATEGORIES,
@@ -99,10 +165,8 @@ export default {
   data() {
     return {
       categories: [],
-      subCategories: [],
       category: "",
-      subCategory: "",
-      wizardFields: []
+      subCategory: ""
     };
   },
   apollo: {
@@ -110,62 +174,83 @@ export default {
       query: WIZARD_GET_CATEGORIES
     }
   },
+  methods: {
+    handleWizardData(e) {
+      e.preventDefault();
+      if (Cookies.get("user") !== undefined) {
+        console.log("category: ", this.category);
+        console.log("subcategory: ", this.subCategory);
+        this.getWizardFields.map((wizardField, index) => {
+          console.log(
+            wizardField.label + ": ",
+            document.getElementById(wizardField.label + index).value
+          );
+        });
+      } else {
+        $("#wizardModal").modal("hide")
+        $("#loginModal").modal("show");
+      }
+    }
+  },
   computed: {
     getCategories() {
-      const array = [];
+      const categories = [];
+
       this.categories.map(category => {
-        const cat = category.id + "- " + category.name;
-        array.push(cat);
+        categories.push(category.name);
       });
 
-      return array;
+      return categories;
     }
   },
   asyncComputed: {
     getSubCategories() {
-      let categoryId = null;
+      const subCategories = [];
+      this.subCategory = "";
 
-      if (this.getCategories.some(category => category === this.category)) {
-        categoryId = this.category.split("-")[0];
-      }
-
-      if (categoryId != null) {
+      if (this.category !== "") {
         this.$apollo
           .query({
             query: WIZARD_GET_SUBCATEGORIES,
             variables: {
-              categoryId: categoryId
+              category: this.category
             }
           })
           .then(data => {
-            this.subCategories = data.data.subcategories;
+            data.data.subcategories.map(subCategory =>
+              subCategories.push(subCategory.name)
+            );
           });
       }
 
-      return this.subCategories;
+      return subCategories;
     },
     getWizardFields() {
-      if (this.subCategory != "") {
+      const wizardFields = [];
+
+      if (this.subCategory !== "") {
         this.$apollo
           .query({
             query: WIZARD_GET_WIZARDFIELDS,
             variables: {
-              subCategoryId: this.subCategory
+              subCategory: this.subCategory
             }
           })
           .then(data => {
-            this.wizardFields = data.data.wizardFields;
+            data.data.wizardFields.map(wizardField =>
+              wizardFields.push(wizardField)
+            );
           });
       }
-      //console.log("aqui: ", this.wizardFields);
-      return this.wizardFields;
+
+      return wizardFields;
     }
   }
 };
 </script>
 
 <style scoped>
-.reply-form {
+.wizard-form {
   margin-top: 0px;
 }
 .pb-custom {

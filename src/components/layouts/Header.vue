@@ -33,16 +33,18 @@
           </ul>
           <ul class="topbar-links mb-0 list-unstyled d-inline-flex" v-else>
             <li>
-              <a href="#loginModal" data-toggle="modal" title="">Login</a>
+              <a href="#loginModal" data-toggle="modal" title=""
+                >Iniciar Sesión</a
+              >
             </li>
             <li>
               <a href="#signUpRegularModal" data-toggle="modal" title=""
-                >Sign Up</a
+                >Registrarse</a
               >
             </li>
             <li>
               <a href="#signUpProfessionalModal" data-toggle="modal" title=""
-                >Become a Professional</a
+                >Hazte Profesional</a
               >
             </li>
           </ul>
@@ -178,7 +180,7 @@
               href="javascript:void(0);"
               title=""
               data-toggle="modal"
-              data-target="#commonWizard"
+              data-target="#wizardModal"
               ><i class="far fa-comments"></i>Pide Presupuesto<i
                 class="flaticon-arrow-pointing-to-right"
               ></i
@@ -189,150 +191,192 @@
     </div>
     <!-- Login Modal -->
     <div id="loginModal" ref="loginModal" class="modal fade">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <form id="loginForm" @submit="handleLogin">
-            <div class="modal-header">
-              <h4 class="modal-title">Login</h4>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-hidden="true"
-                @click="handleCloseModal"
-              >
-                &times;
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  v-model="email"
-                  placeholder="email"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <div class="clearfix">
-                  <label>Password</label>
-                  <a href="#" class="float-right text-muted"
-                    ><small>Forgot?</small></a
+          <div class="modal-header">
+            <h4 class="modal-title">Iniciar Sesión</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+              @click="handleCloseModal"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="post-detail wizard-form w-100">
+              <form class="w-100 pb-50 pb-custom" @submit="handleLogin">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Correo</label>
+                      <input
+                        type="email"
+                        v-model="email"
+                        placeholder="Ingrese su correo."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Contraseña</label>
+                      <input
+                        type="password"
+                        v-model="password"
+                        placeholder="Ingrese su contraseña."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 right">
+                    <div class="field-wrap w-100">
+                      <a
+                        class="link"
+                        @click="handleChangeModal('signUpRegularModal')"
+                      >
+                        Registrarse
+                      </a>
+                      <br />
+                      <a
+                        class="link"
+                        @click="handleChangeModal('signUpProfessionalModal')"
+                      >
+                        Hazte Profesional
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="col-md-12 col-sm-12 col-lg-12 center"
+                    v-if="error"
                   >
+                    <div class="field-wrap w-100 error-message">
+                      <label class="error-label">{{ error }}</label>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                    <button class="thm-btn thm-bg" type="submit">
+                      Login<i class="flaticon-arrow-pointing-to-right"></i>
+                    </button>
+                  </div>
                 </div>
-
-                <input
-                  type="password"
-                  class="form-control"
-                  v-model="password"
-                  placeholder="password"
-                  required="required"
-                />
-              </div>
-              <div class="form-group" v-if="error">
-                <div class="clearfix">
-                  <label>{{ error }}</label>
-                </div>
-              </div>
+              </form>
             </div>
-            <div class="modal-footer justify-content-between">
-              <label class="form-check-label"
-                ><input type="checkbox" /> Remember me</label
-              >
-              <input
-                type="submit"
-                class="btn btn-primary"
-                value="Login"
-                :disabled="email === '' || password === ''"
-              />
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
     <!-- Sign Up Regular User Modal -->
     <div id="signUpRegularModal" ref="signUpRegularModal" class="modal fade">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-          <form @submit="handleRegister">
-            <div class="modal-header">
-              <h4 class="modal-title">Sign Up</h4>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-hidden="true"
-                @click="handleCloseModal"
-              >
-                &times;
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label>Username</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="username"
-                  placeholder="username"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <label>Phone</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="phone"
-                  placeholder="phone"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  v-model="email"
-                  placeholder="email"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <div class="clearfix">
-                  <label>Password</label>
-                  <a href="#" class="float-right text-muted"
-                    ><small>Forgot?</small></a
+          <div class="modal-header">
+            <h4 class="modal-title">Registro</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+              @click="handleCloseModal"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="post-detail wizard-form w-100">
+              <form class="w-100 pb-50 pb-custom" @submit="handleRegister">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Nombre de Usuario</label>
+                      <input
+                        type="text"
+                        v-model="username"
+                        placeholder="Ingrese su nombre de usuario."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Correo</label>
+                      <input
+                        type="email"
+                        v-model="email"
+                        placeholder="Ingrese su correo."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Teléfono</label>
+                      <input
+                        type="text"
+                        v-model="phone"
+                        placeholder="Ingrese su número de teléfono."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Contraseña</label>
+                      <input
+                        type="password"
+                        v-model="password"
+                        placeholder="Ingrese su contraseña."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Confirmar Contraseña</label>
+                      <input
+                        type="password"
+                        v-model="passwordConfirm"
+                        placeholder="Ingrese su contraseña nuevamente."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 right">
+                    <div class="field-wrap w-100">
+                      <a
+                        class="link"
+                        @click="handleChangeModal('loginModal')"
+                      >
+                        Iniciar Sesión
+                      </a>
+                      <br />
+                      <a
+                        class="link"
+                        @click="handleChangeModal('signUpProfessionalModal')"
+                      >
+                        Hazte Profesional
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="col-md-12 col-sm-12 col-lg-12 center"
+                    v-if="error"
                   >
+                    <div class="field-wrap w-100 error-message">
+                      <label class="error-label">{{ error }}</label>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                    <button class="thm-btn thm-bg" type="submit">
+                      Login<i class="flaticon-arrow-pointing-to-right"></i>
+                    </button>
+                  </div>
                 </div>
-                <input
-                  type="password"
-                  class="form-control"
-                  v-model="password"
-                  placeholder="password"
-                  required="required"
-                />
-              </div>
-              <div class="form-group" v-if="error">
-                <div class="clearfix">
-                  <label>{{ error }}</label>
-                </div>
-              </div>
+              </form>
             </div>
-            <div class="modal-footer justify-content-between">
-              <label class="form-check-label"
-                ><input type="checkbox" /> Remember me</label
-              >
-              <input
-                type="submit"
-                class="btn btn-primary"
-                value="Register"
-                :disabled="email === '' || password === '' || username === ''"
-              />
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -342,85 +386,116 @@
       ref="signUpProfessionalModal"
       class="modal fade"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-          <form @submit="handleProfessionalRegister">
-            <div class="modal-header">
-              <h4 class="modal-title">Become a Professional</h4>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-hidden="true"
-                @click="handleCloseModal"
+          <div class="modal-header">
+            <h4 class="modal-title">Hazte Profesional</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+              @click="handleCloseModal"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="post-detail wizard-form w-100">
+              <form
+                class="w-100 pb-50 pb-custom"
+                @submit="handleProfessionalRegister"
               >
-                &times;
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label>Username</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="username"
-                  placeholder="username"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <label>Phone</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="phone"
-                  placeholder="phone"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  v-model="email"
-                  placeholder="email"
-                  required="required"
-                />
-              </div>
-              <div class="form-group">
-                <div class="clearfix">
-                  <label>Password</label>
-                  <a href="#" class="float-right text-muted"
-                    ><small>Forgot?</small></a
+                <div class="row">
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Nombre de Usuario</label>
+                      <input
+                        type="text"
+                        v-model="username"
+                        placeholder="Ingrese su nombre de usuario."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Correo</label>
+                      <input
+                        type="email"
+                        v-model="email"
+                        placeholder="Ingrese su correo."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Teléfono</label>
+                      <input
+                        type="text"
+                        v-model="phone"
+                        placeholder="Ingrese su número de teléfono."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Contraseña</label>
+                      <input
+                        type="password"
+                        v-model="password"
+                        placeholder="Ingrese su contraseña."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <div class="field-wrap w-100">
+                      <label>Confirmar Contraseña</label>
+                      <input
+                        type="password"
+                        v-model="passwordConfirm"
+                        placeholder="Ingrese su contraseña nuevamente."
+                        :required="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 right">
+                    <div class="field-wrap w-100">
+                      <a
+                        class="link"
+                        @click="handleChangeModal('loginModal')"
+                      >
+                        Iniciar Sesión
+                      </a>
+                      <br />
+                      <a
+                        class="link"
+                        @click="handleChangeModal('signUpRegularModal')"
+                      >
+                        Registrarse
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="col-md-12 col-sm-12 col-lg-12 center"
+                    v-if="error"
                   >
+                    <div class="field-wrap w-100 error-message">
+                      <label class="error-label">{{ error }}</label>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                    <button class="thm-btn thm-bg" type="submit">
+                      Login<i class="flaticon-arrow-pointing-to-right"></i>
+                    </button>
+                  </div>
                 </div>
-                <input
-                  type="password"
-                  class="form-control"
-                  v-model="password"
-                  placeholder="password"
-                  required="required"
-                />
-              </div>
-              <div class="form-group" v-if="error">
-                <div class="clearfix">
-                  <label>{{ error }}</label>
-                </div>
-              </div>
+              </form>
             </div>
-            <div class="modal-footer justify-content-between">
-              <label class="form-check-label"
-                ><input type="checkbox" /> Remember me</label
-              >
-              <input
-                type="submit"
-                class="btn btn-primary"
-                value="Register"
-                :disabled="email === '' || password === '' || username === ''"
-              />
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -451,6 +526,7 @@ export default {
       username: "",
       email: "",
       password: "",
+      passwordConfirm: "",
       phone: "",
       error: ""
     };
@@ -474,6 +550,7 @@ export default {
     handleLogin(e) {
       e.preventDefault();
       const { email, password } = this.$data;
+
       this.$apollo
         .mutate({
           mutation: HEADER_USER_LOGIN,
@@ -496,57 +573,65 @@ export default {
     },
     handleRegister(e) {
       e.preventDefault();
-      const { username, email, password, phone } = this.$data;
+      const { username, email, password, passwordConfirm, phone } = this.$data;
       const role = this.roles.filter(rol => rol.name === "Authenticated")[0].id;
-      this.$apollo
-        .mutate({
-          mutation: HEADER_USER_REGISTER,
-          variables: {
-            username,
-            email,
-            password,
-            phone,
-            role
-          }
-        })
-        .then(() => {
-          this.handleLogin(e);
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(error =>
-            this.$toast.open({
-              message: error.message,
-              type: "error",
-              duration: 3000
-            })
-          );
-        });
+
+      if (password !== passwordConfirm) {
+        this.error = "Las contraseñas no coinciden";
+      } else {
+        this.$apollo
+          .mutate({
+            mutation: HEADER_USER_REGISTER,
+            variables: {
+              username,
+              email,
+              password,
+              phone,
+              role
+            }
+          })
+          .then(() => {
+            this.handleLogin(e);
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(({ extensions }) =>
+              extensions.exception.data.message.map(({ messages }) =>
+                messages.map(({ message }) => (this.error = message))
+              )
+            );
+          });
+      }
     },
     handleProfessionalRegister(e) {
       e.preventDefault();
-      const { username, email, password, phone } = this.$data;
+      const { username, email, password, passwordConfirm, phone } = this.$data;
       const role = this.roles.filter(rol => rol.name === "Professional")[0].id;
-      this.$apollo
-        .mutate({
-          mutation: HEADER_USER_REGISTER,
-          variables: {
-            username,
-            email,
-            password,
-            phone,
-            role
-          }
-        })
-        .then(() => {
-          this.handleLogin(e);
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(({ extensions }) =>
-            extensions.exception.data.message.map(({ messages }) =>
-              messages.map(({ message }) => (this.error = message))
-            )
-          );
-        });
+
+      if (password !== passwordConfirm) {
+        this.error = "Las contraseñas no coinciden";
+      } else {
+        this.$apollo
+          .mutate({
+            mutation: HEADER_USER_REGISTER,
+            variables: {
+              username,
+              email,
+              password,
+              phone,
+              role
+            }
+          })
+          .then(() => {
+            this.handleLogin(e);
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(({ extensions }) =>
+              extensions.exception.data.message.map(({ messages }) =>
+                messages.map(({ message }) => (this.error = message))
+              )
+            );
+          });
+      }
     },
     handleLogout: function() {
       this.logout();
@@ -559,6 +644,21 @@ export default {
       this.phone = "";
       this.role = "";
       this.username = "";
+    },
+    handleChangeModal(nameModal) {
+      if (nameModal === "loginModal") {
+        $("#loginModal").modal("show");
+        $("#signUpRegularModal").modal("hide");
+        $("#signUpProfessionalModal").modal("hide");
+      } else if (nameModal === "signUpRegularModal") {
+        $("#loginModal").modal("hide");
+        $("#signUpRegularModal").modal("show");
+        $("#signUpProfessionalModal").modal("hide");
+      } else if (nameModal === "signUpProfessionalModal") {
+        $("#loginModal").modal("hide");
+        $("#signUpRegularModal").modal("hide");
+        $("#signUpProfessionalModal").modal("show");
+      }
     }
   },
   computed: {
@@ -591,5 +691,32 @@ export default {
 <style scoped>
 .logo {
   width: 180px;
+}
+.wizard-form {
+  margin-top: 0px;
+}
+.pb-custom {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.center {
+  text-align: center;
+}
+.right {
+  text-align: right;
+}
+.error-message {
+  margin-bottom: -30px;
+}
+.error-label {
+  color: red !important;
+}
+.link {
+  color: #777;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.link:hover {
+  color: #ff5e15;
 }
 </style>

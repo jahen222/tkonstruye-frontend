@@ -22,7 +22,7 @@
                     href="about.html"
                     title=""
                     data-toggle="modal"
-                    data-target="#commonWizard"
+                    data-target="#wizardModal"
                     >Pide Presupuesto<i
                       class="flaticon-arrow-pointing-to-right"
                     ></i
@@ -59,7 +59,7 @@
                     href="about.html"
                     title=""
                     data-toggle="modal"
-                    data-target="#commonWizard"
+                    data-target="#wizardModal"
                     >Pide Presupuesto<i
                       class="flaticon-arrow-pointing-to-right"
                     ></i
@@ -96,7 +96,7 @@
                     href="about.html"
                     title=""
                     data-toggle="modal"
-                    data-target="#commonWizard"
+                    data-target="#wizardModal"
                     >Pide Presupuesto<i
                       class="flaticon-arrow-pointing-to-right"
                     ></i

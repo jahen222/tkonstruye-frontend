@@ -10,8 +10,8 @@ export const WIZARD_GET_CATEGORIES = gql`
 `;
 
 export const WIZARD_GET_SUBCATEGORIES = gql`
-  query subCategories($categoryId: ID!) {
-    subcategories(where: { category: $categoryId }) {
+  query subCategories($category: String!) {
+    subcategories(where: { category: { name: $category } }) {
       id
       name
     }
@@ -19,11 +19,13 @@ export const WIZARD_GET_SUBCATEGORIES = gql`
 `;
 
 export const WIZARD_GET_WIZARDFIELDS = gql`
-  query wizardFields($subCategoryId: ID!) {
-    wizardFields(where: { subcategories: $subCategoryId }) {
+  query wizardFields($subCategory: String!) {
+    wizardFields(where: { subcategories: {name: $subCategory} }) {
       id
       label
       type
+      isRequired
+      isTextLength
       isNumberMin
       isNumberMax
       isSelect
@@ -32,4 +34,3 @@ export const WIZARD_GET_WIZARDFIELDS = gql`
     }
   }
 `;
-
