@@ -23,15 +23,37 @@
           <div id="dashboardProfile" class="post-detail wizard-form w-100">
             <form class="w-100 pb-50 pb-custom" @submit="handleWizardData">
               <div class="row">
-                <div class="col-md-12 col-sm-12 col-lg-12">
+                <div
+                  class="col-md-12 col-sm-12 col-lg-12"
+                  v-if="getCommunes.length > 0"
+                >
+                  <div class="field-wrap w-100">
+                    <label>
+                      <i class="fas fa-question-circle"></i> ¿Donde necesitas el
+                      trabajo?</label
+                    >
+                    <vue-typeahead-bootstrap
+                      :data="getCommunes"
+                      :serializer="(item) => item.name"
+                      :required="true"
+                      :placeholder="'Por ejemplo: Santiago, Viña del Mar...'"
+                      v-model="commune"
+                    >
+                    </vue-typeahead-bootstrap>
+                  </div>
+                </div>
+                <div
+                  class="col-md-12 col-sm-12 col-lg-12"
+                  v-if="categories.length > 0"
+                >
                   <div class="field-wrap w-100">
                     <label>
                       <i class="fas fa-question-circle"></i> ¿Qué tipo de
                       trabajo necesitas?</label
                     >
                     <vue-typeahead-bootstrap
-                      v-if="getCategories.length > 0"
-                      :data="getCategories"
+                      :data="categories"
+                      :serializer="(item) => item.name"
                       :required="true"
                       :placeholder="'Por ejemplo: Pintores, Construcción...'"
                       v-model="category"
@@ -56,9 +78,9 @@
                         <option
                           v-for="(subCategory, index) in getSubCategories"
                           v-bind:key="index"
-                          :value="subCategory"
+                          :value="subCategory.id"
                         >
-                          {{ subCategory }}
+                          {{ subCategory.name }}
                         </option>
                       </select>
                     </div>
@@ -157,8 +179,10 @@ import Cookies from "js-cookie";
 import {
   WIZARD_GET_CATEGORIES,
   WIZARD_GET_SUBCATEGORIES,
-  WIZARD_GET_WIZARDFIELDS
+  WIZARD_GET_WIZARDFIELDS,
+  WIZARD_GET_COMMUNES
 } from "./constants/querys";
+import { WIZARD_CREATE_TICKET } from "./constants/mutations";
 
 export default {
   name: "Wizard",
@@ -166,82 +190,126 @@ export default {
     return {
       categories: [],
       category: "",
-      subCategory: ""
+      subCategory: "",
+      communes: [],
+      commune: ""
     };
   },
   apollo: {
     categories: {
       query: WIZARD_GET_CATEGORIES
+    },
+    communes: {
+      query: WIZARD_GET_COMMUNES
     }
   },
   methods: {
-    handleWizardData(e) {
+    async handleWizardData(e) {
       e.preventDefault();
-      if (Cookies.get("user") !== undefined) {
-        console.log("category: ", this.category);
-        console.log("subcategory: ", this.subCategory);
+      let requirements = {};
+
+      if (
+        Cookies.get("user") !== undefined &&
+        this.subCategory !== "" &&
+        this.commune !== ""
+      ) {
         this.getWizardFields.map((wizardField, index) => {
-          console.log(
-            wizardField.label + ": ",
-            document.getElementById(wizardField.label + index).value
-          );
+          requirements[wizardField.label] = document.getElementById(
+            wizardField.label + index
+          ).value;
         });
+
+        await this.$apollo
+          .mutate({
+            mutation: WIZARD_CREATE_TICKET,
+            variables: {
+              subCategory: this.subCategory,
+              usersPermissionsUser: JSON.parse(Cookies.get("user")).id,
+              commune: this.getCommunes
+                .filter(commune => commune.name === this.commune)
+                .shift().id,
+              requirements: requirements
+            }
+          })
+          .then(() => {
+            $("#wizardModal").modal("hide");
+            this.$toast.open({
+              message: "Ticket creado exitosamente",
+              type: "success",
+              duration: 3000
+            });
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(error =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000
+              })
+            );
+          });
       } else {
-        $("#wizardModal").modal("hide")
+        $("#wizardModal").modal("hide");
         $("#loginModal").modal("show");
       }
     }
   },
   computed: {
-    getCategories() {
-      const categories = [];
+    getCommunes() {
+      const communes = [];
 
-      this.categories.map(category => {
-        categories.push(category.name);
+      this.communes.map(commune => {
+        const cat = {
+          id: commune.id,
+          name:
+            commune.name +
+            ", " +
+            commune.city.name +
+            ", " +
+            commune.city.region.name
+        };
+
+        communes.push(cat);
       });
 
-      return categories;
+      return communes;
     }
   },
   asyncComputed: {
-    getSubCategories() {
-      const subCategories = [];
+    async getSubCategories() {
+      let subCategories = [];
       this.subCategory = "";
 
-      if (this.category !== "") {
-        this.$apollo
+      if (this.categories.some(category => category.name === this.category)) {
+        await this.$apollo
           .query({
             query: WIZARD_GET_SUBCATEGORIES,
             variables: {
-              category: this.category
+              category: this.categories
+                .filter(category => category.name === this.category)
+                .shift().id
             }
           })
           .then(data => {
-            data.data.subcategories.map(subCategory =>
-              subCategories.push(subCategory.name)
-            );
+            subCategories = data.data.subcategories;
           });
       }
 
       return subCategories;
     },
-    getWizardFields() {
-      const wizardFields = [];
+    async getWizardFields() {
+      let wizardFields = [];
 
-      if (this.subCategory !== "") {
-        this.$apollo
-          .query({
-            query: WIZARD_GET_WIZARDFIELDS,
-            variables: {
-              subCategory: this.subCategory
-            }
-          })
-          .then(data => {
-            data.data.wizardFields.map(wizardField =>
-              wizardFields.push(wizardField)
-            );
-          });
-      }
+      await this.$apollo
+        .query({
+          query: WIZARD_GET_WIZARDFIELDS,
+          variables: {
+            subCategory: this.subCategory
+          }
+        })
+        .then(data => {
+          wizardFields = data.data.wizardFields;
+        });
 
       return wizardFields;
     }

@@ -235,6 +235,7 @@
                     <div class="field-wrap w-100">
                       <a
                         class="link"
+                        href="#"
                         @click="handleChangeModal('signUpRegularModal')"
                       >
                         Registrarse
@@ -242,9 +243,17 @@
                       <br />
                       <a
                         class="link"
+                        href="#"
                         @click="handleChangeModal('signUpProfessionalModal')"
                       >
                         Hazte Profesional
+                      </a>
+                      <br />
+                      <a
+                        class="link"
+                        href="#"
+                      >
+                        ¿Has olvidado la contraseña?
                       </a>
                     </div>
                   </div>
@@ -273,7 +282,7 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Registro</h4>
+            <h4 class="modal-title">Registrarse</h4>
             <button
               type="button"
               class="close"

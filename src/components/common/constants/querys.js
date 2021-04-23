@@ -10,8 +10,8 @@ export const WIZARD_GET_CATEGORIES = gql`
 `;
 
 export const WIZARD_GET_SUBCATEGORIES = gql`
-  query subCategories($category: String!) {
-    subcategories(where: { category: { name: $category } }) {
+  query subCategories($category: ID!) {
+    subcategories(where: { category: $category}) {
       id
       name
     }
@@ -19,8 +19,8 @@ export const WIZARD_GET_SUBCATEGORIES = gql`
 `;
 
 export const WIZARD_GET_WIZARDFIELDS = gql`
-  query wizardFields($subCategory: String!) {
-    wizardFields(where: { subcategories: {name: $subCategory} }) {
+  query wizardFields($subCategory: ID!) {
+    wizardFields(where: { subcategories: $subCategory }) {
       id
       label
       type
@@ -31,6 +31,24 @@ export const WIZARD_GET_WIZARDFIELDS = gql`
       isSelect
       isRadio
       isCheckbox
+    }
+  }
+`;
+
+export const WIZARD_GET_COMMUNES = gql`
+  query communes {
+    communes {
+      id
+      name
+      city {
+        name
+        region {
+          name
+          country {
+            name
+          }
+        }
+      }
     }
   }
 `;
