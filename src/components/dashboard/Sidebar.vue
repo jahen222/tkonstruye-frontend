@@ -20,7 +20,12 @@
         <p class="mb-0">“{{ me.detail.slogan }}”</p>
         <span class="d-block"
           ><a href="#" @click="handleGeneralOption('profile')"
-            >Editar Perfi</a
+            >Perfil</a
+          ></span
+        >
+        <span class="d-block"
+          ><a href="#" @click="handleGeneralOption('tickets')"
+            >Tickets</a
           ></span
         >
       </div>

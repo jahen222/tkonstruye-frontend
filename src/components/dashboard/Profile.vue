@@ -31,9 +31,9 @@
           <div class="field-wrap w-100">
             <label>Comuna:</label>
             <vue-typeahead-bootstrap
-              v-model="userCommune"
               :data="getCommunes"
-              ref="userCommune"
+              :serializer="(item) => item.name"
+              v-model="userCommune"
             >
             </vue-typeahead-bootstrap>
           </div>
@@ -191,10 +191,11 @@ export default {
       let commune = null;
       let validate = true;
 
-      if (this.getCommunes.some(commune => commune === this.userCommune)) {
-        commune = this.userCommune.split("-")[0];
-      } 
-      else if (this.userCommune !== "") {
+      if (this.getCommunes.some(commune => commune.name === this.userCommune)) {
+        commune = this.getCommunes
+          .filter(commune => commune.name === this.userCommune)
+          .shift().id;
+      } else if (this.userCommune !== "") {
         this.$toast.open({
           message: "Seleccione una comuna válida",
           type: "error",
@@ -357,20 +358,21 @@ export default {
       const communes = this.communes;
       const array = [];
       communes.map(commune => {
-        const cat =
-          commune.id +
-          "- " +
-          commune.name +
-          ", " +
-          commune.city.name +
-          ", " +
-          commune.city.region.name;
+        const cat = {
+          id: commune.id,
+          name:
+            commune.name +
+            ", " +
+            commune.city.name +
+            ", " +
+            commune.city.region.name
+        };
 
         if (
           this.me.detail.commune !== null &&
           this.me.detail.commune.id === commune.id
         ) {
-          this.userCommune = cat;
+          this.userCommune = cat.name;
         }
 
         array.push(cat);

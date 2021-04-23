@@ -17,6 +17,14 @@
               <li class="breadcrumb-item active">Perfil</li>
             </ol>
           </div>
+          <div class="page-top-wrap w-100" v-else-if="generalOption == 'tickets'">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
+              </li>
+              <li class="breadcrumb-item active">Tickets</li>
+            </ol>
+          </div>
           <div class="page-top-wrap w-100" v-else>
             <ol class="breadcrumb">
               <li class="breadcrumb-item active">
@@ -39,6 +47,9 @@
               <div class="col-md-12 col-sm-12 col-lg-8">
                 <div v-if="generalOption == 'profile'">
                   <Profile />
+                </div>
+                <div v-else-if="generalOption == 'tickets'">
+                  <Tickets />
                 </div>
                 <div v-else>
                   <Index />
@@ -63,6 +74,7 @@ import StickyMenu from "../components/layouts/StickyMenu";
 import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
 import Sidebar from '../components/dashboard/Sidebar.vue';
 import Profile from "../components/dashboard/Profile";
+import Tickets from "../components/dashboard/Tickets";
 import Index from "../components/dashboard/Index";
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
@@ -74,6 +86,7 @@ export default {
     StickyMenu,
     ResponsiveHeader,
     Profile,
+    Tickets,
     Index,
     Footer,
     Copyright,

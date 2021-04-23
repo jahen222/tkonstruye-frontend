@@ -58,3 +58,24 @@ export const PROFILE_GET_COMMUNES = gql`
     }
   }
 `;
+
+export const TICKETS_GET_TICKETS = gql`
+  query tickets($user: ID!) {
+    tickets(where: { users_permissions_user: $user }) {
+      id
+      subcategory {
+        id
+        name
+      }
+      users_permissions_user {
+        id
+        name
+      }
+      commune {
+        id
+        name
+      }
+      requirements
+    }
+  }
+`;
