@@ -26,7 +26,9 @@
                         <a href="#" title="">
                           {{
                             Object.keys(ticket.requirements)[
-                              Object.values(ticket.requirements).indexOf(requirement)
+                              Object.values(ticket.requirements).indexOf(
+                                requirement
+                              )
                             ]
                           }}
                         </a>
@@ -74,7 +76,9 @@ export default {
     tickets: {
       query: TICKETS_GET_TICKETS,
       variables: {
-        user: JSON.parse(Cookies.get("user")).id
+        user: Cookies.get("user")
+          ? JSON.parse(Cookies.get("user")).id
+          : null
       }
     }
   }
