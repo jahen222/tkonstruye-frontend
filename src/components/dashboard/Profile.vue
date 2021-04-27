@@ -1,30 +1,54 @@
 <template>
-  <div id="dashboardProfile" class="post-detail reply-form w-100">
+  <div id="dashboardProfile" class="post-detail wizard-form w-100">
     <h3 class="mb-0">Datos de Usuario</h3>
     <form class="w-100 pb-50" @submit="handleProfileUpdateUserData">
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
             <label>Nombre Completo:</label>
-            <input type="text" v-model="me.detail.name" />
+            <input
+              type="text"
+              v-model="me.detail.name"
+              placeholder="Ingresa aquí tu respuesta."
+            />
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
             <label>Nombre de Usuario:</label>
-            <input type="text" v-model="me.detail.username" />
+            <input
+              type="text"
+              v-model="me.detail.username"
+              placeholder="Ingresa aquí tu respuesta."
+            />
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
             <label>Correo Electrónico:</label>
-            <input type="email" v-model="me.detail.email" />
+            <input
+              type="email"
+              v-model="me.detail.email"
+              placeholder="Ingresa aquí tu respuesta."
+            />
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
-            <label>Teléfono:</label>
-            <input type="text" v-model="me.detail.phone" />
+            <div class="row">
+              <div class="col-md-3 col-sm-3 col-lg-3">
+                <label>Teléfono:</label>
+              </div>
+              <div class="col-md-9 col-sm-9 col-lg-9">
+                <label>+56</label>
+              </div>
+            </div>
+            <input
+              type="text"
+              v-model="me.detail.phone"
+              @input="handleFormatPhone()"
+              placeholder="Por ejemplo: 99240555"
+            />
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
@@ -34,6 +58,7 @@
               :data="getCommunes"
               :serializer="(item) => item.name"
               v-model="userCommune"
+              :placeholder="'Por ejemplo: Santiago, Viña del Mar...'"
             >
             </vue-typeahead-bootstrap>
           </div>
@@ -41,13 +66,21 @@
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
             <label>Rut:</label>
-            <input type="text" v-model="me.detail.rut" />
+            <input
+              type="text"
+              v-model="me.detail.rut"
+              @input="handleFormatRut()"
+              placeholder="Por ejemplo: 24174768-9"
+            />
           </div>
         </div>
         <div class="col-md-12 col-sm-12 col-lg-12">
           <div class="field-wrap w-100">
             <label>Eslogan:</label>
-            <textarea v-model="me.detail.slogan"></textarea>
+            <textarea
+              v-model="me.detail.slogan"
+              placeholder="Ingresa aquí tu respuesta."
+            ></textarea>
           </div>
           <button class="thm-btn thm-bg" type="submit">
             Actualizar<i class="flaticon-arrow-pointing-to-right"></i>
@@ -67,11 +100,17 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
           <div class="field-wrap w-100">
             <label>Giro:</label>
-            <textarea v-model="me.detail.giro"></textarea>
+            <textarea
+              v-model="me.detail.giro"
+              placeholder="Ingresa aquí tu respuesta."
+            ></textarea>
           </div>
           <div class="field-wrap w-100">
             <label>Contacto:</label>
-            <textarea v-model="me.detail.contact"></textarea>
+            <textarea
+              v-model="me.detail.contact"
+              placeholder="Ingresa aquí tu respuesta."
+            ></textarea>
           </div>
           <button class="thm-btn thm-bg" type="submit">
             Actualizar<i class="flaticon-arrow-pointing-to-right"></i>
@@ -85,7 +124,11 @@
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
             <label>Correo Electrónico:</label>
-            <input type="email" v-model="forgotPasswordEmail" />
+            <input
+              type="email"
+              v-model="forgotPasswordEmail"
+              placeholder="Ingresa aquí tu respuesta."
+            />
           </div>
         </div>
         <div class="col-md-12 col-sm-12 col-lg-12">
@@ -101,13 +144,29 @@
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
-            <label>Imagen o Foto:</label>
+            <label>Imagen o Foto (png, jpg, jpeg ó gif):</label>
             <input
               type="file"
               name="files"
               @change="handlePhotoChange"
-              alt="photo"
+              ref="photo"
             />
+            <div class="row">
+              <div class="col-md-3 col-sm-3 col-lg-3">
+                <label for="inputPhoto" @click="$refs.photo.click()"
+                  ><i class="fas fa-upload"></i
+                ></label>
+              </div>
+              <div
+                class="col-md-4 col-sm-4 col-lg-4 previewPhoto"
+                v-if="previewPhoto"
+              >
+                <img v-if="previewPhoto" :src="previewPhoto" />
+              </div>
+              <div class="col-md-5 col-sm-5 col-lg-5" v-if="photo">
+                <label>{{ photo.name }}</label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-md-12 col-sm-12 col-lg-12">
@@ -162,7 +221,8 @@ export default {
       communes: [],
       userCommune: "",
       forgotPasswordEmail: "",
-      photo: null
+      photo: "",
+      previewPhoto: ""
     };
   },
   apollo: {
@@ -302,7 +362,21 @@ export default {
         });
     },
     handlePhotoChange(e) {
-      this.photo = e.target.files[0];
+      if (
+        e.target.files[0].type === "image/png" ||
+        e.target.files[0].type === "image/jpg" ||
+        e.target.files[0].type === "image/jpeg" ||
+        e.target.files[0].type === "image/gif"
+      ) {
+        this.photo = e.target.files[0];
+        this.previewPhoto = URL.createObjectURL(this.photo);
+      } else {
+        this.$toast.open({
+          message: "El archivo no tiene un formato válido.",
+          type: "error",
+          duration: 3000
+        });
+      }
     },
     handleProfileUploadPhoto(e) {
       e.preventDefault();
@@ -351,6 +425,22 @@ export default {
             })
           );
         });
+    },
+    handleFormatPhone() {
+      const formatedPhone = this.me.detail.phone
+        ? this.me.detail.phone.replace(/[^\d]/g, "")
+        : "";
+      this.me.detail.phone = formatedPhone
+        .replace(/(\d{1})(\d{4})(\d{4})/, "($1) $2-$3")
+        .substr(0, 13);
+    },
+    handleFormatRut() {
+      const formatedRut = this.me.detail.rut
+        ? this.me.detail.rut.replace(/[^\dKk]/g, "")
+        : "";
+      this.me.detail.rut = formatedRut
+        .replace(/(\d{1,2})(\d{3})(\d{3})([\dKk]{1})/, "$1.$2.$3-$4")
+        .substr(0, 12);
     }
   },
   computed: {

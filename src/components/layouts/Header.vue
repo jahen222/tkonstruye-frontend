@@ -6,18 +6,27 @@
           class="topbar-inner d-flex flex-wrap justify-content-between align-items-center w-100"
         >
           <ul class="topbar-info-list mb-0 list-unstyled d-inline-flex">
-            <li>
+            <li v-if="config.address">
+              <i class="thm-clr fas fa-map-marker-alt"></i>{{ config.address }}
+            </li>
+            <li v-else>
               <i class="thm-clr fas fa-map-marker-alt"></i>27 Division,
               mirpur-12, pallbi.
             </li>
             <li>
               <i class="thm-clr far fa-envelope-open"></i>Email:
-              <a href="javascript:void(0);" title="">bioxin0011@gmail.com</a>
+
+              <a href="javascript:void(0);" title="" v-if="config.email">
+                {{ config.email }}</a
+              >
+              <a href="#" title="" v-else
+                >bioxin0011@gmail.com</a
+              >
             </li>
           </ul>
           <ul
             class="topbar-links mb-0 list-unstyled d-inline-flex"
-            v-if="getUsername !== ''"
+            v-if="getUsername"
           >
             <li>
               <a href="#" title="">Bienvenido {{ getUsername }}</a>
@@ -91,14 +100,19 @@
           >
             <div class="call-us">
               <i class="thm-clr flaticon-phone-call"></i>
-              <span>24/7 Phone Services</span>
-              <strong>555 666 999 00</strong>
+              <span>24/7 Servicio Activo</span>
+              <strong v-if="config.phone">{{ config.phone }}</strong>
+              <strong v-else>555 666 999 00</strong>
             </div>
-            <div class="add-cart">
-              <a href="cart.html" title="">
-                <i class="thm-bg fas fa-shopping-basket"></i>
-                Add to Cart
-                <span class="d-block">(Item: 02)</span>
+            <div class="add-cart" v-if="getUsername">
+              <a href="#" title="">
+                <img
+                  class="thm-bg img-fluid rounded-circle photo"
+                  :src="this.api_url + me.detail.photo.url"
+                  alt="About Image"
+                  v-if="me.detail.photo.url"
+                />
+                {{ getUsername }}
               </a>
             </div>
           </div>
@@ -249,10 +263,7 @@
                         Hazte Profesional
                       </a>
                       <br />
-                      <a
-                        class="link"
-                        href="#"
-                      >
+                      <a class="link" href="#">
                         ¿Has olvidado la contraseña?
                       </a>
                     </div>
@@ -354,10 +365,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
                     <div class="field-wrap w-100">
-                      <a
-                        class="link"
-                        @click="handleChangeModal('loginModal')"
-                      >
+                      <a class="link" @click="handleChangeModal('loginModal')">
                         Iniciar Sesión
                       </a>
                       <br />
@@ -473,10 +481,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
                     <div class="field-wrap w-100">
-                      <a
-                        class="link"
-                        @click="handleChangeModal('loginModal')"
-                      >
+                      <a class="link" @click="handleChangeModal('loginModal')">
                         Iniciar Sesión
                       </a>
                       <br />
@@ -516,7 +521,11 @@
 import $ from "jquery";
 import Cookies from "js-cookie";
 import { mapMutations } from "vuex";
-import { HEADER_GET_LOGO, HEADER_GET_ROLES } from "./constants/querys";
+import {
+  HEADER_GET_LOGO,
+  HEADER_GET_ROLES,
+  HEADER_GET_PHOTO
+} from "./constants/querys";
 import { HEADER_USER_LOGIN, HEADER_USER_REGISTER } from "./constants/mutations";
 import Wizard from "../common/Wizard";
 
@@ -526,6 +535,9 @@ export default {
     return {
       api_url: process.env.VUE_APP_STRAPI_API_URL,
       config: {
+        email: "",
+        address: "",
+        phone: "",
         logo: {
           url: ""
         }
@@ -537,7 +549,12 @@ export default {
       password: "",
       passwordConfirm: "",
       phone: "",
-      error: ""
+      error: "",
+      me: {
+        detail: {
+          photo: ""
+        }
+      }
     };
   },
   components: {
@@ -549,6 +566,12 @@ export default {
     },
     roles: {
       query: HEADER_GET_ROLES
+    },
+    me: {
+      query: HEADER_GET_PHOTO,
+      skip() {
+        return !this.getUsername;
+      }
     }
   },
   methods: {
@@ -727,5 +750,9 @@ export default {
 }
 .link:hover {
   color: #ff5e15;
+}
+.photo {
+  width: 50px;
+  height: 50px;
 }
 </style>

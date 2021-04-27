@@ -3048,13 +3048,29 @@ blockquote > p::after {
   padding: 1.125rem;
   height: 12.5rem;
 }
+.wizard-form .field-wrap input[type="file"] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.wizard-form .field-wrap label[for="inputPhoto"] {
+  font-size: 50px;
+  color: #777;
+  display: inline-block;
+  transition: all .5s;
+  cursor: pointer;
+}
 .wizard-form .field-wrap + button {margin-top: 3.125rem;}
 
-/* .wizard-form .field-wrap input:hover,
-.wizard-form .field-wrap select:hover, 
-.wizard-form .field-wrap textarea:hover {
-  border: 1px solid var(#777);
-} */
+.wizard-form .field-wrap input::placeholder,
+.wizard-form .field-wrap select::placeholder,
+.wizard-form .field-wrap textarea::placeholder {
+  color: lightgray;
+  font-style: italic;
+}
 
 .wizard-form .field-wrap input:focus,
 .wizard-form .field-wrap select:focus, 

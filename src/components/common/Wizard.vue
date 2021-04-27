@@ -38,13 +38,14 @@
                       :required="true"
                       :placeholder="'Por ejemplo: Santiago, Viña del Mar...'"
                       v-model="commune"
+                      @hit="handleSecondQuestion"
                     >
                     </vue-typeahead-bootstrap>
                   </div>
                 </div>
                 <div
                   class="col-md-12 col-sm-12 col-lg-12"
-                  v-if="categories.length > 0"
+                  v-if="categories.length > 0 && secondQuestion"
                 >
                   <div class="field-wrap w-100">
                     <label>
@@ -192,7 +193,8 @@ export default {
       category: "",
       subCategory: "",
       communes: [],
-      commune: ""
+      commune: "",
+      secondQuestion: false
     };
   },
   apollo: {
@@ -252,6 +254,9 @@ export default {
         $("#wizardModal").modal("hide");
         $("#loginModal").modal("show");
       }
+    },
+    handleSecondQuestion () {
+      this.secondQuestion = true;
     }
   },
   computed: {
