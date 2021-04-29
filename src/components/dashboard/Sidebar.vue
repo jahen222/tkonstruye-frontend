@@ -1,34 +1,79 @@
 <template>
-  <aside id="dashboardSidebar" class="sidebar-wrap w-100">
-    <div class="widget2 brd-rd5 w-100">
-      <div class="about-widget text-center w-100">
+  <aside id="dashboardSidebar" class="sidebar-wrap widget2 brd-rd5 w-100">
+    <nav
+      class="navbar flex-column navbar-expand-md navbar-light bg-light 
+      text-justify w-100 d-none d-md-block d-lg-block d-xl-block"
+    >
+      <button
+        type="button"
+        class="navbar-toggler"
+        data-toggle="collapse"
+        data-target="#navbarCollapse"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        class="collapse navbar-collapse justify-content-between"
+        id="navbarCollapse"
+      >
+        <nav class="nav flex-column">
+          <a class="nav-link paddingLeft text-center" href="#">
+            <div class="about-widget-img d-inline-block">
+              <img
+                v-if="me.detail.photo"
+                class="img-fluid rounded-circle photo"
+                :src="this.api_url + me.detail.photo.url"
+                alt="About Image"
+              />
+            </div>
+          </a>
+          <a class="nav-link paddingLeft text-center" href="#"
+            ><h4 class="mb-0">{{ me.detail.username }}</h4></a
+          >
+          <a class="nav-link paddingLeft text-center" href="#"
+            ><p class="mb-0">“{{ me.detail.slogan }}”</p></a
+          >
+          <hr />
+          <a class="nav-link customNavLink" href="#" @click="handleGeneralOption('dashboard')"
+            >Dashboard</a
+          >
+          <a class="nav-link customNavLink" href="#" @click="handleGeneralOption('profile')"
+            >Perfil</a
+          >
+          <a class="nav-link customNavLink" href="#" @click="handleGeneralOption('tickets')"
+            >Tickets</a
+          >
+        </nav>
+      </div>
+    </nav>
+    <div class="rspn-hdr d-block d-md-none d-lg-none d-xl-none">
+      <div class="lg-mn">
+        <span class="rspn-mnu-btn"><i class="fa fa-list-ul"></i></span>
+      </div>
+      <div class="rsnp-mnu">
         <div class="about-widget-img d-inline-block">
           <img
-            v-if="me.detail.photo === null"
-            class="img-fluid rounded-circle"
-            src="../../assets/blubuild/images/resources/about-widget-img.jpg"
-            alt="About Image"
-          />
-          <img
-            v-else
+            v-if="me.detail.photo"
             class="img-fluid rounded-circle photo"
             :src="this.api_url + me.detail.photo.url"
             alt="About Image"
           />
         </div>
-        <h4 class="mb-0">{{ me.detail.username }}</h4>
-        <p class="mb-0">“{{ me.detail.slogan }}”</p>
-        <span class="d-block"
-          ><a href="#" @click="handleGeneralOption('profile')"
-            >Perfil</a
-          ></span
-        >
-        <span class="d-block"
-          ><a href="#" @click="handleGeneralOption('tickets')"
-            >Tickets</a
-          ></span
-        >
+        <hr />
+        <span class="rspn-mnu-cls"><i class="fa fa-times"></i></span>
+        <ul class="mb-0 list-unstyled w-100">
+          <li>
+            <a href="#" @click="handleGeneralOption('dashboard')">Dashboard</a>
+          </li>
+          <li>
+            <a href="#" @click="handleGeneralOption('profile')">Perfil</a>
+          </li>
+          <li>
+            <a href="#" @click="handleGeneralOption('tickets')">Tickets</a>
+          </li>
+        </ul>
       </div>
+      <!-- Responsive Menu -->
     </div>
   </aside>
   <!-- Sidebar Wrap -->
@@ -66,5 +111,17 @@ export default {
 .photo {
   width: 105px;
   height: 105px;
+}
+</style>
+
+<style scoped>
+.customNavLink:hover{
+  color: #ff5e15;
+}
+.nav{
+  padding-left: 0;
+}
+.paddingLeft {
+  padding-left: 25px;
 }
 </style>

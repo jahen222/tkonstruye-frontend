@@ -19,9 +19,7 @@
               <a href="javascript:void(0);" title="" v-if="config.email">
                 {{ config.email }}</a
               >
-              <a href="#" title="" v-else
-                >bioxin0011@gmail.com</a
-              >
+              <a href="#" title="" v-else>bioxin0011@gmail.com</a>
             </li>
           </ul>
           <ul
@@ -108,9 +106,9 @@
               <a href="#" title="">
                 <img
                   class="thm-bg img-fluid rounded-circle photo"
-                  :src="this.api_url + me.detail.photo.url"
+                  :src="api_url + me.detail.photo.url"
                   alt="About Image"
-                  v-if="me.detail.photo.url"
+                  v-if="me.detail.photo"
                 />
                 {{ getUsername }}
               </a>
@@ -230,6 +228,8 @@
                         type="email"
                         v-model="email"
                         placeholder="Ingrese su correo."
+                        minlength="7"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -241,6 +241,8 @@
                         type="password"
                         v-model="password"
                         placeholder="Ingrese su contraseña."
+                        minlength="8"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -315,6 +317,7 @@
                         type="text"
                         v-model="username"
                         placeholder="Ingrese su nombre de usuario."
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -326,17 +329,29 @@
                         type="email"
                         v-model="email"
                         placeholder="Ingrese su correo."
+                        minlength="7"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Teléfono</label>
+                      <div class="row">
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                          <label>Teléfono:</label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-lg-9">
+                          <label>+56</label>
+                        </div>
+                      </div>
                       <input
                         type="text"
                         v-model="phone"
-                        placeholder="Ingrese su número de teléfono."
+                        minlength="13"
+                        maxlength="13"
+                        @input="handleFormatPhone()"
+                        placeholder="Por ejemplo: 99240555"
                         :required="true"
                       />
                     </div>
@@ -348,6 +363,8 @@
                         type="password"
                         v-model="password"
                         placeholder="Ingrese su contraseña."
+                        minlength="8"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -359,6 +376,8 @@
                         type="password"
                         v-model="passwordConfirm"
                         placeholder="Ingrese su contraseña nuevamente."
+                        minlength="8"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -387,7 +406,9 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">
-                      Login<i class="flaticon-arrow-pointing-to-right"></i>
+                      Registrarse<i
+                        class="flaticon-arrow-pointing-to-right"
+                      ></i>
                     </button>
                   </div>
                 </div>
@@ -431,6 +452,7 @@
                         type="text"
                         v-model="username"
                         placeholder="Ingrese su nombre de usuario."
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -442,17 +464,29 @@
                         type="email"
                         v-model="email"
                         placeholder="Ingrese su correo."
+                        minlength="7"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Teléfono</label>
+                      <div class="row">
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                          <label>Teléfono:</label>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-lg-9">
+                          <label>+56</label>
+                        </div>
+                      </div>
                       <input
                         type="text"
                         v-model="phone"
-                        placeholder="Ingrese su número de teléfono."
+                        minlength="13"
+                        maxlength="13"
+                        @input="handleFormatPhone()"
+                        placeholder="Por ejemplo: 99240555"
                         :required="true"
                       />
                     </div>
@@ -464,6 +498,8 @@
                         type="password"
                         v-model="password"
                         placeholder="Ingrese su contraseña."
+                        minlength="8"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -475,6 +511,8 @@
                         type="password"
                         v-model="passwordConfirm"
                         placeholder="Ingrese su contraseña nuevamente."
+                        minlength="8"
+                        maxlength="32"
                         :required="true"
                       />
                     </div>
@@ -503,7 +541,9 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">
-                      Login<i class="flaticon-arrow-pointing-to-right"></i>
+                      Registrarse<i
+                        class="flaticon-arrow-pointing-to-right"
+                      ></i>
                     </button>
                   </div>
                 </div>
@@ -552,7 +592,9 @@ export default {
       error: "",
       me: {
         detail: {
-          photo: ""
+          photo: {
+            url: ""
+          }
         }
       }
     };
@@ -582,35 +624,65 @@ export default {
     handleLogin(e) {
       e.preventDefault();
       const { email, password } = this.$data;
+      let validate = true;
 
-      this.$apollo
-        .mutate({
-          mutation: HEADER_USER_LOGIN,
-          variables: {
-            email,
-            password
-          }
-        })
-        .then(data => {
-          this.setUser(data.data.login);
-          this.$router.go();
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(({ extensions }) =>
-            extensions.exception.data.message.map(({ messages }) =>
-              messages.map(({ message }) => (this.error = message))
-            )
-          );
-        });
+      if (email.length < 7 || email.length > 32) {
+        validate = false;
+        this.error = "Ingrese un correo válido.";
+      } else if (password.length < 8 || password.length > 32) {
+        validate = false;
+        this.error = "Ingrese una contraseña válida.";
+      }
+
+      if (validate) {
+        this.$apollo
+          .mutate({
+            mutation: HEADER_USER_LOGIN,
+            variables: {
+              email,
+              password
+            }
+          })
+          .then(data => {
+            this.setUser(data.data.login);
+            this.$router.go();
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(({ extensions }) =>
+              extensions.exception.data.message.map(({ messages }) =>
+                messages.map(({ message }) => (this.error = message))
+              )
+            );
+          });
+      }
     },
     handleRegister(e) {
       e.preventDefault();
       const { username, email, password, passwordConfirm, phone } = this.$data;
       const role = this.roles.filter(rol => rol.name === "Authenticated")[0].id;
+      let validate = true;
 
-      if (password !== passwordConfirm) {
+      if (email.length < 7 || email.length > 32) {
+        validate = false;
+        this.error = "Ingrese un correo válido.";
+      } else if (username.length > 32) {
+        validate = false;
+        this.error = "Ingrese un nombre de usuario válido.";
+      } else if (phone.length != 13) {
+        validate = false;
+        this.error = "Ingrese un teléfono válido.";
+      } else if (password.length < 8 || password.length > 32) {
+        validate = false;
+        this.error = "Ingrese una contraseña válida.";
+      } else if (passwordConfirm.length < 8 || passwordConfirm.length > 32) {
+        validate = false;
+        this.error = "Ingrese una contraseña válida.";
+      } else if (password !== passwordConfirm) {
+        validate = false;
         this.error = "Las contraseñas no coinciden";
-      } else {
+      }
+
+      if (validate) {
         this.$apollo
           .mutate({
             mutation: HEADER_USER_REGISTER,
@@ -638,10 +710,29 @@ export default {
       e.preventDefault();
       const { username, email, password, passwordConfirm, phone } = this.$data;
       const role = this.roles.filter(rol => rol.name === "Professional")[0].id;
+      let validate = true;
 
-      if (password !== passwordConfirm) {
+      if (email.length < 7 || email.length > 32) {
+        validate = false;
+        this.error = "Ingrese un correo válido.";
+      } else if (username.length > 32) {
+        validate = false;
+        this.error = "Ingrese un nombre de usuario válido.";
+      } else if (phone.length != 13) {
+        validate = false;
+        this.error = "Ingrese un teléfono válido.";
+      } else if (password.length < 8 || password.length > 32) {
+        validate = false;
+        this.error = "Ingrese una contraseña válida.";
+      } else if (passwordConfirm.length < 8 || passwordConfirm.length > 32) {
+        validate = false;
+        this.error = "Ingrese una contraseña válida.";
+      } else if (password !== passwordConfirm) {
+        validate = false;
         this.error = "Las contraseñas no coinciden";
-      } else {
+      }
+
+      if (validate) {
         this.$apollo
           .mutate({
             mutation: HEADER_USER_REGISTER,
@@ -665,19 +756,28 @@ export default {
           });
       }
     },
-    handleLogout: function() {
+    handleLogout() {
       this.logout();
       this.$router.go();
     },
-    handleCloseModal: function() {
+    handleCloseModal() {
       this.email = "";
       this.error = "";
       this.password = "";
+      this.passwordConfirm = "";
       this.phone = "";
       this.role = "";
       this.username = "";
     },
     handleChangeModal(nameModal) {
+      this.email = "";
+      this.error = "";
+      this.password = "";
+      this.passwordConfirm = "";
+      this.phone = "";
+      this.role = "";
+      this.username = "";
+
       if (nameModal === "loginModal") {
         $("#loginModal").modal("show");
         $("#signUpRegularModal").modal("hide");
@@ -691,6 +791,12 @@ export default {
         $("#signUpRegularModal").modal("hide");
         $("#signUpProfessionalModal").modal("show");
       }
+    },
+    handleFormatPhone() {
+      const formatedPhone = this.phone ? this.phone.replace(/[^\d]/g, "") : "";
+      this.phone = formatedPhone
+        .replace(/(\d{1})(\d{4})(\d{4})/, "($1) $2-$3")
+        .substr(0, 13);
     }
   },
   computed: {

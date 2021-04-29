@@ -3078,6 +3078,12 @@ blockquote > p::after {
   border: 1px solid var(--color2);
 }
 
+/*===== Notification =====*/
+.v-toast__text {
+  color: white;
+  font-weight: bold;
+}
+
 /*===== Sidebar =====*/
 .widget2 {
   background-color: #f8f8f9;

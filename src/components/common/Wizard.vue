@@ -210,10 +210,14 @@ export default {
       e.preventDefault();
       let requirements = {};
 
-      if (
-        Cookies.get("user") !== undefined &&
-        this.subCategory !== "" &&
-        this.commune !== ""
+      if (!Cookies.get("user")) {
+        $("#wizardModal").modal("hide");
+        $("#loginModal").modal("show");
+      } else if (
+        Cookies.get("user") &&
+        this.category &&
+        this.subCategory &&
+        this.commune
       ) {
         this.getWizardFields.map((wizardField, index) => {
           requirements[wizardField.label] = document.getElementById(
@@ -235,8 +239,12 @@ export default {
           })
           .then(() => {
             $("#wizardModal").modal("hide");
+            this.category = "";
+            this.subCategory = ""; 
+            this.commune = "";
+            this.secondQuestion = false;
             this.$toast.open({
-              message: "Ticket creado exitosamente",
+              message: "Ticket creado exitosamente.",
               type: "success",
               duration: 3000
             });
@@ -251,11 +259,14 @@ export default {
             );
           });
       } else {
-        $("#wizardModal").modal("hide");
-        $("#loginModal").modal("show");
+        this.$toast.open({
+          message: "Seleccione una comuna, categoría y subcategoría válidas",
+          type: "error",
+          duration: 3000
+        });
       }
     },
-    handleSecondQuestion () {
+    handleSecondQuestion() {
       this.secondQuestion = true;
     }
   },

@@ -87,14 +87,22 @@ export const PROFILE_UPLOAD_PHOTO = gql`
 
 export const PROFILE_UPDATE_PHOTO = gql`
   mutation updateUser($id: ID!, $photo: ID) {
-    updateUser(
-      input: { where: { id: $id }, data: { photo: $photo } }
-    ) {
+    updateUser(input: { where: { id: $id }, data: { photo: $photo } }) {
       user {
         id
-        photo{
+        photo {
           url
         }
+      }
+    }
+  }
+`;
+
+export const TICKETS_DELETE_TICKET = gql`
+  mutation deleteTicket($id: ID!) {
+    deleteTicket(input: { where: { id: $id } }) {
+      ticket {
+        id
       }
     }
   }

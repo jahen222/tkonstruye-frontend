@@ -10,6 +10,7 @@
               type="text"
               v-model="me.detail.name"
               placeholder="Ingresa aquí tu respuesta."
+              maxlength="128"
             />
           </div>
         </div>
@@ -20,6 +21,7 @@
               type="text"
               v-model="me.detail.username"
               placeholder="Ingresa aquí tu respuesta."
+              maxlength="32"
             />
           </div>
         </div>
@@ -30,6 +32,8 @@
               type="email"
               v-model="me.detail.email"
               placeholder="Ingresa aquí tu respuesta."
+              minlength="7"
+              maxlength="32"
             />
           </div>
         </div>
@@ -46,6 +50,8 @@
             <input
               type="text"
               v-model="me.detail.phone"
+              minlength="13"
+              maxlength="13"
               @input="handleFormatPhone()"
               placeholder="Por ejemplo: 99240555"
             />
@@ -69,6 +75,8 @@
             <input
               type="text"
               v-model="me.detail.rut"
+              minlength="11"
+              maxlength="12"
               @input="handleFormatRut()"
               placeholder="Por ejemplo: 24174768-9"
             />
@@ -80,6 +88,7 @@
             <textarea
               v-model="me.detail.slogan"
               placeholder="Ingresa aquí tu respuesta."
+              maxlength="128"
             ></textarea>
           </div>
           <button class="thm-btn thm-bg" type="submit">
@@ -103,6 +112,7 @@
             <textarea
               v-model="me.detail.giro"
               placeholder="Ingresa aquí tu respuesta."
+              maxlength="512"
             ></textarea>
           </div>
           <div class="field-wrap w-100">
@@ -110,6 +120,7 @@
             <textarea
               v-model="me.detail.contact"
               placeholder="Ingresa aquí tu respuesta."
+              maxlength="512"
             ></textarea>
           </div>
           <button class="thm-btn thm-bg" type="submit">
@@ -128,6 +139,8 @@
               type="email"
               v-model="forgotPasswordEmail"
               placeholder="Ingresa aquí tu respuesta."
+              minlength="7"
+              maxlength="32"
             />
           </div>
         </div>
@@ -144,7 +157,7 @@
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
-            <label>Imagen o Foto (png, jpg, jpeg ó gif):</label>
+            <label>Imagen o Foto (png, jpg, svg ó gif):</label>
             <input
               type="file"
               name="files"
@@ -251,17 +264,61 @@ export default {
       let commune = null;
       let validate = true;
 
+      if (email.length < 7 || email.length > 32) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un correo válido.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (username.length > 32) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un nombre de usuario válido.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (phone.length != 13) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un teléfono válido.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (name.length > 128) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un nombre válido.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (rut && (rut.length < 11 || rut.length > 12)) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un rut válido.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (name.slogan > 128) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un eslogan válido.",
+          type: "error",
+          duration: 3000
+        });
+      }
+
       if (this.getCommunes.some(commune => commune.name === this.userCommune)) {
         commune = this.getCommunes
           .filter(commune => commune.name === this.userCommune)
           .shift().id;
-      } else if (this.userCommune !== "") {
+      } else if (this.userCommune) {
+        validate = false;
         this.$toast.open({
-          message: "Seleccione una comuna válida",
+          message: "Seleccione una comuna válida.",
           type: "error",
           duration: 3000
         });
-        validate = false;
       }
 
       if (validate) {
@@ -289,7 +346,7 @@ export default {
 
             this.updateUser(user);
             this.$toast.open({
-              message: "Usuario actualizado exitosamente",
+              message: "Usuario actualizado exitosamente.",
               type: "success",
               duration: 3000
             });
@@ -308,71 +365,105 @@ export default {
     handleProfileUpdateCompanyData(e) {
       e.preventDefault();
       const { id, giro, contact } = this.$data.me.detail;
-      this.$apollo
-        .mutate({
-          mutation: PROFILE_UPDATE_COMPANY_DATA,
-          variables: {
-            id,
-            giro,
-            contact
-          }
-        })
-        .then(() => {
-          this.$toast.open({
-            message: "Usuario actualizado exitosamente",
-            type: "success",
-            duration: 3000
-          });
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(error =>
-            this.$toast.open({
-              message: error.message,
-              type: "error",
-              duration: 3000
-            })
-          );
+      let validate = true;
+
+      if (giro.length < 512) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un giro válido.",
+          type: "error",
+          duration: 3000
         });
+      } else if (contact.length > 512) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un contacto válido.",
+          type: "error",
+          duration: 3000
+        });
+      }
+
+      if (validate) {
+        this.$apollo
+          .mutate({
+            mutation: PROFILE_UPDATE_COMPANY_DATA,
+            variables: {
+              id,
+              giro,
+              contact
+            }
+          })
+          .then(() => {
+            this.$toast.open({
+              message: "Usuario actualizado exitosamente.",
+              type: "success",
+              duration: 3000
+            });
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(error =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000
+              })
+            );
+          });
+      }
     },
     handleProfileForgotPassword(e) {
       e.preventDefault();
       const email = this.forgotPasswordEmail;
-      this.$apollo
-        .mutate({
-          mutation: PROFILE_FORGOT_PASSWORD,
-          variables: {
-            email
-          }
-        })
-        .then(() => {
-          this.$toast.open({
-            message: "Correo enviado exitosamente",
-            type: "success",
-            duration: 3000
-          });
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(error =>
-            this.$toast.open({
-              message: error.message,
-              type: "error",
-              duration: 3000
-            })
-          );
+      let validate = true;
+
+      if (email.length < 7 || email.length > 32) {
+        validate = false;
+        this.$toast.open({
+          message: "Ingrese un correo válido.",
+          type: "error",
+          duration: 3000
         });
+      }
+
+      if (validate) {
+        this.$apollo
+          .mutate({
+            mutation: PROFILE_FORGOT_PASSWORD,
+            variables: {
+              email
+            }
+          })
+          .then(() => {
+            this.$toast.open({
+              message: "Correo enviado exitosamente.",
+              type: "success",
+              duration: 3000
+            });
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(error =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000
+              })
+            );
+          });
+      }
     },
     handlePhotoChange(e) {
       if (
         e.target.files[0].type === "image/png" ||
         e.target.files[0].type === "image/jpg" ||
         e.target.files[0].type === "image/jpeg" ||
-        e.target.files[0].type === "image/gif"
+        e.target.files[0].type === "image/gif" ||
+        e.target.files[0].type === "image/svg"
       ) {
         this.photo = e.target.files[0];
         this.previewPhoto = URL.createObjectURL(this.photo);
       } else {
         this.$toast.open({
-          message: "El archivo no tiene un formato válido.",
+          message: "Seleccione un archivo con un formato válido.",
           type: "error",
           duration: 3000
         });
@@ -401,7 +492,7 @@ export default {
             })
             .then(() => {
               this.$toast.open({
-                message: "Usuario actualizado exitosamente",
+                message: "Usuario actualizado exitosamente.",
                 type: "success",
                 duration: 3000
               });

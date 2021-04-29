@@ -66,6 +66,9 @@ export const TICKETS_GET_TICKETS = gql`
       subcategory {
         id
         name
+        category {
+          name
+        }
       }
       users_permissions_user {
         id
