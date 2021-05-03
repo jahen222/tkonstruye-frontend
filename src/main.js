@@ -55,7 +55,9 @@ router.beforeEach((to, from, next) => {
 
 Vue.config.productionTip = false;
 Vue.use(VueApollo);
-Vue.use(VueToast);
+Vue.use(VueToast, {
+  position: "top-right",
+});
 Vue.component("vue-typeahead-bootstrap", VueTypeaheadBootstrap);
 Vue.use(AsyncComputed);
 

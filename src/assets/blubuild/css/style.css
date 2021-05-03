@@ -3079,6 +3079,9 @@ blockquote > p::after {
 }
 
 /*===== Notification =====*/
+.v-toast--top {
+  z-index: 10000 !important;
+}
 .v-toast__text {
   color: white;
   font-weight: bold;

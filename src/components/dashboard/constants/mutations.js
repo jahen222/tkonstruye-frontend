@@ -98,6 +98,47 @@ export const PROFILE_UPDATE_PHOTO = gql`
   }
 `;
 
+export const TICKETS_UPDATE_TICKET = gql`
+  mutation updateTicket(
+    $id: ID!
+    $subCategory: ID!
+    $usersPermissionsUser: ID!
+    $commune: ID!
+    $requirements: JSON
+  ) {
+    updateTicket(
+      input: {
+        where: {
+          id: $id
+        }
+        data: {
+          subcategory: $subCategory
+          users_permissions_user: $usersPermissionsUser
+          commune: $commune
+          requirements: $requirements
+        }
+      }
+    ) {
+      ticket {
+        id
+        subcategory {
+          id
+          name
+        }
+        users_permissions_user {
+          id
+          name
+        }
+        commune {
+          id
+          name
+        }
+        requirements
+      }
+    }
+  }
+`;
+
 export const TICKETS_DELETE_TICKET = gql`
   mutation deleteTicket($id: ID!) {
     deleteTicket(input: { where: { id: $id } }) {

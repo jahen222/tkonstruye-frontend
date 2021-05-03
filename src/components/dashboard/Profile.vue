@@ -292,7 +292,7 @@ export default {
           type: "error",
           duration: 3000
         });
-      } else if (rut && (rut.length < 11 || rut.length > 12)) {
+      } else if (!this.checkRutModule11(rut) && rut) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un rut válido.",
@@ -532,6 +532,39 @@ export default {
       this.me.detail.rut = formatedRut
         .replace(/(\d{1,2})(\d{3})(\d{3})([\dKk]{1})/, "$1.$2.$3-$4")
         .substr(0, 12);
+    },
+    checkRutModule11(rut) {
+      // by-> https://gist.github.com/rotvulpix/69a24cc199a4253d058c
+      let valor = rut.replaceAll(".", "");
+      valor = valor.replace("-", "");
+      let cuerpo = valor.slice(0, -1);
+      let dv = valor.slice(-1).toUpperCase();
+      rut = cuerpo + "-" + dv;
+
+      if (cuerpo.length < 7 || cuerpo.length > 8) {
+        return false;
+      }
+      let suma = 0;
+      let multiplo = 2;
+
+      for (let i = 1; i <= cuerpo.length; i++) {
+        let index = multiplo * valor.charAt(cuerpo.length - i);
+        suma = suma + index;
+        if (multiplo < 7) {
+          multiplo = multiplo + 1;
+        } else {
+          multiplo = 2;
+        }
+      }
+      let dvEsperado = 11 - (suma % 11);
+      dv = dv == "K" ? 10 : dv;
+      dv = dv == 0 ? 11 : dv;
+
+      if (dvEsperado != dv) {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   computed: {
