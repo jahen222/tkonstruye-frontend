@@ -23,35 +23,45 @@
             </li>
           </ul>
           <ul
-            class="topbar-links mb-0 list-unstyled d-inline-flex"
+            class="topbar-info-list topbar-links-custom mb-0 list-unstyled d-inline-flex"
             v-if="getUsername"
           >
             <li>
-              <a href="#" title="">Bienvenido {{ getUsername }}</a>
+              <a href="#" title=""
+                ><i class="thm-clr thm-clr far fa-user"></i> Bienvenido,
+                {{ getUsername }}</a
+              >
             </li>
             <li>
-              <router-link to="/dashboard"> Dashboard </router-link>
+              <router-link to="/dashboard"
+                ><i class="thm-clr fas fa-tachometer-alt"></i> Dashboard
+              </router-link>
             </li>
             <li>
               <a href="#" data-toggle="modal" title="" v-on:click="handleLogout"
-                >Salir</a
+                ><i class="thm-clr fas fa-sign-out-alt"></i>
+
+                Salir</a
               >
             </li>
           </ul>
-          <ul class="topbar-links mb-0 list-unstyled d-inline-flex" v-else>
+          <ul
+            class="topbar-info-list topbar-links-custom mb-0 list-unstyled d-inline-flex"
+            v-else
+          >
             <li>
               <a href="#loginModal" data-toggle="modal" title=""
-                >Iniciar Sesión</a
+                ><i class="thm-clr far fa-user"></i> Iniciar Sesión</a
               >
             </li>
             <li>
               <a href="#signUpRegularModal" data-toggle="modal" title=""
-                >Registrarse</a
+                ><i class="thm-clr far fa-edit"></i> Registrarse</a
               >
             </li>
             <li>
               <a href="#signUpProfessionalModal" data-toggle="modal" title=""
-                >Hazte Profesional</a
+                ><i class="thm-clr fas fa-briefcase"></i> Hazte Profesional</a
               >
             </li>
           </ul>
@@ -206,7 +216,9 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Iniciar Sesión</h4>
+            <h4 class="modal-title">
+              <i class="fas fa-user"></i> Iniciar Sesión
+            </h4>
             <button
               type="button"
               class="close"
@@ -223,7 +235,7 @@
                 <div class="row">
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Correo</label>
+                      <label><i class="fas fa-envelope"></i> Correo</label>
                       <input
                         type="email"
                         v-model="email"
@@ -236,7 +248,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Contraseña</label>
+                      <label><i class="fas fa-lock"></i> Contraseña</label>
                       <input
                         type="password"
                         v-model="password"
@@ -295,7 +307,7 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Registrarse</h4>
+            <h4 class="modal-title"><i class="far fa-edit"></i> Registrarse</h4>
             <button
               type="button"
               class="close"
@@ -312,7 +324,7 @@
                 <div class="row">
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Nombre de Usuario</label>
+                      <label><i class="fas fa-user"></i> Nombre de Usuario</label>
                       <input
                         type="text"
                         v-model="username"
@@ -324,7 +336,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Correo</label>
+                      <label><i class="fas fa-envelope"></i> Correo</label>
                       <input
                         type="email"
                         v-model="email"
@@ -338,10 +350,10 @@
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
                       <div class="row">
-                        <div class="col-md-3 col-sm-3 col-lg-3">
-                          <label>Teléfono:</label>
+                        <div class="col-md-4 col-sm-4 col-lg-4">
+                          <label><i class="fas fa-phone"></i> Teléfono:</label>
                         </div>
-                        <div class="col-md-9 col-sm-9 col-lg-9">
+                        <div class="col-md-8 col-sm-8 col-lg-8">
                           <label>+56</label>
                         </div>
                       </div>
@@ -358,7 +370,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Contraseña</label>
+                      <label><i class="fas fa-lock"></i> Contraseña</label>
                       <input
                         type="password"
                         v-model="password"
@@ -371,7 +383,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Confirmar Contraseña</label>
+                      <label><i class="fas fa-lock"></i> Confirmar Contraseña</label>
                       <input
                         type="password"
                         v-model="passwordConfirm"
@@ -427,7 +439,9 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Hazte Profesional</h4>
+            <h4 class="modal-title">
+              <i class="fas fa-briefcase"></i> Hazte Profesional
+            </h4>
             <button
               type="button"
               class="close"
@@ -447,7 +461,7 @@
                 <div class="row">
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Nombre de Usuario</label>
+                      <label><i class="fas fa-user"></i> Nombre de Usuario</label>
                       <input
                         type="text"
                         v-model="username"
@@ -459,7 +473,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Correo</label>
+                      <label><i class="fas fa-envelope"></i> Correo</label>
                       <input
                         type="email"
                         v-model="email"
@@ -473,10 +487,10 @@
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
                       <div class="row">
-                        <div class="col-md-3 col-sm-3 col-lg-3">
-                          <label>Teléfono:</label>
+                        <div class="col-md-4 col-sm-4 col-lg-4">
+                          <label><i class="fas fa-phone"></i> Teléfono:</label>
                         </div>
-                        <div class="col-md-9 col-sm-9 col-lg-9">
+                        <div class="col-md-8 col-sm-8 col-lg-8">
                           <label>+56</label>
                         </div>
                       </div>
@@ -493,7 +507,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Contraseña</label>
+                      <label><i class="fas fa-lock"></i> Contraseña</label>
                       <input
                         type="password"
                         v-model="password"
@@ -506,7 +520,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label>Confirmar Contraseña</label>
+                      <label><i class="fas fa-lock"></i> Confirmar Contraseña</label>
                       <input
                         type="password"
                         v-model="passwordConfirm"

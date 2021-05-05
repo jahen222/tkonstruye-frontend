@@ -148,3 +148,18 @@ export const TICKETS_DELETE_TICKET = gql`
     }
   }
 `;
+
+export const CATEGORIES_UPDATE_USER_SUBCATEGORIES = gql`
+  mutation updateUser($id: ID!, $subCategories: [ID]) {
+    updateUser(
+      input: { where: { id: $id }, data: { subcategories: $subCategories} }
+    ) {
+      user {
+        id
+        subcategories {
+          id
+        }
+      }
+    }
+  }
+`;

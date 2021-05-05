@@ -9,7 +9,7 @@
     <section>
       <div class="w-100 pt-50 opc7 position-relative">
         <div class="container">
-          <div class="page-top-wrap w-100" v-if="generalOption == 'profile'">
+          <div class="page-top-wrap w-100" v-if="generalOption === 'profile'">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
                 <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
@@ -17,12 +17,20 @@
               <li class="breadcrumb-item active">Perfil</li>
             </ol>
           </div>
-          <div class="page-top-wrap w-100" v-else-if="generalOption == 'tickets'">
+          <div class="page-top-wrap w-100" v-else-if="generalOption === 'tickets'">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
                 <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
               </li>
               <li class="breadcrumb-item active">Tickets</li>
+            </ol>
+          </div>
+          <div class="page-top-wrap w-100" v-else-if="generalOption === 'categories'">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
+              </li>
+              <li class="breadcrumb-item active">Categorías</li>
             </ol>
           </div>
           <div class="page-top-wrap w-100" v-else>
@@ -51,6 +59,9 @@
                 <div v-else-if="generalOption == 'tickets'">
                   <Tickets />
                 </div>
+                <div v-else-if="generalOption == 'categories'">
+                  <Categories />
+                </div>
                 <div v-else>
                   <Index />
                 </div>
@@ -74,6 +85,7 @@ import StickyMenu from "../components/layouts/StickyMenu";
 import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
 import Sidebar from '../components/dashboard/Sidebar.vue';
 import Profile from "../components/dashboard/Profile";
+import Categories from "../components/dashboard/Categories";
 import Tickets from "../components/dashboard/Tickets";
 import Index from "../components/dashboard/Index";
 import Footer from "../components/layouts/Footer";
@@ -86,6 +98,7 @@ export default {
     StickyMenu,
     ResponsiveHeader,
     Profile,
+    Categories,
     Tickets,
     Index,
     Footer,

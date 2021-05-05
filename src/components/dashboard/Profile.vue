@@ -1,6 +1,6 @@
 <template>
   <div id="dashboardProfile" class="post-detail wizard-form w-100">
-    <h3 class="mb-0">Datos de Usuario</h3>
+    <h3 class="mb-0"><i class="fas fa-user"></i> Datos de Usuario</h3>
     <form class="w-100 pb-50" @submit="handleProfileUpdateUserData">
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">

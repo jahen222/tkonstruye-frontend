@@ -1384,6 +1384,20 @@ nav > div > ul > li {
   top: 0;
   bottom: 0;
 }
+.topbar-links-custom > li {
+  position: relative;
+}
+.topbar-links-custom > li:not(:first-child) {
+  margin-left: 1rem;
+  padding-left: 1.0625rem;
+}
+.topbar-links-custom > li:not(:first-child):before {
+  content: "I";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
 .logo-info-bar-inner {padding: 1.5625rem 0 3.4375rem;}
 .logo {display: inline-block;}
 .logo + .social-links, 

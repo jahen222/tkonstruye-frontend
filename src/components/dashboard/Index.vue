@@ -1,7 +1,8 @@
 <template>
   <div id="dashboardIndex" class="post-detail w-100">
+    <h3 class="mb-0"><i class="fas fa-tachometer-alt"></i> Dashboard</h3>
     <img
-      class="img-fluid w-100"
+      class="img-fluid w-100 pt-50"
       src="../../assets/blubuild/images/resources/blog-detail-img.jpg"
       alt="Blog Detail Image"
     />

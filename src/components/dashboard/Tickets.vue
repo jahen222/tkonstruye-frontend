@@ -1,53 +1,62 @@
 <template>
-  <section id="dashboardTickets">
-    <div class="w-100 pb-100 position-relative">
+  <section id="dashboardTickets" class="post-detail wizard-form w-100">
+    <h3 class="mb-0"><i class="fas fa-briefcase"></i> Tickets</h3>
+    <div class="w-100 pb-50 pt-40 position-relative">
       <div class="container">
         <div class="cart-table w-100">
           <form class="cart-form">
-            <table class="product-table">
-              <thead>
-                <tr>
-                  <th>Categoría</th>
-                  <th>Tipo de Trabajo</th>
-                  <th>Comuna</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody v-if="tickets ? tickets.length > 0 : false">
-                <tr v-for="(ticket, index) in tickets" v-bind:key="index">
-                  <td class="product-model">
-                    {{ ticket.subcategory.category.name }}
-                  </td>
-                  <td class="product-model">{{ ticket.subcategory.name }}</td>
-                  <td class="product-model">{{ ticket.commune.name }}</td>
-                  <td class="product-btns">
-                    <div class="product-cart-btns">
+            <div class="table-responsive">
+              <table class="table table-borderless table-hover">
+                <thead class="thead">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">COMUNA</th>
+                    <th scope="col">TIPO DE TRABAJO</th>
+                    <th scope="col">ESTADO</th>
+                    <th scope="col">OPCIONES</th>
+                  </tr>
+                </thead>
+                <tbody v-if="tickets ? tickets.length > 0 : false">
+                  <tr v-for="(ticket, index) in tickets" v-bind:key="index">
+                    <th scope="row" @click="handleShowTicketModal(ticket)">
+                      {{ ticket.id }}
+                    </th>
+                    <td @click="handleShowTicketModal(ticket)">
+                      {{ ticket.commune.name }}
+                    </td>
+                    <td @click="handleShowTicketModal(ticket)">
+                      {{ ticket.subcategory.category.name }}
+                      <i class="flaticon-arrow-pointing-to-right"></i>
+                      {{ ticket.subcategory.name }}
+                    </td>
+                    <td @click="handleShowTicketModal(ticket)">Publicado</td>
+                    <td>
                       <a
-                        class="view"
+                        class="view iconTable"
                         title=""
                         @click="handleShowTicketModal(ticket)"
                         data-toggle="modal"
                         ><i class="fas fa-eye"></i
                       ></a>
                       <a
-                        class="edit"
+                        class="edit iconTable"
                         title=""
                         @click="handleEditTicketModal(ticket)"
                         data-toggle="modal"
                         ><i class="fas fa-pencil-alt"></i
                       ></a>
                       <a
-                        class="remove"
+                        class="remove iconTable"
                         @click="handleDeleteTicketModal(ticket)"
                         data-toggle="modal"
                         title=""
                         ><i class="far fa-trash-alt"></i
                       ></a>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <!-- Product Table -->
           </form>
           <!-- Cart Form -->
@@ -65,7 +74,9 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Mostrar Ticket</h5>
+            <h5 class="modal-title" id="exampleModalLabel">
+              <i class="fas fa-eye"></i> Ticket
+            </h5>
             <button
               type="button"
               class="close"
@@ -80,51 +91,67 @@
             <div id="dashboardProfile" class="post-detail wizard-form w-100">
               <form class="w-100 pb-50 pb-custom" @submit="handleShowTicket">
                 <div class="row">
-                  <div class="col-md-12 col-sm-12 col-lg-12">
-                    <div class="field-wrap w-100">
-                      <label>¿Donde necesitas el trabajo?</label>
-                      <p>{{ selectTicket ? selectTicket.commune.name : "" }}</p>
-                    </div>
-                  </div>
-                  <div class="col-md-12 col-sm-12 col-lg-12">
-                    <div class="field-wrap w-100">
-                      <label>¿Qué tipo de trabajo necesitas?</label>
-                      <p>
-                        {{
-                          selectTicket
-                            ? selectTicket.subcategory.category.name
-                            : ""
-                        }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="col-md-12 col-sm-12 col-lg-12">
-                    <div class="field-wrap w-100">
-                      <label>Tipo de trabajo</label>
-                      <p>
-                        {{ selectTicket ? selectTicket.subcategory.name : "" }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="col-md-12 col-sm-12 col-lg-12">
-                    <div class="field-wrap w-100">
-                      <label>Requerimientos</label>
-                      <p
-                        v-for="(requirement, index) in selectTicket
-                          ? selectTicket.requirements
-                          : []"
-                        v-bind:key="index"
-                      >
-                        {{
-                          Object.keys(selectTicket.requirements)[
-                            Object.values(selectTicket.requirements).indexOf(
-                              requirement
-                            )
-                          ]
-                        }}
-                        : {{ requirement }}
-                      </p>
-                    </div>
+                  <div class="table-responsive">
+                    <table class="table table-borderless">
+                      <thead>
+                        <tr>
+                          <th scope="col">Número:</th>
+                          <th scope="col">
+                            #{{ selectTicket ? selectTicket.id : "" }}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">¿Donde necesitas el trabajo?</th>
+                          <td>
+                            <p>
+                              {{
+                                selectTicket ? selectTicket.commune.name : ""
+                              }}
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">¿Qué tipo de trabajo necesitas?</th>
+                          <td>
+                            <p>
+                              {{
+                                selectTicket
+                                  ? selectTicket.subcategory.category.name
+                                  : ""
+                              }}
+                              <i class="flaticon-arrow-pointing-to-right"></i>
+                              {{
+                                selectTicket
+                                  ? selectTicket.subcategory.name
+                                  : ""
+                              }}
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Requerimientos</th>
+                          <td>
+                            <p
+                              v-for="(requirement, index) in selectTicket
+                                ? selectTicket.requirements
+                                : []"
+                              v-bind:key="index"
+                            >
+                              {{
+                                Object.keys(selectTicket.requirements)[
+                                  Object.values(
+                                    selectTicket.requirements
+                                  ).indexOf(requirement)
+                                ]
+                              }}
+                              : {{ requirement }}
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">Cerrar</button>
@@ -146,7 +173,9 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">¿Qué necesitas?</h5>
+            <h5 class="modal-title" id="exampleModalLabel">
+              <i class="fas fa-pencil-alt"></i> Editar Ticket
+            </h5>
             <button
               type="button"
               class="close"
@@ -230,6 +259,9 @@
                             v-bind:key="index"
                             :value="subCategory.id"
                             :hidden="subCategory.id === subCategorySelected.id"
+                            :disabled="
+                              subCategory.id === subCategorySelected.id
+                            "
                           >
                             {{ subCategory.name }}
                           </option>
@@ -315,9 +347,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">
-                      Pedir Presupuesto<i
-                        class="flaticon-arrow-pointing-to-right"
-                      ></i>
+                      Actualizar
                     </button>
                   </div>
                 </div>
@@ -336,7 +366,9 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Eliminar Ticket</h4>
+            <h4 class="modal-title">
+              <i class="far fa-trash-alt"></i> Eliminar Ticket
+            </h4>
             <button
               type="button"
               class="close"
@@ -368,9 +400,7 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">
-                      Si, confirmar<i
-                        class="flaticon-arrow-pointing-to-right"
-                      ></i>
+                      Si, confirmar
                     </button>
                   </div>
                 </div>
@@ -644,5 +674,23 @@ export default {
 }
 .zIndex {
   z-index: 10000;
+}
+.table {
+  font-size: small;
+}
+.iconTable {
+  padding-left: 10px;
+}
+.iconTable:hover {
+  color: #ff5e15;
+}
+.thead {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #777;
+}
+.table-hover tbody tr:hover {
+  background-color: #f8f8f9;
 }
 </style>

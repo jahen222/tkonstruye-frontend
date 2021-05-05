@@ -1,8 +1,7 @@
 <template>
   <aside id="dashboardSidebar" class="sidebar-wrap widget2 brd-rd5 w-100">
     <nav
-      class="navbar flex-column navbar-expand-md navbar-light bg-light 
-      text-justify w-100 d-none d-md-block d-lg-block d-xl-block"
+      class="navbar flex-column navbar-expand-md navbar-light bg-light text-justify w-100 d-none d-md-block d-lg-block d-xl-block"
     >
       <button
         type="button"
@@ -34,14 +33,33 @@
             ><p class="mb-0">“{{ me.detail.slogan }}”</p></a
           >
           <hr />
-          <a class="nav-link customNavLink" href="#" @click="handleGeneralOption('dashboard')"
-            >Dashboard</a
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('dashboard')"
           >
-          <a class="nav-link customNavLink" href="#" @click="handleGeneralOption('profile')"
-            >Perfil</a
+            <i class="fas fa-tachometer-alt"></i> Dashboard</a
           >
-          <a class="nav-link customNavLink" href="#" @click="handleGeneralOption('tickets')"
-            >Tickets</a
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('categories')"
+            v-if="me.detail.role.name === 'Professional'"
+            ><i class="fas fa-stream"></i> Categorías</a
+          >
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('tickets')"
+            v-if="me.detail.role.name === 'Authenticated'"
+            ><i class="fas fa-briefcase"></i> Tickets</a
+          >
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('profile')"
+          >
+            <i class="fas fa-user"></i> Perfil</a
           >
         </nav>
       </div>
@@ -94,7 +112,10 @@ export default {
         detail: {
           username: "",
           slogan: "",
-          photo: ""
+          photo: "",
+          role: {
+            name: ""
+          }
         }
       }
     };
@@ -115,10 +136,10 @@ export default {
 </style>
 
 <style scoped>
-.customNavLink:hover{
+.customNavLink:hover {
   color: #ff5e15;
 }
-.nav{
+.nav {
   padding-left: 0;
 }
 .paddingLeft {

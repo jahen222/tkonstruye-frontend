@@ -9,6 +9,9 @@ export const SIDEBAR_GET_ME = gql`
         photo {
           url
         }
+        role {
+          name
+        }
       }
     }
   }
@@ -94,7 +97,7 @@ export const TICKETS_GET_CATEGORIES = gql`
 
 export const TICKETS_GET_SUBCATEGORIES = gql`
   query subCategories($category: ID!) {
-    subcategories(where: { category: $category}) {
+    subcategories(where: { category: $category }) {
       id
       name
     }
@@ -130,6 +133,31 @@ export const TICKETS_GET_COMMUNES = gql`
           country {
             name
           }
+        }
+      }
+    }
+  }
+`;
+
+export const CATEGORIES_GET_CATEGORIES = gql`
+  query categories {
+    categories {
+      id
+      name
+      subcategories {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const CATEGORIES_GET_ME = gql`
+  query me {
+    me {
+      detail {
+        subcategories {
+          id
         }
       }
     }
