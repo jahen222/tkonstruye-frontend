@@ -158,6 +158,27 @@
                     </div>
                   </div>
                 </div>
+                <div
+                  class="col-md-12 col-sm-12 col-lg-12"
+                  v-if="getWizardFields ? getWizardFields.length > 0 : false"
+                >
+                  <div class="field-wrap w-100">
+                    <label>
+                      <i class="fas fa-question-circle"></i>
+                      Descripción del trabajo</label
+                    >
+                    <div
+                      class="input-group"
+                    >
+                      <textarea
+                        maxlength=500
+                        :required="true"
+                        v-model="description"
+                        placeholder="Ingresa aquí tu respuesta."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                   <button class="thm-btn thm-bg" type="submit">
                     Pedir Presupuesto<i
@@ -194,7 +215,8 @@ export default {
       subCategory: "",
       communes: [],
       commune: "",
-      secondQuestion: false
+      secondQuestion: false,
+      description: ""
     };
   },
   apollo: {
@@ -234,7 +256,8 @@ export default {
               commune: this.getCommunes
                 .filter(commune => commune.name === this.commune)
                 .shift().id,
-              requirements: requirements
+              requirements: requirements,
+              description: this.description
             }
           })
           .then(() => {
@@ -243,6 +266,7 @@ export default {
             this.subCategory = ""; 
             this.commune = "";
             this.secondQuestion = false;
+            this.description = "";
             this.$toast.open({
               message: "Ticket creado exitosamente.",
               type: "success",

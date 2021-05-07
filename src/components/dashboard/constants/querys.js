@@ -82,6 +82,7 @@ export const TICKETS_GET_TICKETS = gql`
         name
       }
       requirements
+      description
     }
   }
 `;

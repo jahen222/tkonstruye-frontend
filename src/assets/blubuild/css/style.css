@@ -2956,7 +2956,7 @@ blockquote > p::after {
   padding: 0 1.25rem 7px 0;
 }
 .comment {
-  background-color: #f3f3f5;
+  background-color: #f8f8f9;
   position: relative;
   margin-top: 3.125rem;
   display: flex;
@@ -2995,7 +2995,7 @@ blockquote > p::after {
 .comment-reply-link > i {margin-right: 5px;}
 .comment-detail > a + span {margin-left: 1.25rem;}
 .comment-reply-link {font-size: 13px;}
-.comment:before {
+/* .comment:before {
   content: "";
   position: absolute;
   left: 0;
@@ -3006,7 +3006,7 @@ blockquote > p::after {
   -webkit-clip-path: polygon(0 0, 100% 55%, 100% 100%, 0% 100%);
   clip-path: polygon(0 0, 100% 55%, 100% 100%, 0% 100%);
   z-index: -1;
-}
+} */
 .comments-thread ul.children {padding-left: 6.875rem;}
 
 /*=== Reply Form ===*/

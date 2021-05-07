@@ -22,7 +22,7 @@
     </div>
     <div class="lg-mn">
       <div class="logo">
-        <a href="index.html" title="Home"><img :src="getLogo" alt="Logo" /></a>
+        <a href="/" title="Home"><img :src="getLogo" alt="Logo" /></a>
       </div>
       <div class="rspn-cnt">
         <span

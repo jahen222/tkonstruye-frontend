@@ -43,6 +43,13 @@
           <a
             class="nav-link customNavLink"
             href="#"
+            @click="handleGeneralOption('profile')"
+          >
+            <i class="fas fa-user"></i> Mi Perfil</a
+          >
+          <a
+            class="nav-link customNavLink"
+            href="#"
             @click="handleGeneralOption('categories')"
             v-if="me.detail.role.name === 'Professional'"
             ><i class="fas fa-stream"></i> Categorías</a
@@ -51,16 +58,9 @@
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('tickets')"
-            v-if="me.detail.role.name === 'Authenticated'"
             ><i class="fas fa-briefcase"></i> Tickets</a
           >
-          <a
-            class="nav-link customNavLink"
-            href="#"
-            @click="handleGeneralOption('profile')"
-          >
-            <i class="fas fa-user"></i> Perfil</a
-          >
+         
         </nav>
       </div>
     </nav>

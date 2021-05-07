@@ -105,6 +105,7 @@ export const TICKETS_UPDATE_TICKET = gql`
     $usersPermissionsUser: ID!
     $commune: ID!
     $requirements: JSON
+    $description: String
   ) {
     updateTicket(
       input: {
@@ -116,6 +117,7 @@ export const TICKETS_UPDATE_TICKET = gql`
           users_permissions_user: $usersPermissionsUser
           commune: $commune
           requirements: $requirements
+          description: $description
         }
       }
     ) {
@@ -134,6 +136,7 @@ export const TICKETS_UPDATE_TICKET = gql`
           name
         }
         requirements
+        description
       }
     }
   }

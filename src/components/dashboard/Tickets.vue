@@ -150,6 +150,14 @@
                             </p>
                           </td>
                         </tr>
+                        <tr>
+                          <th scope="row">Descripción</th>
+                          <td>
+                            <p>
+                              {{ selectTicket ? selectTicket.description : "" }}
+                            </p>
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -345,6 +353,25 @@
                       </div>
                     </div>
                   </div>
+                  <div
+                    class="col-md-12 col-sm-12 col-lg-12"
+                    v-if="getWizardFields ? getWizardFields.length > 0 : false"
+                  >
+                    <div class="field-wrap w-100">
+                      <label>
+                        <i class="fas fa-question-circle"></i>
+                        Descripción del trabajo</label
+                      >
+                      <div class="input-group">
+                        <textarea
+                          maxlength="500"
+                          :required="true"
+                          v-model="description"
+                          placeholder="Ingresa aquí tu respuesta."
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">
                       Actualizar
@@ -441,7 +468,8 @@ export default {
       communes: [],
       commune: "",
       secondQuestion: false,
-      subCategorySelected: ""
+      subCategorySelected: "",
+      description: ""
     };
   },
   apollo: {
@@ -472,6 +500,7 @@ export default {
       this.category = this.selectTicket.subcategory.category.name;
       this.subCategory = this.selectTicket.subcategory.id;
       this.subCategorySelected = this.selectTicket.subcategory;
+      this.description = this.selectTicket.description;
       $("#editTicketModal").modal("show");
     },
     handleDeleteTicketModal(ticket) {
@@ -518,7 +547,8 @@ export default {
               commune: this.getCommunes
                 .filter(commune => commune.name === this.commune)
                 .shift().id,
-              requirements: requirements
+              requirements: requirements,
+              description: this.description
             }
           })
           .then(() => {
@@ -530,6 +560,7 @@ export default {
             this.commune = "";
             this.subCategorySelected = "";
             this.secondQuestion = false;
+            this.description = "";
 
             this.$toast.open({
               message: "Ticket actualizado exitosamente.",

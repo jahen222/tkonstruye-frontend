@@ -34,7 +34,7 @@
             </li>
             <li>
               <router-link to="/dashboard"
-                ><i class="thm-clr fas fa-tachometer-alt"></i> Dashboard
+                ><i class="thm-clr fas fa-cog"></i>Ajustes
               </router-link>
             </li>
             <li>
@@ -134,66 +134,33 @@
         >
           <div class="header-left">
             <ul class="mb-0 list-unstyled d-inline-flex">
+              <li><a href="/" title="">Home</a></li>
               <li class="menu-item-has-children">
-                <a href="javascript:void(0);" title="">Home</a>
+                <a href="#" title="">Buscar Trabajo</a>
                 <ul class="mb-0 list-unstyled">
-                  <li><a href="index.html" title="">Homepage 1</a></li>
-                  <li><a href="index2.html" title="">Homepage 2</a></li>
-                  <li><a href="index3.html" title="">Homepage 3</a></li>
-                </ul>
-              </li>
-              <li><a href="about.html" title="">About Us</a></li>
-              <li class="menu-item-has-children">
-                <a href="javascript:void(0);" title="">Projects</a>
-                <ul class="mb-0 list-unstyled">
-                  <li><a href="projects.html" title="">Projects</a></li>
                   <li>
-                    <a href="project-detail.html" title="">Project Detail</a>
+                    <a
+                      href="#"
+                      title=""
+                      data-toggle="modal"
+                      data-target="#wizardModal"
+                      >Pedir Presupuesto</a
+                    >
+                  </li>
+                  <li v-if="getUsername">
+                    <a href="/find-work" title="">Buscar Trabajo</a>
+                  </li>
+                  <li v-else>
+                    <a href="#loginModal" data-toggle="modal" title=""
+                      >Buscar Trabajo</a
+                    >
                   </li>
                 </ul>
               </li>
-              <li class="menu-item-has-children">
-                <a href="javascript:void(0);" title="">Pages</a>
-                <ul class="mb-0 list-unstyled">
-                  <li class="menu-item-has-children">
-                    <a href="javascript:void(0);" title="">Services</a>
-                    <ul class="mb-0 list-unstyled">
-                      <li><a href="services.html" title="">Services</a></li>
-                      <li>
-                        <a href="services-detail.html" title=""
-                          >Service Detail</a
-                        >
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a href="team.html" title="">Team</a></li>
-                  <li>
-                    <a href="testimonials.html" title="">Testimonials</a>
-                  </li>
-                  <li><a href="faq.html" title="">FAQ's</a></li>
-                </ul>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="javascript:void(0);" title="">Blog</a>
-                <ul class="mb-0 list-unstyled">
-                  <li><a href="blog.html" title="">Blog</a></li>
-                  <li>
-                    <a href="blog-detail.html" title="">Blog Detail</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="javascript:void(0);" title="">Shop</a>
-                <ul class="mb-0 list-unstyled">
-                  <li><a href="shop.html" title="">Shop</a></li>
-                  <li>
-                    <a href="shop-detail.html" title="">Shop Detail</a>
-                  </li>
-                  <li><a href="cart.html" title="">Cart</a></li>
-                  <li><a href="checkout.html" title="">Checkout</a></li>
-                </ul>
-              </li>
-              <li><a href="contact.html" title="">Contact Us</a></li>
+              <li><a href="blog.html" title="">Blog</a></li>
+              <li><a href="planes.html" title="">Planes</a></li>
+              <li><a href="about.html" title="">Nosotros</a></li>
+              <li><a href="contact.html" title="">Contacto</a></li>
             </ul>
           </div>
           <div class="header-right-btns">
@@ -324,7 +291,9 @@
                 <div class="row">
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label><i class="fas fa-user"></i> Nombre de Usuario</label>
+                      <label
+                        ><i class="fas fa-user"></i> Nombre de Usuario</label
+                      >
                       <input
                         type="text"
                         v-model="username"
@@ -383,7 +352,9 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label><i class="fas fa-lock"></i> Confirmar Contraseña</label>
+                      <label
+                        ><i class="fas fa-lock"></i> Confirmar Contraseña</label
+                      >
                       <input
                         type="password"
                         v-model="passwordConfirm"
@@ -461,7 +432,9 @@
                 <div class="row">
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label><i class="fas fa-user"></i> Nombre de Usuario</label>
+                      <label
+                        ><i class="fas fa-user"></i> Nombre de Usuario</label
+                      >
                       <input
                         type="text"
                         v-model="username"
@@ -520,7 +493,9 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
-                      <label><i class="fas fa-lock"></i> Confirmar Contraseña</label>
+                      <label
+                        ><i class="fas fa-lock"></i> Confirmar Contraseña</label
+                      >
                       <input
                         type="password"
                         v-model="passwordConfirm"

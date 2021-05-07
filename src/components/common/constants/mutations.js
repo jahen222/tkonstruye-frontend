@@ -6,6 +6,7 @@ export const WIZARD_CREATE_TICKET = gql`
     $usersPermissionsUser: ID!
     $commune: ID!
     $requirements: JSON
+    $description: String
   ) {
     createTicket(
       input: {
@@ -14,6 +15,7 @@ export const WIZARD_CREATE_TICKET = gql`
           users_permissions_user: $usersPermissionsUser
           commune: $commune
           requirements: $requirements
+          description: $description
         }
       }
     ) {
@@ -32,6 +34,7 @@ export const WIZARD_CREATE_TICKET = gql`
           name
         }
         requirements
+        description
       }
     }
   }
