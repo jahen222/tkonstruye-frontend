@@ -138,7 +138,7 @@
               <li class="menu-item-has-children">
                 <a href="#" title="">Buscar Trabajo</a>
                 <ul class="mb-0 list-unstyled">
-                  <li>
+                  <li v-if="getUsername">
                     <a
                       href="#"
                       title=""
@@ -147,11 +147,16 @@
                       >Pedir Presupuesto</a
                     >
                   </li>
+                  <li v-else>
+                    <a href="#welcomeModal" data-toggle="modal" title=""
+                      >Pedir Presupuesto</a
+                    >
+                  </li>
                   <li v-if="getUsername">
                     <a href="/find-work" title="">Buscar Trabajo</a>
                   </li>
                   <li v-else>
-                    <a href="#loginModal" data-toggle="modal" title=""
+                    <a href="#welcomeModal" data-toggle="modal" title=""
                       >Buscar Trabajo</a
                     >
                   </li>
@@ -165,17 +170,94 @@
           </div>
           <div class="header-right-btns">
             <a
+              v-if="getUsername"
               class="get-quote"
               href="javascript:void(0);"
               title=""
               data-toggle="modal"
               data-target="#wizardModal"
-              ><i class="far fa-comments"></i>Pide Presupuesto<i
+              ><i class="far fa-comments"></i>Pedir Presupuesto<i
+                class="flaticon-arrow-pointing-to-right"
+              ></i
+            ></a>
+            <a
+              v-else
+              href="#welcomeModal"
+              data-toggle="modal"
+              class="get-quote"
+              title=""
+              ><i class="far fa-comments"></i>Pedir Presupuesto<i
                 class="flaticon-arrow-pointing-to-right"
               ></i
             ></a>
           </div>
         </nav>
+      </div>
+    </div>
+    <!-- Welcome Modal -->
+    <div id="welcomeModal" ref="welcomeModal" class="modal fade">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"><i class="fas fa-user"></i> Bienvenido</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+              @click="handleCloseModal"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="post-detail wizard-form w-100">
+              <div class="row">
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <div class="field-wrap w-100 center">
+                    <img
+                      src="../../assets/tkonstruye/modals/chusa-un-solo-paso.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 right">
+                  <div class="field-wrap w-100">
+                    <a
+                      class="link"
+                      href="#"
+                      @click="handleChangeModal('signUpRegularModal')"
+                    >
+                      <i class="far fa-edit"></i> Registrarse
+                    </a>
+                    <br />
+                    <a
+                      class="link"
+                      href="#"
+                      @click="handleChangeModal('signUpProfessionalModal')"
+                    >
+                      <i class="fas fa-briefcase"></i> Hazte Profesional
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12 center" v-if="error">
+                  <div class="field-wrap w-100 error-message">
+                    <label class="error-label">{{ error }}</label>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                  <button
+                    class="thm-btn thm-bg"
+                    @click="handleChangeModal('loginModal')"
+                  >
+                    Login<i class="flaticon-arrow-pointing-to-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Login Modal -->
@@ -233,7 +315,7 @@
                         href="#"
                         @click="handleChangeModal('signUpRegularModal')"
                       >
-                        Registrarse
+                        <i class="far fa-edit"></i> Registrarse
                       </a>
                       <br />
                       <a
@@ -241,11 +323,12 @@
                         href="#"
                         @click="handleChangeModal('signUpProfessionalModal')"
                       >
-                        Hazte Profesional
+                        <i class="fas fa-briefcase"></i> Hazte Profesional
                       </a>
                       <br />
                       <a class="link" href="#">
-                        ¿Has olvidado la contraseña?
+                        <i class="fas fa-unlock"></i> ¿Has olvidado la
+                        contraseña?
                       </a>
                     </div>
                   </div>
@@ -368,14 +451,14 @@
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
                     <div class="field-wrap w-100">
                       <a class="link" @click="handleChangeModal('loginModal')">
-                        Iniciar Sesión
+                        <i class="fas fa-user"></i> Iniciar Sesión
                       </a>
                       <br />
                       <a
                         class="link"
                         @click="handleChangeModal('signUpProfessionalModal')"
                       >
-                        Hazte Profesional
+                        <i class="fas fa-briefcase"></i> Hazte Profesional
                       </a>
                     </div>
                   </div>
@@ -509,14 +592,14 @@
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
                     <div class="field-wrap w-100">
                       <a class="link" @click="handleChangeModal('loginModal')">
-                        Iniciar Sesión
+                        <i class="fas fa-user"></i> Iniciar Sesión
                       </a>
                       <br />
                       <a
                         class="link"
                         @click="handleChangeModal('signUpRegularModal')"
                       >
-                        Registrarse
+                        <i class="far fa-edit"></i> Registrarse
                       </a>
                     </div>
                   </div>
@@ -771,14 +854,17 @@ export default {
         $("#loginModal").modal("show");
         $("#signUpRegularModal").modal("hide");
         $("#signUpProfessionalModal").modal("hide");
+        $("#welcomeModal").modal("hide");
       } else if (nameModal === "signUpRegularModal") {
         $("#loginModal").modal("hide");
         $("#signUpRegularModal").modal("show");
         $("#signUpProfessionalModal").modal("hide");
+        $("#welcomeModal").modal("hide");
       } else if (nameModal === "signUpProfessionalModal") {
         $("#loginModal").modal("hide");
         $("#signUpRegularModal").modal("hide");
         $("#signUpProfessionalModal").modal("show");
+        $("#welcomeModal").modal("hide");
       }
     },
     handleFormatPhone() {
