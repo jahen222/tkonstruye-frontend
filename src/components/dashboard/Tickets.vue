@@ -1,9 +1,16 @@
 <template>
   <section id="dashboardTickets" class="post-detail wizard-form w-100">
     <h3 class="mb-0"><i class="fas fa-briefcase"></i> Tickets</h3>
-    <div class="w-100 pb-50 pt-40 position-relative">
+    <div class="w-100 pb-50 position-relative">
       <div class="container">
         <div class="cart-table w-100">
+          <div class="post-detail wizard-form w-100 pb-10">
+            <div class="field-wrap w-100">
+              <div class="input-group">
+                <input type="text" placeholder="Buscar..." v-model="contains" />
+              </div>
+            </div>
+          </div>
           <form class="cart-form">
             <div class="table-responsive">
               <table class="table table-borderless table-hover">
@@ -26,10 +33,12 @@
                     </td>
                     <td @click="handleShowTicketModal(ticket)">
                       {{ ticket.subcategory.category.name }}
-                      <i class="flaticon-arrow-pointing-to-right"></i>
+                      <i class="fas fa-greater-than"></i>
                       {{ ticket.subcategory.name }}
                     </td>
-                    <td @click="handleShowTicketModal(ticket)">Publicado</td>
+                    <td @click="handleShowTicketModal(ticket)">
+                      {{ ticket.status }}
+                    </td>
                     <td>
                       <a
                         class="view iconTable"
@@ -92,7 +101,7 @@
               <form class="w-100 pb-50 pb-custom" @submit="handleShowTicket">
                 <div class="row">
                   <div class="table-responsive">
-                    <table class="table table-borderless">
+                    <table class="table">
                       <thead>
                         <tr>
                           <th scope="col">Número:</th>
@@ -103,7 +112,10 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <th scope="row">¿Donde necesitas el trabajo?</th>
+                          <th scope="row">
+                            <i class="fas fa-question-circle"></i> ¿Donde
+                            necesitas el trabajo?
+                          </th>
                           <td>
                             <p>
                               {{
@@ -113,7 +125,10 @@
                           </td>
                         </tr>
                         <tr>
-                          <th scope="row">¿Qué tipo de trabajo necesitas?</th>
+                          <th scope="row">
+                            <i class="fas fa-question-circle"></i> ¿Qué tipo de
+                            trabajo necesitas?
+                          </th>
                           <td>
                             <p>
                               {{
@@ -121,7 +136,7 @@
                                   ? selectTicket.subcategory.category.name
                                   : ""
                               }}
-                              <i class="flaticon-arrow-pointing-to-right"></i>
+                              <i class="fas fa-greater-than"></i>
                               {{
                                 selectTicket
                                   ? selectTicket.subcategory.name
@@ -131,9 +146,12 @@
                           </td>
                         </tr>
                         <tr>
-                          <th scope="row">Requerimientos</th>
+                          <th scope="row">
+                            <i class="fas fa-question-circle"></i>
+                            Requerimientos
+                          </th>
                           <td>
-                            <p
+                            <div
                               v-for="(requirement, index) in selectTicket
                                 ? selectTicket.requirements
                                 : []"
@@ -146,12 +164,17 @@
                                   ).indexOf(requirement)
                                 ]
                               }}
-                              : {{ requirement }}
-                            </p>
+                              :
+                              <p class="italic">
+                                {{ requirement }}
+                              </p>
+                            </div>
                           </td>
                         </tr>
                         <tr>
-                          <th scope="row">Descripción</th>
+                          <th scope="row">
+                            <i class="fas fa-question-circle"></i> Descripción
+                          </th>
                           <td>
                             <p>
                               {{ selectTicket ? selectTicket.description : "" }}
@@ -469,14 +492,18 @@ export default {
       commune: "",
       secondQuestion: false,
       subCategorySelected: "",
-      description: ""
+      description: "",
+      contains: ""
     };
   },
   apollo: {
     tickets: {
       query: TICKETS_GET_TICKETS,
-      variables: {
-        user: Cookies.get("user") ? JSON.parse(Cookies.get("user")).id : null
+      variables() {
+        return {
+          user: Cookies.get("user") ? JSON.parse(Cookies.get("user")).id : null,
+          contains: this.contains
+        };
       }
     },
     categories: {
@@ -723,5 +750,11 @@ export default {
 }
 .table-hover tbody tr:hover {
   background-color: #f8f8f9;
+}
+.table thead tr th {
+  border-top: none;
+}
+.italic {
+  font-style: italic;
 }
 </style>

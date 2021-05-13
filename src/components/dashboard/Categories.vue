@@ -3,7 +3,6 @@
     <h3 class="mb-0"><i class="fas fa-stream"></i> Categorías</h3>
     <div
       class="accordion w-100 pb-50 pt-40 position-relative"
-      id="accordionExample"
     >
       <div
         class="card"
@@ -29,7 +28,6 @@
           :id="'collapse' + index"
           class="collapse show"
           :aria-labelledby="'heading' + index"
-          data-parent="#accordionExample"
         >
           <div class="card-body">
             <form class="w-100">
@@ -111,7 +109,8 @@ export default {
           })
           .then(data => {
             this.checkSubCategories = [];
-            this.me.detail.subcategories = data.data.updateUser.user.subcategories;
+            this.me.detail.subcategories =
+              data.data.updateUser.user.subcategories;
 
             this.$toast.open({
               message: "Categorías actualizadas exitosamente.",
@@ -164,5 +163,17 @@ export default {
 .customCheckbox {
   width: auto !important;
   height: auto !important;
+  margin-top: 6px;
+}
+.card-body {
+  padding-left: 4%;
+}
+.wizard-form .field-wrap {
+  margin-top: 0px;
+}
+.wizard-form .field-wrap label {
+  margin-bottom: 0px;
+  font-size: 0.8rem;
+  font-weight: initial;
 }
 </style>

@@ -18,7 +18,16 @@ export const FIND_WORK_GET_TICKETS = gql`
     tickets(
       sort: "created_at:desc"
       limit: $limit
-      where: { description_contains: $contains }
+      where: {
+        _or: [
+          { description_contains: $contains }
+          { commune: { name_contains: $contains } }
+          { commune: { city: { name_contains: $contains } } }
+          { commune: { city: { region: { name_contains: $contains } } } }
+          { subcategory: { name_contains: $contains } }
+          { subcategory: { category: { name_contains: $contains } } }
+        ]
+      }
     ) {
       id
       subcategory {
@@ -35,6 +44,14 @@ export const FIND_WORK_GET_TICKETS = gql`
       commune {
         id
         name
+        city {
+          id
+          name
+          region {
+            id
+            name
+          }
+        }
       }
       requirements
       description
@@ -65,6 +82,14 @@ export const FIND_WORK_FILTER_SUBCATEGORIES = gql`
       commune {
         id
         name
+        city {
+          id
+          name
+          region {
+            id
+            name
+          }
+        }
       }
       requirements
       description

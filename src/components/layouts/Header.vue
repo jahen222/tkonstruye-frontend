@@ -113,7 +113,9 @@
               <strong v-else>555 666 999 00</strong>
             </div>
             <div class="add-cart" v-if="getUsername">
-              <a href="#" title="">
+              <router-link
+                :to="{ name: 'Dashboard', params: { option: 'profile' } }"
+              >
                 <img
                   class="thm-bg img-fluid rounded-circle photo"
                   :src="api_url + me.detail.photo.url"
@@ -121,7 +123,7 @@
                   v-if="me.detail.photo"
                 />
                 {{ getUsername }}
-              </a>
+              </router-link>
             </div>
           </div>
         </div>
@@ -136,7 +138,7 @@
             <ul class="mb-0 list-unstyled d-inline-flex">
               <li><a href="/" title="">Home</a></li>
               <li class="menu-item-has-children">
-                <a href="#" title="">Buscar Trabajo</a>
+                <a href="#" title="">Buscar Trabajos</a>
                 <ul class="mb-0 list-unstyled">
                   <li v-if="getUsername">
                     <a
@@ -153,11 +155,11 @@
                     >
                   </li>
                   <li v-if="getUsername">
-                    <a href="/find-work" title="">Buscar Trabajo</a>
+                    <a href="/find-work" title="">Buscar Trabajos</a>
                   </li>
                   <li v-else>
                     <a href="#welcomeModal" data-toggle="modal" title=""
-                      >Buscar Trabajo</a
+                      >Buscar Trabajos</a
                     >
                   </li>
                 </ul>
@@ -212,7 +214,7 @@
           </div>
           <div class="modal-body">
             <div class="post-detail wizard-form w-100">
-              <div class="row">
+              <div class="row pb-50 pb-custom">
                 <div class="col-md-12 col-sm-12 col-lg-12">
                   <div class="field-wrap w-100 center">
                     <img
@@ -251,7 +253,9 @@
                     class="thm-btn thm-bg"
                     @click="handleChangeModal('loginModal')"
                   >
-                    Login<i class="flaticon-arrow-pointing-to-right"></i>
+                    Iniciar Sesión<i
+                      class="flaticon-arrow-pointing-to-right"
+                    ></i>
                   </button>
                 </div>
               </div>
@@ -342,7 +346,9 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
                     <button class="thm-btn thm-bg" type="submit">
-                      Login<i class="flaticon-arrow-pointing-to-right"></i>
+                      Iniciar Sesión<i
+                        class="flaticon-arrow-pointing-to-right"
+                      ></i>
                     </button>
                   </div>
                 </div>
@@ -769,12 +775,13 @@ export default {
           .then(() => {
             this.handleLogin(e);
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
+          .catch(() => {
+            this.error = "Nombre de usuario o Correo no disponible.";
+            /* graphQLErrors.map(({ extensions }) =>
               extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
               )
-            );
+            ); */
           });
       }
     },
@@ -819,12 +826,13 @@ export default {
           .then(() => {
             this.handleLogin(e);
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
+          .catch(() => {
+            this.error = "Nombre de usuario o Correo no disponible.";
+            /* graphQLErrors.map(({ extensions }) =>
               extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
               )
-            );
+            ); */
           });
       }
     },

@@ -34,17 +34,16 @@
                           v-for="(category, index) in categories"
                           v-bind:key="index"
                         >
-                          <a
+                          <span
+                            class="linkSpam"
                             data-toggle="collapse"
-                            href="#"
-                            role="button"
                             :data-target="'#collapse' + index"
                             :aria-expanded="'false'"
                             :aria-controls="'collapse' + index"
                             title=""
                           >
                             {{ category.name }}
-                          </a>
+                          </span>
                           <br />
                           <div class="collapse" :id="'collapse' + index">
                             <div class="card card-body">
@@ -82,9 +81,15 @@
                             <div class="comment-detail">
                               <h4 class="mb-0">
                                 {{ ticket.subcategory.category.name }}
-                                <i class="flaticon-arrow-pointing-to-right"></i>
+                                <i class="fas fa-greater-than"></i>
                                 {{ ticket.subcategory.name }}
                               </h4>
+                              <span class="d-inline-block"
+                                ><i class="fas fa-map-marker-alt"></i>
+                                {{ ticket.commune.name }},
+                                {{ ticket.commune.city.name }},
+                                {{ ticket.commune.city.region.name }}
+                              </span>
                               <p class="mb-0">
                                 {{ ticket.description }}
                               </p>
@@ -243,5 +248,12 @@ export default {
 .linkSpam:hover {
   color: #ff5e15;
   cursor: pointer;
+}
+.card-body {
+  padding: 0.55rem;
+  padding-left: 10%;
+}
+.widget2.category_widget ul li {
+  text-align: left;
 }
 </style>

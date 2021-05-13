@@ -21,7 +21,7 @@
             <ul class="mb-0 list-unstyled d-inline-flex">
               <li><a href="/" title="">Home</a></li>
               <li class="menu-item-has-children">
-                <a href="#" title="">Buscar Trabajo</a>
+                <a href="#" title="">Buscar Trabajos</a>
                 <ul class="mb-0 list-unstyled">
                   <li>
                     <a
@@ -33,11 +33,11 @@
                     >
                   </li>
                   <li v-if="getUsername">
-                    <a href="/find-work" title="">Buscar Trabajo</a>
+                    <a href="/find-work" title="">Buscar Trabajos</a>
                   </li>
                   <li v-else>
                     <a href="#loginModal" data-toggle="modal" title=""
-                      >Buscar Trabajo</a
+                      >Buscar Trabajos</a
                     >
                   </li>
                 </ul>

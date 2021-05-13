@@ -167,11 +167,9 @@
                       <i class="fas fa-question-circle"></i>
                       Descripción del trabajo</label
                     >
-                    <div
-                      class="input-group"
-                    >
+                    <div class="input-group">
                       <textarea
-                        maxlength=500
+                        maxlength="500"
                         :required="true"
                         v-model="description"
                         placeholder="Ingresa aquí tu respuesta."
@@ -205,6 +203,7 @@ import {
   WIZARD_GET_COMMUNES
 } from "./constants/querys";
 import { WIZARD_CREATE_TICKET } from "./constants/mutations";
+import { TICKETS_GET_TICKETS } from "../dashboard/constants/querys";
 
 export default {
   name: "Wizard",
@@ -258,12 +257,22 @@ export default {
                 .shift().id,
               requirements: requirements,
               description: this.description
-            }
+            },
+            refetchQueries: [
+              {
+                query: TICKETS_GET_TICKETS,
+                variables: {
+                  user: Cookies.get("user")
+                    ? JSON.parse(Cookies.get("user")).id
+                    : null
+                }
+              }
+            ]
           })
           .then(() => {
             $("#wizardModal").modal("hide");
             this.category = "";
-            this.subCategory = ""; 
+            this.subCategory = "";
             this.commune = "";
             this.secondQuestion = false;
             this.description = "";

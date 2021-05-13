@@ -63,8 +63,20 @@ export const PROFILE_GET_COMMUNES = gql`
 `;
 
 export const TICKETS_GET_TICKETS = gql`
-  query tickets($user: ID!) {
-    tickets(where: { users_permissions_user: $user }) {
+  query tickets($user: ID!, $contains: String) {
+    tickets(
+      sort: "created_at:desc"
+      where: {
+        users_permissions_user: $user
+        _or: [
+          { id_contains: $contains }
+          { status_contains: $contains }
+          { commune: { name_contains: $contains } }
+          { subcategory: { name_contains: $contains } }
+          { subcategory: { category: { name_contains: $contains } } }
+        ]
+      }
+    ) {
       id
       subcategory {
         id
@@ -83,6 +95,7 @@ export const TICKETS_GET_TICKETS = gql`
       }
       requirements
       description
+      status
     }
   }
 `;

@@ -12,23 +12,35 @@
           <div class="page-top-wrap w-100" v-if="generalOption === 'profile'">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
+                <a href="#" @click="handleGeneralOption('')" title=""
+                  >Dashboard</a
+                >
               </li>
               <li class="breadcrumb-item active">Perfil</li>
             </ol>
           </div>
-          <div class="page-top-wrap w-100" v-else-if="generalOption === 'tickets'">
+          <div
+            class="page-top-wrap w-100"
+            v-else-if="generalOption === 'tickets'"
+          >
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
+                <a href="#" @click="handleGeneralOption('')" title=""
+                  >Dashboard</a
+                >
               </li>
               <li class="breadcrumb-item active">Tickets</li>
             </ol>
           </div>
-          <div class="page-top-wrap w-100" v-else-if="generalOption === 'categories'">
+          <div
+            class="page-top-wrap w-100"
+            v-else-if="generalOption === 'categories'"
+          >
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <a href="#" @click="handleGeneralOption('')" title="">Dashboard</a>
+                <a href="#" @click="handleGeneralOption('')" title=""
+                  >Dashboard</a
+                >
               </li>
               <li class="breadcrumb-item active">Categorías</li>
             </ol>
@@ -50,7 +62,7 @@
           <div class="post-detail-wrap w-100">
             <div class="row">
               <div class="col-md-4 col-sm-12 col-lg-3">
-                <Sidebar :handleGeneralOption="handleGeneralOption"/>
+                <Sidebar :handleGeneralOption="handleGeneralOption" />
               </div>
               <div class="col-md-8 col-sm-12 col-lg-9">
                 <div v-if="generalOption == 'profile'">
@@ -83,7 +95,7 @@
 import Header from "../components/layouts/Header";
 import StickyMenu from "../components/layouts/StickyMenu";
 import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
-import Sidebar from '../components/dashboard/Sidebar.vue';
+import Sidebar from "../components/dashboard/Sidebar.vue";
 import Profile from "../components/dashboard/Profile";
 import Categories from "../components/dashboard/Categories";
 import Tickets from "../components/dashboard/Tickets";
@@ -116,6 +128,11 @@ export default {
       this.generalOption = option;
     }
   },
+  mounted() {
+    if (this.$route.params.option) {
+      this.generalOption = this.$route.params.option;
+    }
+  }
 };
 </script>
 
