@@ -7,6 +7,7 @@ export const HEADER_GET_LOGO = gql`
       address
       phone
       logo {
+        id
         url
       }
     }
@@ -26,6 +27,7 @@ export const RESPONSIVEHEADER_GET_LOGO = gql`
   query config {
     config {
       logo_mobile {
+        id
         url
       }
     }
@@ -36,6 +38,7 @@ export const STICKYMENU_GET_LOGO = gql`
   query config {
     config {
       logo {
+        id
         url
       }
     }
@@ -47,6 +50,7 @@ export const HEADER_GET_PHOTO = gql`
     me {
       detail {
         photo {
+          id
           url
         }
       }

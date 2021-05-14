@@ -21,7 +21,7 @@ const routes = [
     },
   },
   {
-    path: "/find-work",
+    path: "/findwork",
     name: "FindWork",
     component: FindWork,
     meta: {

@@ -155,7 +155,7 @@
                     >
                   </li>
                   <li v-if="getUsername">
-                    <a href="/find-work" title="">Buscar Trabajos</a>
+                    <a href="/findwork" title="">Buscar Trabajos</a>
                   </li>
                   <li v-else>
                     <a href="#welcomeModal" data-toggle="modal" title=""

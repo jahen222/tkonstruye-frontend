@@ -4,12 +4,15 @@ export const SIDEBAR_GET_ME = gql`
   query me {
     me {
       detail {
+        id
         username
         slogan
         photo {
+          id
           url
         }
         role {
+          id
           name
         }
       }
@@ -31,12 +34,14 @@ export const PROFILE_GET_ME = gql`
         giro
         contact
         photo {
+          id
           url
         }
         commune {
           id
         }
         role {
+          id
           name
         }
       }
@@ -50,10 +55,13 @@ export const PROFILE_GET_COMMUNES = gql`
       id
       name
       city {
+        id
         name
         region {
+          id
           name
           country {
+            id
             name
           }
         }
@@ -141,10 +149,13 @@ export const TICKETS_GET_COMMUNES = gql`
       id
       name
       city {
+        id
         name
         region {
+          id
           name
           country {
+            id
             name
           }
         }
@@ -170,10 +181,43 @@ export const CATEGORIES_GET_ME = gql`
   query me {
     me {
       detail {
+        id
         subcategories {
           id
         }
       }
+    }
+  }
+`;
+
+export const PROPOSALS_GET_PROPOSALS = gql`
+  query proposals($user: ID!, $contains: String) {
+    proposals(
+      sort: "created_at:desc"
+      where: {
+        ticket: { users_permissions_user: $user }
+        _or: [
+          { id_contains: $contains }
+          { users_permissions_user: { username_contains: $contains } }
+          { ticket: {  id_contains: $contains } } 
+        ]
+      }
+    ) {
+      id
+      users_permissions_user {
+        id
+        username
+        email
+        phone
+      }
+      ticket {
+        id
+        users_permissions_user {
+          id
+        }
+      }
+      coverLetter
+      jobDetail
     }
   }
 `;

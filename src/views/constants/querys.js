@@ -56,6 +56,12 @@ export const FIND_WORK_GET_TICKETS = gql`
       requirements
       description
       created_at
+      proposals{
+        id
+        users_permissions_user{
+          id
+        }
+      }
     }
   }
 `;

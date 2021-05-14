@@ -41,10 +41,13 @@ export const WIZARD_GET_COMMUNES = gql`
       id
       name
       city {
+        id
         name
         region {
+          id
           name
           country {
+            id
             name
           }
         }

@@ -45,6 +45,19 @@
               <li class="breadcrumb-item active">Categorías</li>
             </ol>
           </div>
+          <div
+            class="page-top-wrap w-100"
+            v-else-if="generalOption === 'proposals'"
+          >
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="#" @click="handleGeneralOption('')" title=""
+                  >Dashboard</a
+                >
+              </li>
+              <li class="breadcrumb-item active">Propuestas</li>
+            </ol>
+          </div>
           <div class="page-top-wrap w-100" v-else>
             <ol class="breadcrumb">
               <li class="breadcrumb-item active">
@@ -74,6 +87,9 @@
                 <div v-else-if="generalOption == 'categories'">
                   <Categories />
                 </div>
+                <div v-else-if="generalOption == 'proposals'">
+                  <Proposals />
+                </div>
                 <div v-else>
                   <Index />
                 </div>
@@ -99,6 +115,7 @@ import Sidebar from "../components/dashboard/Sidebar.vue";
 import Profile from "../components/dashboard/Profile";
 import Categories from "../components/dashboard/Categories";
 import Tickets from "../components/dashboard/Tickets";
+import Proposals from "../components/dashboard/Proposals";
 import Index from "../components/dashboard/Index";
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
@@ -112,6 +129,7 @@ export default {
     Profile,
     Categories,
     Tickets,
+    Proposals,
     Index,
     Footer,
     Copyright,

@@ -8,6 +8,7 @@
       <ResponsiveHeader />
       <!-- Responsive Header -->
       <section>
+        <CreateProposal :ticket="ticket" />
         <div class="w-100 pt-100 pb-100 position-relative">
           <div class="container">
             <div class="post-detail-wrap w-100">
@@ -68,7 +69,7 @@
                   </aside>
                   <!-- Sidebar Wrap -->
                 </div>
-                <div class="col-md-12 col-sm-12 col-lg-8">
+                <div class="col-md-6 col-sm-12 col-lg-8">
                   <div class="post-detail w-100">
                     <div class="w-100">
                       <ul class="comments-thread mb-0 list-unstyled">
@@ -94,9 +95,29 @@
                                 {{ ticket.description }}
                               </p>
                               <a
-                                class="comment-reply-link d-inline-block orange"
-                                href="javascript:void(0);"
+                                v-if="
+                                  ticket.users_permissions_user.id ===
+                                  getUser.id
+                                "
+                                class="comment-reply-link d-inline-block"
                                 title=""
+                                >Ticket Propio</a
+                              >
+                              <a
+                                v-else-if="
+                                  ticket.proposals.some((proposal) => proposal.users_permissions_user.id === getUser.id)
+                                "
+                                class="comment-reply-link d-inline-block"
+                                title=""
+                                >Has propuesto</a
+                              >
+                              <a
+                                v-else
+                                class="comment-reply-link d-inline-block orange"
+                                href="#createProposalModal"
+                                data-toggle="modal"
+                                title=""
+                                @click="handleContactTicket(ticket)"
                                 ><i class="fas fa-reply-all"></i>Contactar</a
                               >
                               <span class="d-inline-block"
@@ -108,6 +129,10 @@
                               <span class="d-inline-block replyCustom"
                                 ><i class="far fa-clock"></i
                                 >{{ ticketDate(ticket.created_at) }}</span
+                              >
+                              <span class="d-inline-block replyCustom"
+                                ><i class="fas fa-users"></i
+                                >{{ ticket.proposals.length }} Propuestas</span
                               >
                             </div>
                           </div>
@@ -146,12 +171,14 @@ import StickyMenu from "../components/layouts/StickyMenu";
 import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
+import CreateProposal from "../components/findwork/CreateProposal";
 import {
   FIND_WORK_GET_CATEGORIES,
   FIND_WORK_GET_TICKETS,
   FIND_WORK_FILTER_SUBCATEGORIES
 } from "./constants/querys";
 import moment from "moment";
+import Cookies from "js-cookie";
 
 export default {
   name: "FindWork",
@@ -160,7 +187,8 @@ export default {
       categories: [],
       tickets: [],
       limit: 10,
-      contains: ""
+      contains: "",
+      ticket: null
     };
   },
   components: {
@@ -168,7 +196,8 @@ export default {
     StickyMenu,
     ResponsiveHeader,
     Footer,
-    Copyright
+    Copyright,
+    CreateProposal
   },
   apollo: {
     categories: {
@@ -209,6 +238,9 @@ export default {
           );
         });
     },
+    handleContactTicket(ticket) {
+      this.ticket = ticket;
+    },
     ticketDate(ticketDate) {
       let now = moment();
       let date = moment(ticketDate);
@@ -227,6 +259,16 @@ export default {
       }
 
       return cat;
+    }
+  },
+  computed: {
+    getUser() {
+      let user = "";
+      if (Cookies.get("user") !== undefined) {
+        user = JSON.parse(Cookies.get("user"));
+        return user;
+      }
+      return user;
     }
   }
 };

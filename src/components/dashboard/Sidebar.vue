@@ -51,16 +51,27 @@
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('categories')"
-            v-if="me.detail.role.name === 'Professional'"
             ><i class="fas fa-stream"></i> Categorías</a
           >
+          <!-- <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('categories')"
+            v-if="me.detail.role.name === 'Professional'"
+            ><i class="fas fa-stream"></i> Categorías</a
+          > -->
           <a
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('tickets')"
             ><i class="fas fa-briefcase"></i> Tickets</a
           >
-         
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('proposals')"
+            ><i class="fas fa-paperclip"></i> Propuestas</a
+          >
         </nav>
       </div>
     </nav>
@@ -87,7 +98,13 @@
             <a href="#" @click="handleGeneralOption('profile')">Perfil</a>
           </li>
           <li>
+            <a href="#" @click="handleGeneralOption('categories')">Categorías</a>
+          </li>
+          <li>
             <a href="#" @click="handleGeneralOption('tickets')">Tickets</a>
+          </li>
+          <li>
+            <a href="#" @click="handleGeneralOption('proposals')">Propuestas</a>
           </li>
         </ul>
       </div>
