@@ -1,7 +1,7 @@
 <template>
   <div id="dashboardProfile" class="post-detail wizard-form w-100">
     <h3 class="mb-0"><i class="fas fa-user"></i> Datos de Usuario</h3>
-    <form class="w-100 pb-50" @submit="handleProfileUpdateUserData">
+    <form class="w-100 pb-40" @submit="handleProfileUpdateUserData">
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
@@ -85,11 +85,12 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
           <div class="field-wrap w-100">
             <label>Eslogan:</label>
-            <textarea
+            <input
+              type="text"
               v-model="me.detail.slogan"
-              placeholder="Ingresa aquí tu respuesta."
               maxlength="128"
-            ></textarea>
+              placeholder="Ingresa aquí tu respuesta."
+            />
           </div>
           <button class="thm-btn thm-bg" type="submit">
             Actualizar<i class="flaticon-arrow-pointing-to-right"></i>
@@ -97,11 +98,12 @@
         </div>
       </div>
     </form>
+    <hr class="pb-20" />
     <h3 class="mb-0" v-if="me.detail.role.name === 'Professional'">
       Datos de Empresa
     </h3>
     <form
-      class="w-100 pb-50"
+      class="w-100 pb-40"
       v-if="me.detail.role.name === 'Professional'"
       @submit="handleProfileUpdateCompanyData"
     >
@@ -129,8 +131,9 @@
         </div>
       </div>
     </form>
+    <hr class="pb-20" />
     <h3 class="mb-0">Restablecer Contraseña</h3>
-    <form class="w-100 pb-50" @submit="handleProfileForgotPassword">
+    <form class="w-100 pb-40" @submit="handleProfileForgotPassword">
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
@@ -152,6 +155,7 @@
         </div>
       </div>
     </form>
+    <hr class="pb-20" />
     <h3 class="mb-0">Imagen de Perfil</h3>
     <form class="w-100" @submit="handleProfileUploadPhoto">
       <div class="row">
@@ -167,7 +171,7 @@
             <div class="row">
               <div class="col-md-3 col-sm-3 col-lg-3">
                 <label for="inputPhoto" @click="$refs.photo.click()"
-                  ><i class="fas fa-upload"></i
+                  ><i class="fas fa-upload iconUploadImage"></i
                 ></label>
               </div>
               <div
@@ -271,35 +275,35 @@ export default {
           type: "error",
           duration: 3000
         });
-      } else if (username.length > 32) {
+      } else if (username.length < 1 || username.length > 32) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un nombre de usuario válido.",
           type: "error",
           duration: 3000
         });
-      } else if (phone.length != 13) {
+      } else if (phone.length !== 13 || phone[1] != 9) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un teléfono válido.",
           type: "error",
           duration: 3000
         });
-      } else if (name.length > 128) {
+      } else if (name && name.length > 128) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un nombre válido.",
           type: "error",
           duration: 3000
         });
-      } else if (!this.checkRutModule11(rut) && rut) {
+      } else if (rut && !this.checkRutModule11(rut)) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un rut válido.",
           type: "error",
           duration: 3000
         });
-      } else if (name.slogan > 128) {
+      } else if (slogan && slogan.length > 128) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un eslogan válido.",
@@ -367,14 +371,14 @@ export default {
       const { id, giro, contact } = this.$data.me.detail;
       let validate = true;
 
-      if (giro.length < 512) {
+      if (giro && (giro.length < 16 || giro.length > 512)) {
         validate = false;
         this.$toast.open({
-          message: "Ingrese un giro válido.",
+          message: "Ingrese un giro de al menos 16 caracteres.",
           type: "error",
           duration: 3000
         });
-      } else if (contact.length > 512) {
+      } else if (contact && (contact.length < 16 || contact.length > 256)) {
         validate = false;
         this.$toast.open({
           message: "Ingrese un contacto válido.",
@@ -399,6 +403,67 @@ export default {
               type: "success",
               duration: 3000
             });
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(error =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000
+              })
+            );
+          });
+      }
+    },
+    handleProfileUploadPhoto(e) {
+      e.preventDefault();
+      const file = this.photo;
+      let validate = true;
+
+      if (!file) {
+        validate = false;
+        this.$toast.open({
+          message: "Seleccione una imagen.",
+          type: "error",
+          duration: 3000
+        });
+      }
+
+      if (validate) {
+        this.$apollo
+          .mutate({
+            mutation: PROFILE_UPLOAD_PHOTO,
+            variables: {
+              file
+            }
+          })
+          .then(data => {
+            const photo = data.data.upload.id;
+            const { id } = this.$data.me.detail;
+            this.$apollo
+              .mutate({
+                mutation: PROFILE_UPDATE_PHOTO,
+                variables: {
+                  id,
+                  photo
+                }
+              })
+              .then(() => {
+                this.$toast.open({
+                  message: "Imagen actualizada exitosamente.",
+                  type: "success",
+                  duration: 3000
+                });
+              })
+              .catch(({ graphQLErrors }) => {
+                graphQLErrors.map(error =>
+                  this.$toast.open({
+                    message: error.message,
+                    type: "error",
+                    duration: 3000
+                  })
+                );
+              });
           })
           .catch(({ graphQLErrors }) => {
             graphQLErrors.map(error =>
@@ -468,54 +533,6 @@ export default {
           duration: 3000
         });
       }
-    },
-    handleProfileUploadPhoto(e) {
-      e.preventDefault();
-      const file = this.photo;
-      this.$apollo
-        .mutate({
-          mutation: PROFILE_UPLOAD_PHOTO,
-          variables: {
-            file
-          }
-        })
-        .then(data => {
-          const photo = data.data.upload.id;
-          const { id } = this.$data.me.detail;
-          this.$apollo
-            .mutate({
-              mutation: PROFILE_UPDATE_PHOTO,
-              variables: {
-                id,
-                photo
-              }
-            })
-            .then(() => {
-              this.$toast.open({
-                message: "Usuario actualizado exitosamente.",
-                type: "success",
-                duration: 3000
-              });
-            })
-            .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(error =>
-                this.$toast.open({
-                  message: error.message,
-                  type: "error",
-                  duration: 3000
-                })
-              );
-            });
-        })
-        .catch(({ graphQLErrors }) => {
-          graphQLErrors.map(error =>
-            this.$toast.open({
-              message: error.message,
-              type: "error",
-              duration: 3000
-            })
-          );
-        });
     },
     handleFormatPhone() {
       const formatedPhone = this.me.detail.phone
@@ -597,3 +614,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.iconUploadImage:hover {
+  color: #ff5e15;
+}
+</style>

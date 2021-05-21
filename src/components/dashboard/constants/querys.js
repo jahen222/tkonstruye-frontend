@@ -199,7 +199,7 @@ export const PROPOSALS_GET_PROPOSALS = gql`
         _or: [
           { id_contains: $contains }
           { users_permissions_user: { username_contains: $contains } }
-          { ticket: {  id_contains: $contains } } 
+          { ticket: { id_contains: $contains } }
         ]
       }
     ) {
@@ -218,6 +218,57 @@ export const PROPOSALS_GET_PROPOSALS = gql`
       }
       coverLetter
       jobDetail
+    }
+  }
+`;
+
+export const PROPOSALS_GET_PROFESSIONAL_PROPOSALS = gql`
+  query proposals($user: ID!, $contains: String) {
+    proposals(
+      sort: "created_at:desc"
+      where: {
+        users_permissions_user: $user
+        _or: [
+          { id_contains: $contains }
+          {
+            ticket: { users_permissions_user: { username_contains: $contains } }
+          }
+          { ticket: { id_contains: $contains } }
+        ]
+      }
+    ) {
+      id
+      users_permissions_user {
+        id
+        username
+        email
+        phone
+      }
+      ticket {
+        id
+        users_permissions_user {
+          id
+          username
+          email
+          phone
+        }
+      }
+      coverLetter
+      jobDetail
+    }
+  }
+`;
+
+export const PROPOSALS_GET_ME = gql`
+  query me {
+    me {
+      detail {
+        id
+        role {
+          id
+          name
+        }
+      }
     }
   }
 `;

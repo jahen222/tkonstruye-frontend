@@ -24,6 +24,12 @@
                 :src="this.api_url + me.detail.photo.url"
                 alt="About Image"
               />
+              <img
+                v-else
+                class="img-fluid rounded-circle photo"
+                src="../../assets/neutro-user.png"
+                alt="About Image"
+              />
             </div>
           </a>
           <a class="nav-link paddingLeft text-center" href="#"
@@ -51,25 +57,28 @@
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('categories')"
-            ><i class="fas fa-stream"></i> Categorías</a
-          >
-          <!-- <a
-            class="nav-link customNavLink"
-            href="#"
-            @click="handleGeneralOption('categories')"
             v-if="me.detail.role.name === 'Professional'"
             ><i class="fas fa-stream"></i> Categorías</a
-          > -->
+          >
           <a
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('tickets')"
+            v-if="me.detail.role.name === 'Authenticated'"
             ><i class="fas fa-briefcase"></i> Tickets</a
           >
           <a
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('proposals')"
+            v-if="me.detail.role.name === 'Authenticated'"
+            ><i class="fas fa-paperclip"></i> Propuestas</a
+          >
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('professionalProposals')"
+            v-if="me.detail.role.name === 'Professional'"
             ><i class="fas fa-paperclip"></i> Propuestas</a
           >
         </nav>
@@ -127,6 +136,7 @@ export default {
       api_url: process.env.VUE_APP_STRAPI_API_URL,
       me: {
         detail: {
+          id: "",
           username: "",
           slogan: "",
           photo: "",
@@ -150,9 +160,6 @@ export default {
   width: 105px;
   height: 105px;
 }
-</style>
-
-<style scoped>
 .customNavLink:hover {
   color: #ff5e15;
 }

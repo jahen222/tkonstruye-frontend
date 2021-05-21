@@ -8,7 +8,7 @@
       <ResponsiveHeader />
       <!-- Responsive Header -->
       <section>
-        <CreateProposal :ticket="ticket" />
+        <CreateProposal :ticket="ticket" :role="me.detail.role.name" />
         <div class="w-100 pt-100 pb-100 position-relative">
           <div class="container">
             <div class="post-detail-wrap w-100">
@@ -104,6 +104,15 @@
                                 >Ticket Propio</a
                               >
                               <a
+                                v-else-if="me.detail.role.name === 'Authenticated'"
+                                class="comment-reply-link d-inline-block orange"
+                                href="#createProposalModal"
+                                data-toggle="modal"
+                                title=""
+                                @click="handleContactTicket(ticket)"
+                                ><i class="fas fa-reply-all"></i>Ver</a
+                              >
+                              <a
                                 v-else-if="
                                   ticket.proposals.some((proposal) => proposal.users_permissions_user.id === getUser.id)
                                 "
@@ -175,7 +184,8 @@ import CreateProposal from "../components/findwork/CreateProposal";
 import {
   FIND_WORK_GET_CATEGORIES,
   FIND_WORK_GET_TICKETS,
-  FIND_WORK_FILTER_SUBCATEGORIES
+  FIND_WORK_FILTER_SUBCATEGORIES,
+  FIND_WORK_GET_ME
 } from "./constants/querys";
 import moment from "moment";
 import Cookies from "js-cookie";
@@ -188,7 +198,15 @@ export default {
       tickets: [],
       limit: 10,
       contains: "",
-      ticket: null
+      ticket: null,
+      me: {
+        detail: {
+          id: "",
+          role: {
+            name: ""
+          }
+        }
+      }
     };
   },
   components: {
@@ -211,6 +229,9 @@ export default {
           contains: this.contains
         };
       }
+    },
+    me: {
+      query:  FIND_WORK_GET_ME
     }
   },
   methods: {

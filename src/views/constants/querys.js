@@ -33,6 +33,7 @@ export const FIND_WORK_GET_TICKETS = gql`
       subcategory {
         id
         name
+        price
         category {
           name
         }
@@ -100,6 +101,20 @@ export const FIND_WORK_FILTER_SUBCATEGORIES = gql`
       requirements
       description
       created_at
+    }
+  }
+`;
+
+export const FIND_WORK_GET_ME = gql`
+  query me {
+    me {
+      detail {
+        id
+        role {
+          id
+          name
+        }
+      }
     }
   }
 `;

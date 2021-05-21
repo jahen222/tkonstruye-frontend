@@ -49,6 +49,7 @@ export const HEADER_GET_PHOTO = gql`
   query me {
     me {
       detail {
+        id
         photo {
           id
           url

@@ -264,7 +264,8 @@ export default {
                 variables: {
                   user: Cookies.get("user")
                     ? JSON.parse(Cookies.get("user")).id
-                    : null
+                    : null,
+                  contains: ""
                 }
               }
             ]

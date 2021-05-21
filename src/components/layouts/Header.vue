@@ -122,6 +122,12 @@
                   alt="About Image"
                   v-if="me.detail.photo"
                 />
+                <img
+                  class="thm-bg img-fluid rounded-circle photo"
+                  src="../../assets/neutro-user.png"
+                  alt="About Image"
+                  v-else
+                />
                 {{ getUsername }}
               </router-link>
             </div>
@@ -670,6 +676,7 @@ export default {
       error: "",
       me: {
         detail: {
+          id: "",
           photo: {
             url: ""
           }
@@ -722,6 +729,11 @@ export default {
             }
           })
           .then(data => {
+            this.$toast.open({
+              message: "Bienvenido, "+data.data.login.user.username,
+              type: "success",
+              duration: 3000
+            });
             this.setUser(data.data.login);
             this.$router.go();
           })

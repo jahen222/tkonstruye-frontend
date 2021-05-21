@@ -12,11 +12,12 @@
         <div class="card-header" :id="'heading' + index">
           <h2 class="mb-0">
             <button
+              ref="collapseButton"
               class="btn customNavLink text-left"
               type="button"
               data-toggle="collapse"
               :data-target="'#collapse' + index"
-              :aria-expanded="'false'"
+              aria-expanded="false"
               :aria-controls="'collapse' + index"
             >
               <i class="fas fa-chevron-down"></i> {{ category.name }}
@@ -26,7 +27,7 @@
 
         <div
           :id="'collapse' + index"
-          class="collapse show"
+          class="collapse"
           :aria-labelledby="'heading' + index"
         >
           <div class="card-body">
@@ -63,7 +64,6 @@
 </template>
 
 <script>
-// import $ from "jquery";
 import Cookies from "js-cookie";
 import {
   CATEGORIES_GET_CATEGORIES,

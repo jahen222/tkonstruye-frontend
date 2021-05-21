@@ -34,16 +34,20 @@ export const PROFILE_UPDATE_USER_DATA = gql`
         slogan
         rut
         photo {
+          id
           url
         }
         commune {
           id
           name
           city {
+            id
             name
             region {
+              id
               name
               country {
+                id
                 name
               }
             }
@@ -91,6 +95,7 @@ export const PROFILE_UPDATE_PHOTO = gql`
       user {
         id
         photo {
+          id
           url
         }
       }

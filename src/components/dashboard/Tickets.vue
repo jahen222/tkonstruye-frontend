@@ -33,7 +33,7 @@
                     </td>
                     <td @click="handleShowTicketModal(ticket)">
                       {{ ticket.subcategory.category.name }}
-                      <i class="fas fa-greater-than"></i>
+                      <i class="fas fa-greater-than smaller"></i>
                       {{ ticket.subcategory.name }}
                     </td>
                     <td @click="handleShowTicketModal(ticket)">
@@ -80,7 +80,7 @@
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
@@ -136,7 +136,7 @@
                                   ? selectTicket.subcategory.category.name
                                   : ""
                               }}
-                              <i class="fas fa-greater-than"></i>
+                              <i class="fas fa-greater-than smaller"></i>
                               {{
                                 selectTicket
                                   ? selectTicket.subcategory.name
@@ -756,5 +756,8 @@ export default {
 }
 .italic {
   font-style: italic;
+}
+.smaller {
+  font-size: smaller;
 }
 </style>
