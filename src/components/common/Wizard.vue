@@ -200,7 +200,8 @@ import {
   WIZARD_GET_CATEGORIES,
   WIZARD_GET_SUBCATEGORIES,
   WIZARD_GET_WIZARDFIELDS,
-  WIZARD_GET_COMMUNES
+  WIZARD_GET_COMMUNES,
+  WIZARD_GET_VULGARITIES
 } from "./constants/querys";
 import { WIZARD_CREATE_TICKET } from "./constants/mutations";
 import { TICKETS_GET_TICKETS } from "../dashboard/constants/querys";
@@ -224,6 +225,9 @@ export default {
     },
     communes: {
       query: WIZARD_GET_COMMUNES
+    },
+    config: {
+      query: WIZARD_GET_VULGARITIES
     }
   },
   methods: {
@@ -240,58 +244,83 @@ export default {
         this.subCategory &&
         this.commune
       ) {
+        var validate = true;
+
         this.getWizardFields.map((wizardField, index) => {
           requirements[wizardField.label] = document.getElementById(
             wizardField.label + index
           ).value;
         });
 
-        await this.$apollo
-          .mutate({
-            mutation: WIZARD_CREATE_TICKET,
-            variables: {
-              subCategory: this.subCategory,
-              usersPermissionsUser: JSON.parse(Cookies.get("user")).id,
-              commune: this.getCommunes
-                .filter(commune => commune.name === this.commune)
-                .shift().id,
-              requirements: requirements,
-              description: this.description
-            },
-            refetchQueries: [
-              {
-                query: TICKETS_GET_TICKETS,
-                variables: {
-                  user: Cookies.get("user")
-                    ? JSON.parse(Cookies.get("user")).id
-                    : null,
-                  contains: ""
-                }
-              }
-            ]
-          })
-          .then(() => {
-            $("#wizardModal").modal("hide");
-            this.category = "";
-            this.subCategory = "";
-            this.commune = "";
-            this.secondQuestion = false;
-            this.description = "";
-            this.$toast.open({
-              message: "Ticket creado exitosamente.",
-              type: "success",
-              duration: 3000
-            });
-          })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(error =>
+        if (this.description) {
+          for (
+            let i = 0;
+            i < Object.values(this.config.vulgarity).length;
+            i++
+          ) {
+            const vulgarity = Object.values(this.config.vulgarity)[i];
+            if (
+              this.description.toLowerCase().search(vulgarity.toString()) != -1
+            ) {
+              validate = false;
               this.$toast.open({
-                message: error.message,
+                message: "La descripción tiene contenido ofensivo.",
                 type: "error",
                 duration: 3000
-              })
-            );
-          });
+              });
+              break;
+            }
+          }
+        }
+
+        if (validate) {
+          await this.$apollo
+            .mutate({
+              mutation: WIZARD_CREATE_TICKET,
+              variables: {
+                subCategory: this.subCategory,
+                usersPermissionsUser: JSON.parse(Cookies.get("user")).id,
+                commune: this.getCommunes
+                  .filter(commune => commune.name === this.commune)
+                  .shift().id,
+                requirements: requirements,
+                description: this.description
+              },
+              refetchQueries: [
+                {
+                  query: TICKETS_GET_TICKETS,
+                  variables: {
+                    user: Cookies.get("user")
+                      ? JSON.parse(Cookies.get("user")).id
+                      : null,
+                    contains: ""
+                  }
+                }
+              ]
+            })
+            .then(() => {
+              $("#wizardModal").modal("hide");
+              this.category = "";
+              this.subCategory = "";
+              this.commune = "";
+              this.secondQuestion = false;
+              this.description = "";
+              this.$toast.open({
+                message: "Ticket creado exitosamente.",
+                type: "success",
+                duration: 3000
+              });
+            })
+            .catch(({ graphQLErrors }) => {
+              graphQLErrors.map(error =>
+                this.$toast.open({
+                  message: error.message,
+                  type: "error",
+                  duration: 3000
+                })
+              );
+            });
+        }
       } else {
         this.$toast.open({
           message: "Seleccione una comuna, categoría y subcategoría válidas",

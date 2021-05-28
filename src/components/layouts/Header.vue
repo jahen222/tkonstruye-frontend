@@ -308,14 +308,28 @@
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
                       <label><i class="fas fa-lock"></i> Contraseña</label>
-                      <input
-                        type="password"
-                        v-model="password"
-                        placeholder="Ingrese su contraseña."
-                        minlength="8"
-                        maxlength="32"
-                        :required="true"
-                      />
+                      <div class="row">
+                        <div class="col-md-10 col-sm-10 col-lg-10">
+                          <input
+                            ref="loginPassword"
+                            type="password"
+                            v-model="password"
+                            placeholder="Ingrese su contraseña."
+                            minlength="8"
+                            maxlength="32"
+                            :required="true"
+                          />
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                          <button
+                            class="btn"
+                            type="button"
+                            @click="handleShowPassword('loginPassword')"
+                          >
+                            <span class="fa fa-eye-slash icon link"></span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
@@ -413,36 +427,50 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
+                      <label>Teléfono:</label>
                       <div class="row">
-                        <div class="col-md-4 col-sm-4 col-lg-4">
-                          <label><i class="fas fa-phone"></i> Teléfono:</label>
+                        <div class="col-md-1 col-sm-1 col-lg-1">
+                          <label class="codeCountry">+56</label>
                         </div>
-                        <div class="col-md-8 col-sm-8 col-lg-8">
-                          <label>+56</label>
+                        <div class="col-md-11 col-sm-11 col-lg-11">
+                          <input
+                            type="text"
+                            v-model="phone"
+                            minlength="13"
+                            maxlength="13"
+                            @input="handleFormatPhone()"
+                            placeholder="Por ejemplo: 99240555"
+                            :required="true"
+                          />
                         </div>
                       </div>
-                      <input
-                        type="text"
-                        v-model="phone"
-                        minlength="13"
-                        maxlength="13"
-                        @input="handleFormatPhone()"
-                        placeholder="Por ejemplo: 99240555"
-                        :required="true"
-                      />
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
                       <label><i class="fas fa-lock"></i> Contraseña</label>
-                      <input
-                        type="password"
-                        v-model="password"
-                        placeholder="Ingrese su contraseña."
-                        minlength="8"
-                        maxlength="32"
-                        :required="true"
-                      />
+                      <div class="row">
+                        <div class="col-md-10 col-sm-10 col-lg-10">
+                          <input
+                            ref="registerPassword"
+                            type="password"
+                            v-model="password"
+                            placeholder="Ingrese su contraseña."
+                            minlength="8"
+                            maxlength="32"
+                            :required="true"
+                          />
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                          <button
+                            class="btn"
+                            type="button"
+                            @click="handleShowPassword('registerPassword')"
+                          >
+                            <span class="fa fa-eye-slash icon link"></span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
@@ -450,14 +478,30 @@
                       <label
                         ><i class="fas fa-lock"></i> Confirmar Contraseña</label
                       >
-                      <input
-                        type="password"
-                        v-model="passwordConfirm"
-                        placeholder="Ingrese su contraseña nuevamente."
-                        minlength="8"
-                        maxlength="32"
-                        :required="true"
-                      />
+                      <div class="row">
+                        <div class="col-md-10 col-sm-10 col-lg-10">
+                          <input
+                            ref="confirmRegisterPassword"
+                            type="password"
+                            v-model="passwordConfirm"
+                            placeholder="Ingrese su contraseña nuevamente."
+                            minlength="8"
+                            maxlength="32"
+                            :required="true"
+                          />
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                          <button
+                            class="btn"
+                            type="button"
+                            @click="
+                              handleShowPassword('confirmRegisterPassword')
+                            "
+                          >
+                            <span class="fa fa-eye-slash icon link"></span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
@@ -554,36 +598,50 @@
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
+                      <label>Teléfono:</label>
                       <div class="row">
-                        <div class="col-md-4 col-sm-4 col-lg-4">
-                          <label><i class="fas fa-phone"></i> Teléfono:</label>
+                        <div class="col-md-1 col-sm-1 col-lg-1">
+                          <label class="codeCountry">+56</label>
                         </div>
-                        <div class="col-md-8 col-sm-8 col-lg-8">
-                          <label>+56</label>
+                        <div class="col-md-11 col-sm-11 col-lg-11">
+                          <input
+                            type="text"
+                            v-model="phone"
+                            minlength="13"
+                            maxlength="13"
+                            @input="handleFormatPhone()"
+                            placeholder="Por ejemplo: 99240555"
+                            :required="true"
+                          />
                         </div>
                       </div>
-                      <input
-                        type="text"
-                        v-model="phone"
-                        minlength="13"
-                        maxlength="13"
-                        @input="handleFormatPhone()"
-                        placeholder="Por ejemplo: 99240555"
-                        :required="true"
-                      />
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
                     <div class="field-wrap w-100">
                       <label><i class="fas fa-lock"></i> Contraseña</label>
-                      <input
-                        type="password"
-                        v-model="password"
-                        placeholder="Ingrese su contraseña."
-                        minlength="8"
-                        maxlength="32"
-                        :required="true"
-                      />
+                      <div class="row">
+                        <div class="col-md-10 col-sm-10 col-lg-10">
+                          <input
+                            ref="professionalPassword"
+                            type="password"
+                            v-model="password"
+                            placeholder="Ingrese su contraseña."
+                            minlength="8"
+                            maxlength="32"
+                            :required="true"
+                          />
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                          <button
+                            class="btn"
+                            type="button"
+                            @click="handleShowPassword('professionalPassword')"
+                          >
+                            <span class="fa fa-eye-slash icon link"></span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12">
@@ -591,14 +649,30 @@
                       <label
                         ><i class="fas fa-lock"></i> Confirmar Contraseña</label
                       >
-                      <input
-                        type="password"
-                        v-model="passwordConfirm"
-                        placeholder="Ingrese su contraseña nuevamente."
-                        minlength="8"
-                        maxlength="32"
-                        :required="true"
-                      />
+                      <div class="row">
+                        <div class="col-md-10 col-sm-10 col-lg-10">
+                          <input
+                            ref="confirmProfessionalPassword"
+                            type="password"
+                            v-model="passwordConfirm"
+                            placeholder="Ingrese su contraseña nuevamente."
+                            minlength="8"
+                            maxlength="32"
+                            :required="true"
+                          />
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                          <button
+                            class="btn"
+                            type="button"
+                            @click="
+                              handleShowPassword('confirmProfessionalPassword')
+                            "
+                          >
+                            <span class="fa fa-eye-slash icon link"></span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-12 col-sm-12 col-lg-12 right">
@@ -730,7 +804,7 @@ export default {
           })
           .then(data => {
             this.$toast.open({
-              message: "Bienvenido, "+data.data.login.user.username,
+              message: "Bienvenido, " + data.data.login.user.username,
               type: "success",
               duration: 3000
             });
@@ -892,6 +966,41 @@ export default {
       this.phone = formatedPhone
         .replace(/(\d{1})(\d{4})(\d{4})/, "($1) $2-$3")
         .substr(0, 13);
+    },
+    handleShowPassword(nameInput) {
+      if (nameInput === "loginPassword") {
+        if ($(this.$refs.loginPassword).attr("type") === "password") {
+          $(this.$refs.loginPassword).attr("type", "text");
+        } else {
+          $(this.$refs.loginPassword).attr("type", "password");
+        }
+      } else if (nameInput === "registerPassword") {
+        if ($(this.$refs.registerPassword).attr("type") === "password") {
+          $(this.$refs.registerPassword).attr("type", "text");
+        } else {
+          $(this.$refs.registerPassword).attr("type", "password");
+        }
+      } else if (nameInput === "confirmRegisterPassword") {
+        if ($(this.$refs.confirmRegisterPassword).attr("type") === "password") {
+          $(this.$refs.confirmRegisterPassword).attr("type", "text");
+        } else {
+          $(this.$refs.confirmRegisterPassword).attr("type", "password");
+        }
+      } else if (nameInput === "professionalPassword") {
+        if ($(this.$refs.professionalPassword).attr("type") === "password") {
+          $(this.$refs.professionalPassword).attr("type", "text");
+        } else {
+          $(this.$refs.professionalPassword).attr("type", "password");
+        }
+      } else if (nameInput === "confirmProfessionalPassword") {
+        if (
+          $(this.$refs.confirmProfessionalPassword).attr("type") === "password"
+        ) {
+          $(this.$refs.confirmProfessionalPassword).attr("type", "text");
+        } else {
+          $(this.$refs.confirmProfessionalPassword).attr("type", "password");
+        }
+      }
     }
   },
   computed: {
@@ -956,5 +1065,9 @@ export default {
   width: 50px;
   height: 50px;
   border: 2px solid #ff5e15;
+}
+.codeCountry {
+  margin-top: 5px;
+  margin-bottom: 0px;
 }
 </style>

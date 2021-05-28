@@ -5,7 +5,8 @@ export const FINDWORK_CREATE_PROPOSAL = gql`
     $ticket: ID!
     $usersPermissionsUser: ID!
     $coverLetter: String!
-    $jobDetail: String
+    $jobDetail: String,
+    $file: ID
   ) {
     createProposal(
       input: {
@@ -14,12 +15,22 @@ export const FINDWORK_CREATE_PROPOSAL = gql`
           users_permissions_user: $usersPermissionsUser
           coverLetter: $coverLetter
           jobDetail: $jobDetail
+          file: $file
         }
       }
     ) {
       proposal {
         id
       }
+    }
+  }
+`;
+
+export const FINDWORK_UPLOAD_PHOTO = gql`
+  mutation upload($file: Upload!) {
+    upload(file: $file) {
+      id
+      name
     }
   }
 `;

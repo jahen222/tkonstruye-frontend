@@ -55,3 +55,11 @@ export const WIZARD_GET_COMMUNES = gql`
     }
   }
 `;
+
+export const WIZARD_GET_VULGARITIES = gql`
+  query config {
+    config {
+      vulgarity
+    }
+  }
+`;

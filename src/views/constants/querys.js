@@ -118,3 +118,58 @@ export const FIND_WORK_GET_ME = gql`
     }
   }
 `;
+
+export const CREATE_PROPOSAL_GET_VULGARITIES = gql`
+  query config {
+    config {
+      vulgarity
+    }
+  }
+`;
+
+export const FIND_WORK_GET_COMMUNES = gql`
+  query communes {
+    communes {
+      id
+      name
+    }
+  }
+`;
+
+export const FIND_WORK_FILTER_COMMUNES = gql`
+  query tickets($limit: Int, $communeId: ID) {
+    tickets(
+      sort: "created_at:desc"
+      limit: $limit
+      where: { commune: $communeId }
+    ) {
+      id
+      subcategory {
+        id
+        name
+        category {
+          name
+        }
+      }
+      users_permissions_user {
+        id
+        username
+      }
+      commune {
+        id
+        name
+        city {
+          id
+          name
+          region {
+            id
+            name
+          }
+        }
+      }
+      requirements
+      description
+      created_at
+    }
+  }
+`;

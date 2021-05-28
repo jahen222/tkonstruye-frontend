@@ -5,17 +5,22 @@
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
+    @click.self="handleCloseModal"
   >
     <div
       class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
-      v-if="role==='Professional'"
+      v-if="role === 'Professional'"
     >
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
+          <p class="marginPs price">
+            {{ ticket ? ticket.subcategory.price + "$" : "" }}
+          </p>
           <button
             type="button"
             class="close"
+            @click="handleCloseModal"
             data-dismiss="modal"
             aria-label="Close"
           >
@@ -57,35 +62,31 @@
                               {{
                                 ticket ? ticket.subcategory.category.name : ""
                               }}
-                              <i class="fas fa-greater-than"></i>
+                              <i class="fas fa-greater-than smaller"></i>
                               {{ ticket ? ticket.subcategory.name : "" }}
                             </p>
                           </td>
                         </tr>
-                        <tr>
+                        <tr
+                          v-for="(requirement, index) in ticket
+                            ? ticket.requirements
+                            : []"
+                          v-bind:key="index"
+                        >
                           <th scope="row">
                             <i class="fas fa-question-circle"></i>
-                            Requerimientos
+                            {{
+                              Object.keys(ticket.requirements)[
+                                Object.values(ticket.requirements).indexOf(
+                                  requirement
+                                )
+                              ]
+                            }}
                           </th>
                           <td>
-                            <div
-                              v-for="(requirement, index) in ticket
-                                ? ticket.requirements
-                                : []"
-                              v-bind:key="index"
-                            >
-                              {{
-                                Object.keys(ticket.requirements)[
-                                  Object.values(ticket.requirements).indexOf(
-                                    requirement
-                                  )
-                                ]
-                              }}
-                              :
-                              <p class="italic marginPs">
-                                {{ requirement }}
-                              </p>
-                            </div>
+                            <p class="marginPs">
+                              {{ requirement }}
+                            </p>
                           </td>
                         </tr>
                         <tr>
@@ -110,16 +111,6 @@
                             ></iframe>
                           </td>
                         </tr>
-                        <tr>
-                          <th scope="row">
-                            <i class="fas fa-question-circle"></i> Total
-                          </th>
-                          <td>
-                            <p class="marginPs price">
-                              {{ ticket ? ticket.subcategory.price + "$" : "" }}
-                            </p>
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -132,7 +123,8 @@
                     >
                     <div class="input-group">
                       <textarea
-                        maxlength="500"
+                        maxlength="512"
+                        minlength="128"
                         :required="true"
                         v-model="coverLetter"
                         placeholder="Ingresa aquí tu respuesta."
@@ -146,20 +138,29 @@
                     >
                     <div class="input-group">
                       <textarea
-                        maxlength="500"
-                        :required="true"
+                        class="heightJobDetail"
+                        maxlength="256"
+                        minlength="10"
                         v-model="jobDetail"
                         placeholder="Ingresa aquí tu respuesta."
-                        rows="3"
                       ></textarea>
                     </div>
                   </div>
-                  <button
-                    class="thm-btn thm-bg"
-                    type="submit"
-                   
-                  >
-                    Enviar Propuesta
+                  <div class="field-wrap w-100">
+                    <a class="link" href="#" @click="$refs.file.click()">
+                      <i class="fas fa-upload"></i>
+                      Subir Adjunto</a
+                    >
+                    <p v-if="fileName">{{ fileName }}</p>
+                    <input
+                      type="file"
+                      name="files"
+                      @change="handleFileChange"
+                      ref="file"
+                    />
+                  </div>
+                  <button class="thm-btn thm-bg" type="submit">
+                    Participar
                   </button>
                 </div>
               </div>
@@ -175,6 +176,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
+          <p class="marginPs price">
+            {{ ticket ? ticket.subcategory.price + "$" : "" }}
+          </p>
           <button
             type="button"
             class="close"
@@ -219,35 +223,31 @@
                               {{
                                 ticket ? ticket.subcategory.category.name : ""
                               }}
-                              <i class="fas fa-greater-than"></i>
+                              <i class="fas fa-greater-than smaller"></i>
                               {{ ticket ? ticket.subcategory.name : "" }}
                             </p>
                           </td>
                         </tr>
-                        <tr>
+                        <tr
+                          v-for="(requirement, index) in ticket
+                            ? ticket.requirements
+                            : []"
+                          v-bind:key="index"
+                        >
                           <th scope="row">
                             <i class="fas fa-question-circle"></i>
-                            Requerimientos
+                            {{
+                              Object.keys(ticket.requirements)[
+                                Object.values(ticket.requirements).indexOf(
+                                  requirement
+                                )
+                              ]
+                            }}
                           </th>
                           <td>
-                            <div
-                              v-for="(requirement, index) in ticket
-                                ? ticket.requirements
-                                : []"
-                              v-bind:key="index"
-                            >
-                              {{
-                                Object.keys(ticket.requirements)[
-                                  Object.values(ticket.requirements).indexOf(
-                                    requirement
-                                  )
-                                ]
-                              }}
-                              :
-                              <p class="italic marginPs">
-                                {{ requirement }}
-                              </p>
-                            </div>
+                            <p class="marginPs">
+                              {{ requirement }}
+                            </p>
                           </td>
                         </tr>
                         <tr>
@@ -272,25 +272,12 @@
                             ></iframe>
                           </td>
                         </tr>
-                        <tr>
-                          <th scope="row">
-                            <i class="fas fa-question-circle"></i> Total
-                          </th>
-                          <td>
-                            <p class="marginPs price">
-                              {{ ticket ? ticket.subcategory.price + "$" : "" }}
-                            </p>
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-12">
-                  <button
-                    class="thm-btn thm-bg"
-                    :disabled="true"
-                  >
+                  <button class="thm-btn thm-bg" :disabled="true">
                     Debes ser profesional para hacer propuestas
                   </button>
                 </div>
@@ -305,9 +292,15 @@
 
 <script>
 import $ from "jquery";
-import { FINDWORK_CREATE_PROPOSAL } from "./constants/mutations";
+import {
+  FINDWORK_CREATE_PROPOSAL,
+  FINDWORK_UPLOAD_PHOTO
+} from "./constants/mutations";
 import Cookies from "js-cookie";
-import { FIND_WORK_GET_TICKETS } from "../../views/constants/querys";
+import {
+  FIND_WORK_GET_TICKETS,
+  CREATE_PROPOSAL_GET_VULGARITIES
+} from "../../views/constants/querys";
 
 export default {
   name: "CreateProposal",
@@ -316,13 +309,94 @@ export default {
     return {
       coverLetter: "",
       jobDetail: "",
-      limit: 10
+      limit: 10,
+      config: {},
+      file: "",
+      fileName: "",
+      fileId: ""
     };
+  },
+  apollo: {
+    config: {
+      query: CREATE_PROPOSAL_GET_VULGARITIES
+    }
   },
   methods: {
     async handleProposal(e) {
       e.preventDefault();
       let validate = true;
+      const { coverLetter, jobDetail } = this.$data;
+      const file = this.file;
+
+      if (coverLetter.length < 128 || coverLetter.length > 512) {
+        validate = false;
+        this.$toast.open({
+          message:
+            "La carta de presentación debe tener entre 128 y 512 caracteres.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (coverLetter) {
+        for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
+          const vulgarity = Object.values(this.config.vulgarity)[i];
+          if (coverLetter.toLowerCase().search(vulgarity.toString()) != -1) {
+            validate = false;
+            this.$toast.open({
+              message: "La carta de presentación tiene contenido ofensivo.",
+              type: "error",
+              duration: 3000
+            });
+            break;
+          }
+        }
+      } else if (
+        jobDetail &&
+        (jobDetail.length < 10 || jobDetail.length > 256)
+      ) {
+        validate = false;
+        this.$toast.open({
+          message:
+            "La descripción del trabajo debe tener entre 10 y 256 caracteres.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (jobDetail) {
+        for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
+          const vulgarity = Object.values(this.config.vulgarity)[i];
+          if (jobDetail.toLowerCase().search(vulgarity.toString()) != -1) {
+            validate = false;
+            this.$toast.open({
+              message: "La descripción del trabajo tiene contenido ofensivo.",
+              type: "error",
+              duration: 3000
+            });
+            break;
+          }
+        }
+      }
+
+      if (file) {
+        await this.$apollo
+          .mutate({
+            mutation: FINDWORK_UPLOAD_PHOTO,
+            variables: {
+              file
+            }
+          })
+          .then(data => {
+            this.fileId = data.data.upload.id;
+          })
+          .catch(({ graphQLErrors }) => {
+            validate = false;
+            graphQLErrors.map(error =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000
+              })
+            );
+          });
+      }
 
       if (validate) {
         await this.$apollo
@@ -331,8 +405,9 @@ export default {
             variables: {
               ticket: this.ticket.id,
               usersPermissionsUser: JSON.parse(Cookies.get("user")).id,
-              coverLetter: this.coverLetter,
-              jobDetail: this.jobDetail
+              coverLetter: coverLetter,
+              jobDetail: jobDetail,
+              file: this.fileId
             },
             refetchQueries: [
               {
@@ -365,6 +440,34 @@ export default {
             );
           });
       }
+    },
+    handleFileChange(e) {
+      if (
+        e.target.files[0].type === "image/png" ||
+        e.target.files[0].type === "image/jpg" ||
+        e.target.files[0].type === "image/jpeg" ||
+        e.target.files[0].type === "image/gif" ||
+        e.target.files[0].type === "image/svg" ||
+        e.target.files[0].type === "application/msword" ||
+        e.target.files[0].type === "application/pdf" ||
+        e.target.files[0].type === "application/vnd.ms-excel"
+      ) {
+        this.file = e.target.files[0];
+        this.fileName = this.file.name;
+      } else {
+        this.$toast.open({
+          message: "Seleccione un archivo con un formato válido.",
+          type: "error",
+          duration: 3000
+        });
+      }
+    },
+    handleCloseModal() {
+      this.coverLetter = "";
+      this.jobDetail = "";
+      this.file = "";
+      this.fileName = "";
+      this.fileId = "";
     }
   }
 };
@@ -423,7 +526,23 @@ export default {
   height: 8.5rem;
 }
 .price {
-  font-size: large;
+  font-size: xx-large;
   font-weight: bold;
+  margin-inline-start: 2%;
+  color: #ff5e15;
+}
+.smaller {
+  font-size: smaller;
+}
+.heightJobDetail {
+  height: 5rem !important;
+}
+.link {
+  font-size: small;
+  font-weight: bold;
+  color: black;
+}
+.link:hover {
+  color: #ff5e15;
 }
 </style>

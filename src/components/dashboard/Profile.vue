@@ -1,11 +1,11 @@
 <template>
   <div id="dashboardProfile" class="post-detail wizard-form w-100">
-    <h3 class="mb-0"><i class="fas fa-user"></i> Datos de Usuario</h3>
+    <h3 class="mb-0"><i class="fas fa-user"></i> Datos de Usuario - (Usuario no validado)</h3>
     <form class="w-100 pb-40" @submit="handleProfileUpdateUserData">
       <div class="row">
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
-            <label>Nombre Completo:</label>
+            <label>{{ getNameLabel }}:</label>
             <input
               type="text"
               v-model="me.detail.name"
@@ -39,22 +39,22 @@
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
           <div class="field-wrap w-100">
+            <label>Teléfono:</label>
             <div class="row">
-              <div class="col-md-3 col-sm-3 col-lg-3">
-                <label>Teléfono:</label>
+              <div class="col-md-1 col-sm-1 col-lg-1">
+                <label class="codeCountry">+56</label>
               </div>
-              <div class="col-md-9 col-sm-9 col-lg-9">
-                <label>+56</label>
+              <div class="col-md-11 col-sm-11 col-lg-11">
+                <input
+                  type="text"
+                  v-model="me.detail.phone"
+                  minlength="13"
+                  maxlength="13"
+                  @input="handleFormatPhone()"
+                  placeholder="Por ejemplo: 99240555"
+                />
               </div>
             </div>
-            <input
-              type="text"
-              v-model="me.detail.phone"
-              minlength="13"
-              maxlength="13"
-              @input="handleFormatPhone()"
-              placeholder="Por ejemplo: 99240555"
-            />
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
@@ -131,7 +131,7 @@
         </div>
       </div>
     </form>
-    <hr class="pb-20" />
+    <hr class="pb-20" v-if="me.detail.role.name === 'Professional'" />
     <h3 class="mb-0">Restablecer Contraseña</h3>
     <form class="w-100 pb-40" @submit="handleProfileForgotPassword">
       <div class="row">
@@ -378,10 +378,10 @@ export default {
           type: "error",
           duration: 3000
         });
-      } else if (contact && (contact.length < 16 || contact.length > 256)) {
+      } else if (contact && (contact.length <= 10 || contact.length > 256)) {
         validate = false;
         this.$toast.open({
-          message: "Ingrese un contacto válido.",
+          message: "Ingrese nombre y apellidos validos.",
           type: "error",
           duration: 3000
         });
@@ -610,6 +610,17 @@ export default {
       });
 
       return array;
+    },
+    getNameLabel() {
+      if (this.me.detail.rut && this.me.detail.rut.substr(0, 2) >= 50) {
+        return "Razón Social";
+      }
+      else if (this.me.detail.rut && this.me.detail.rut.substr(0, 2) < 50) {
+        return "Nombre";
+      }
+      else {
+        return "Nombre o Razón Social"
+      }
     }
   }
 };
@@ -618,5 +629,9 @@ export default {
 <style scoped>
 .iconUploadImage:hover {
   color: #ff5e15;
+}
+.codeCountry {
+  margin-top: 5px;
+  margin-bottom: 0px;
 }
 </style>

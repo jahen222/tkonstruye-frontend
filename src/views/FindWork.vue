@@ -66,6 +66,24 @@
                         </li>
                       </ul>
                     </div>
+                    <div class="widget2 category_widget brd-rd5 w-100">
+                      <h3>Comunas</h3>
+                      <ul class="mb-0 list-unstyled w-100">
+                        <li
+                          v-for="(commune, index) in communes"
+                          v-bind:key="index"
+                        >
+                          <span
+                            class="linkSpam"
+                            title=""
+                            @click="handleFilterCommune(commune.id)"
+                          >
+                            {{ commune.name }}
+                          </span>
+                          <br />
+                        </li>
+                      </ul>
+                    </div>
                   </aside>
                   <!-- Sidebar Wrap -->
                 </div>
@@ -82,7 +100,7 @@
                             <div class="comment-detail">
                               <h4 class="mb-0">
                                 {{ ticket.subcategory.category.name }}
-                                <i class="fas fa-greater-than"></i>
+                                <i class="fas fa-greater-than smaller"></i>
                                 {{ ticket.subcategory.name }}
                               </h4>
                               <span class="d-inline-block"
@@ -104,7 +122,9 @@
                                 >Ticket Propio</a
                               >
                               <a
-                                v-else-if="me.detail.role.name === 'Authenticated'"
+                                v-else-if="
+                                  me.detail.role.name === 'Authenticated'
+                                "
                                 class="comment-reply-link d-inline-block orange"
                                 href="#createProposalModal"
                                 data-toggle="modal"
@@ -114,7 +134,12 @@
                               >
                               <a
                                 v-else-if="
-                                  ticket.proposals.some((proposal) => proposal.users_permissions_user.id === getUser.id)
+                                  ticket.proposals &&
+                                  ticket.proposals.some(
+                                    (proposal) =>
+                                      proposal.users_permissions_user.id ===
+                                      getUser.id
+                                  )
                                 "
                                 class="comment-reply-link d-inline-block"
                                 title=""
@@ -141,7 +166,10 @@
                               >
                               <span class="d-inline-block replyCustom"
                                 ><i class="fas fa-users"></i
-                                >{{ ticket.proposals.length }} Propuestas</span
+                                >{{
+                                  ticket.proposals ? ticket.proposals.length : 0
+                                }}
+                                Propuestas</span
                               >
                             </div>
                           </div>
@@ -185,7 +213,9 @@ import {
   FIND_WORK_GET_CATEGORIES,
   FIND_WORK_GET_TICKETS,
   FIND_WORK_FILTER_SUBCATEGORIES,
-  FIND_WORK_GET_ME
+  FIND_WORK_GET_ME,
+  FIND_WORK_GET_COMMUNES,
+  FIND_WORK_FILTER_COMMUNES
 } from "./constants/querys";
 import moment from "moment";
 import Cookies from "js-cookie";
@@ -206,7 +236,8 @@ export default {
             name: ""
           }
         }
-      }
+      },
+      communes: []
     };
   },
   components: {
@@ -231,7 +262,10 @@ export default {
       }
     },
     me: {
-      query:  FIND_WORK_GET_ME
+      query: FIND_WORK_GET_ME
+    },
+    communes: {
+      query: FIND_WORK_GET_COMMUNES
     }
   },
   methods: {
@@ -280,6 +314,26 @@ export default {
       }
 
       return cat;
+    },
+    handleFilterCommune(communeId) {
+      this.$apollo
+        .query({
+          query: FIND_WORK_FILTER_COMMUNES,
+          variables: {
+            limit: this.limit,
+            communeId
+          }
+        })
+        .then(data => {
+          this.tickets = data.data.tickets;
+        })
+        .catch(({ graphQLErrors }) => {
+          graphQLErrors.map(({ extensions }) =>
+            extensions.exception.data.message.map(({ messages }) =>
+              messages.map(({ message }) => (this.error = message))
+            )
+          );
+        });
     }
   },
   computed: {
@@ -318,5 +372,8 @@ export default {
 }
 .widget2.category_widget ul li {
   text-align: left;
+}
+.smaller {
+  font-size: smaller;
 }
 </style>
