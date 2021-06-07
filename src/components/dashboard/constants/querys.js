@@ -218,6 +218,11 @@ export const PROPOSALS_GET_PROPOSALS = gql`
       }
       coverLetter
       jobDetail
+      file {
+        id
+        url
+        name
+      }
     }
   }
 `;

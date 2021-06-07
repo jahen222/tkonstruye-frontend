@@ -15,7 +15,7 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
           <p class="marginPs price">
-            {{ ticket ? ticket.subcategory.price + "$" : "" }}
+            {{ ticket ? handleFormatPrice(ticket.subcategory.price) : "" }}
           </p>
           <button
             type="button"
@@ -159,9 +159,98 @@
                       ref="file"
                     />
                   </div>
-                  <button class="thm-btn thm-bg" type="submit">
+                  <button
+                    class="thm-btn thm-bg"
+                    @click="handleValidation"
+                    title=""
+                  >
                     Participar
                   </button>
+                </div>
+              </div>
+              <!-- confirmation modal -->
+              <div
+                class="modal fade"
+                id="confirmationModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">
+                        Confirmación
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div
+                        id="dashboardProfile"
+                        class="post-detail wizard-form w-100"
+                      >
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12 col-lg-12">
+                            <div class="field-wrap w-100">
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Total:</th>
+                                      <th scope="col">
+                                        {{
+                                          ticket
+                                            ? handleFormatPrice(
+                                                ticket.subcategory.price
+                                              )
+                                            : ""
+                                        }}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <th scope="row">
+                                        Impuesto:
+                                      </th>
+                                      <td>
+                                        <p class="marginPs">
+                                          $0
+                                        </p>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <th scope="row">
+                                        <i class="fas fa-question-circle"></i>
+                                        Nota:
+                                      </th>
+                                      <td>
+                                        <p class="marginPs">
+                                          Puedes recargar tu saldo haciendo
+                                          click 
+                                          <a href="#">aquí</a>
+                                        </p>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <button class="thm-btn thm-bg" type="submit">
+                              Confirmar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>
@@ -177,7 +266,7 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
           <p class="marginPs price">
-            {{ ticket ? ticket.subcategory.price + "$" : "" }}
+            {{ ticket ? handleFormatPrice(ticket.subcategory.price) : "" }}
           </p>
           <button
             type="button"
@@ -322,6 +411,62 @@ export default {
     }
   },
   methods: {
+    handleValidation(e) {
+      e.preventDefault();
+      let validate = true;
+      const { coverLetter, jobDetail } = this.$data;
+
+      if (coverLetter.length < 128 || coverLetter.length > 512) {
+        validate = false;
+        this.$toast.open({
+          message:
+            "La carta de presentación debe tener entre 128 y 512 caracteres.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (coverLetter) {
+        for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
+          const vulgarity = Object.values(this.config.vulgarity)[i];
+          if (coverLetter.toLowerCase().search(vulgarity.toString()) != -1) {
+            validate = false;
+            this.$toast.open({
+              message: "La carta de presentación tiene contenido ofensivo.",
+              type: "error",
+              duration: 3000
+            });
+            break;
+          }
+        }
+      } else if (
+        jobDetail &&
+        (jobDetail.length < 10 || jobDetail.length > 256)
+      ) {
+        validate = false;
+        this.$toast.open({
+          message:
+            "La descripción del trabajo debe tener entre 10 y 256 caracteres.",
+          type: "error",
+          duration: 3000
+        });
+      } else if (jobDetail) {
+        for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
+          const vulgarity = Object.values(this.config.vulgarity)[i];
+          if (jobDetail.toLowerCase().search(vulgarity.toString()) != -1) {
+            validate = false;
+            this.$toast.open({
+              message: "La descripción del trabajo tiene contenido ofensivo.",
+              type: "error",
+              duration: 3000
+            });
+            break;
+          }
+        }
+      }
+
+      if (validate) {
+        $("#confirmationModal").modal("show");
+      }
+    },
     async handleProposal(e) {
       e.preventDefault();
       let validate = true;
@@ -422,6 +567,7 @@ export default {
           .then(() => {
             this.coverLetter = "";
             this.jobDetail = "";
+            $("#confirmationModal").modal("hide");
             $("#createProposalModal").modal("hide");
 
             this.$toast.open({
@@ -468,6 +614,15 @@ export default {
       this.file = "";
       this.fileName = "";
       this.fileId = "";
+    },
+    handleFormatPrice(price) {
+      const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0
+      });
+
+      return formatter.format(price).replace(",", ".");
     }
   }
 };

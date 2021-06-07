@@ -51,7 +51,7 @@
                   minlength="13"
                   maxlength="13"
                   @input="handleFormatPhone()"
-                  placeholder="Por ejemplo: 99240555"
+                  placeholder="Por ejemplo: 992405555"
                 />
               </div>
             </div>
@@ -112,6 +112,7 @@
           <div class="field-wrap w-100">
             <label>Giro:</label>
             <textarea
+              class="heightJobDetail"
               v-model="me.detail.giro"
               placeholder="Ingresa aquí tu respuesta."
               maxlength="512"
@@ -120,6 +121,7 @@
           <div class="field-wrap w-100">
             <label>Contacto:</label>
             <textarea
+              class="heightJobDetail"
               v-model="me.detail.contact"
               placeholder="Ingresa aquí tu respuesta."
               maxlength="512"
@@ -633,5 +635,8 @@ export default {
 .codeCountry {
   margin-top: 5px;
   margin-bottom: 0px;
+}
+.heightJobDetail {
+  height: 5rem !important;
 }
 </style>

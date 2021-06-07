@@ -19,6 +19,7 @@
                     <th scope="col">#</th>
                     <th scope="col"># TICKET</th>
                     <th scope="col">RESPONSABLE</th>
+                    <th scope="col">ADJUNTOS</th>
                     <th scope="col">OPCIONES</th>
                   </tr>
                 </thead>
@@ -32,6 +33,16 @@
                     </td>
                     <td @click="handleShowProposalModal(proposal)">
                       {{ proposal.users_permissions_user.username }}
+                    </td>
+                    <td>
+                      <a
+                        v-if="proposal.file"
+                        class="view iconTable"
+                        title=""
+                        :href="proposal.file ? api_url+proposal.file.url : null"
+                        target="_blank"
+                        ><i class="fas fa-download"></i
+                      ></a>
                     </td>
                     <td>
                       <a
@@ -182,6 +193,7 @@ export default {
   name: "Proposals",
   data() {
     return {
+      api_url: process.env.VUE_APP_STRAPI_API_URL,
       proposals: [],
       selectProposal: "",
       error: "",
