@@ -130,12 +130,12 @@ export default {
 
 <style scoped>
 .slide1 {
-  background-image: url("../../assets/tkonstruye/slider/1.jpg");
+  background-image: url("../../../assets/tkonstruye/slider/1.jpg");
 }
 .slide2 {
-  background-image: url("../../assets/tkonstruye/slider/2.jpg");
+  background-image: url("../../../assets/tkonstruye/slider/2.jpg");
 }
 .slide3 {
-  background-image: url("../../assets/tkonstruye/slider/3.jpg");
+  background-image: url("../../../assets/tkonstruye/slider/3.jpg");
 }
 </style>

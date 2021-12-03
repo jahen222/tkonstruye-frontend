@@ -171,7 +171,7 @@
                 </ul>
               </li>
               <li><a href="blog.html" title="">Blog</a></li>
-              <li><a href="planes.html" title="">Planes</a></li>
+              <li><a href="/subscriptions" title="">Planes</a></li>
               <li><a href="about.html" title="">Nosotros</a></li>
               <li><a href="contact.html" title="">Contacto</a></li>
             </ul>

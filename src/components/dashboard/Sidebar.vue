@@ -81,6 +81,13 @@
             v-if="me.detail.role.name === 'Professional'"
             ><i class="fas fa-paperclip"></i> Propuestas</a
           >
+          <a
+            class="nav-link customNavLink"
+            href="#"
+            @click="handleGeneralOption('payment')"
+          >
+            <i class="fas fa-dollar-sign"></i> Payment</a
+          >
         </nav>
       </div>
     </nav>
@@ -114,6 +121,9 @@
           </li>
           <li>
             <a href="#" @click="handleGeneralOption('proposals')">Propuestas</a>
+          </li>
+          <li>
+            <a href="#" @click="handleGeneralOption('payment')">Pago</a>
           </li>
         </ul>
       </div>

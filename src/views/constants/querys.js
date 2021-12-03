@@ -45,6 +45,7 @@ export const FIND_WORK_GET_TICKETS = gql`
       commune {
         id
         name
+        map
         city {
           id
           name
@@ -89,6 +90,7 @@ export const FIND_WORK_FILTER_SUBCATEGORIES = gql`
       commune {
         id
         name
+        map
         city {
           id
           name
@@ -132,6 +134,7 @@ export const FIND_WORK_GET_COMMUNES = gql`
     communes {
       id
       name
+      map
     }
   }
 `;
@@ -158,6 +161,7 @@ export const FIND_WORK_FILTER_COMMUNES = gql`
       commune {
         id
         name
+        map
         city {
           id
           name
@@ -170,6 +174,19 @@ export const FIND_WORK_FILTER_COMMUNES = gql`
       requirements
       description
       created_at
+    }
+  }
+`;
+
+export const SUBSCRIPTIONS_GET_SUBCRIPTIONS = gql`
+  query subscriptions {
+    subscriptions {
+      id
+      name
+      description
+      price
+      discount
+      icon
     }
   }
 `;

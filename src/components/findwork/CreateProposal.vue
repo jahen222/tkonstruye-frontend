@@ -8,7 +8,9 @@
     @click.self="handleCloseModal"
   >
     <div
-      class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+      class="
+        modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable
+      "
       v-if="role === 'Professional'"
     >
       <div class="modal-content">
@@ -19,7 +21,7 @@
           </p>
           <button
             type="button"
-            class="close"
+            class="close buttonClose"
             @click="handleCloseModal"
             data-dismiss="modal"
             aria-label="Close"
@@ -102,7 +104,11 @@
                         <tr>
                           <td colspan="2">
                             <iframe
-                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53211.524521758976!2d-70.59573121979936!3d-33.534657471820495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662d125ecd59095%3A0x375e6cb56bef3ac!2sLa%20Florida%2C%20Regi%C3%B3n%20Metropolitana%2C%20Chile!5e0!3m2!1ses!2sve!4v1621542101450!5m2!1ses!2sve"
+                              :src="
+                                ticket
+                                  ? ticket.commune.map
+                                  : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53211.524521758976!2d-70.59573121979936!3d-33.534657471820495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662d125ecd59095%3A0x375e6cb56bef3ac!2sLa%20Florida%2C%20Regi%C3%B3n%20Metropolitana%2C%20Chile!5e0!3m2!1ses!2sve!4v1621542101450!5m2!1ses!2sve'
+                              "
                               width="100%"
                               height="100"
                               style="border: 0"
@@ -217,13 +223,9 @@
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <th scope="row">
-                                        Impuesto:
-                                      </th>
+                                      <th scope="row">Impuesto:</th>
                                       <td>
-                                        <p class="marginPs">
-                                          $0
-                                        </p>
+                                        <p class="marginPs">$0</p>
                                       </td>
                                     </tr>
                                     <tr>
@@ -234,7 +236,7 @@
                                       <td>
                                         <p class="marginPs">
                                           Puedes recargar tu saldo haciendo
-                                          click 
+                                          click
                                           <a href="#">aquí</a>
                                         </p>
                                       </td>
@@ -270,7 +272,7 @@
           </p>
           <button
             type="button"
-            class="close"
+            class="close buttonClose"
             data-dismiss="modal"
             aria-label="Close"
           >
@@ -352,7 +354,11 @@
                         <tr>
                           <td colspan="2">
                             <iframe
-                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53211.524521758976!2d-70.59573121979936!3d-33.534657471820495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662d125ecd59095%3A0x375e6cb56bef3ac!2sLa%20Florida%2C%20Regi%C3%B3n%20Metropolitana%2C%20Chile!5e0!3m2!1ses!2sve!4v1621542101450!5m2!1ses!2sve"
+                              :src="
+                                ticket
+                                  ? ticket.commune.map
+                                  : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53211.524521758976!2d-70.59573121979936!3d-33.534657471820495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662d125ecd59095%3A0x375e6cb56bef3ac!2sLa%20Florida%2C%20Regi%C3%B3n%20Metropolitana%2C%20Chile!5e0!3m2!1ses!2sve!4v1621542101450!5m2!1ses!2sve'
+                              "
                               width="100%"
                               height="100"
                               style="border: 0"
@@ -685,6 +691,7 @@ export default {
   font-weight: bold;
   margin-inline-start: 2%;
   color: #ff5e15;
+  margin-left: auto;
 }
 .smaller {
   font-size: smaller;
@@ -699,5 +706,8 @@ export default {
 }
 .link:hover {
   color: #ff5e15;
+}
+.buttonClose{
+    margin: -1rem -1rem -1rem 2rem !important;
 }
 </style>

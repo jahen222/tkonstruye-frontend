@@ -71,6 +71,19 @@
               <li class="breadcrumb-item active">Propuestas</li>
             </ol>
           </div>
+          <div
+            class="page-top-wrap w-100"
+            v-else-if="generalOption === 'payment'"
+          >
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="#" @click="handleGeneralOption('')" title=""
+                  >Dashboard</a
+                >
+              </li>
+              <li class="breadcrumb-item active">Payment</li>
+            </ol>
+          </div>
           <div class="page-top-wrap w-100" v-else>
             <ol class="breadcrumb">
               <li class="breadcrumb-item active">
@@ -106,6 +119,9 @@
                 <div v-else-if="generalOption == 'professionalProposals'">
                   <ProfessionalProposals />
                 </div>
+                <div v-else-if="generalOption == 'payment'">
+                  <Payment />
+                </div>
                 <div v-else>
                   <Index />
                 </div>
@@ -136,6 +152,7 @@ import ProfessionalProposals from "../components/dashboard/ProfessionalProposals
 import Index from "../components/dashboard/Index";
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
+import Payment from "../components/dashboard/Payment";
 
 export default {
   name: "Dashboard",
@@ -151,7 +168,8 @@ export default {
     Index,
     Footer,
     Copyright,
-    Sidebar
+    Sidebar,
+    Payment
   },
   data() {
     return {

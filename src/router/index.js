@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Dashboard from "../views/Dashboard.vue";
 import FindWork from "../views/FindWork.vue";
+import Subscriptions from "../views/Subscriptions.vue";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
+  },
+  {
+    path: "/subscriptions",
+    name: "Subscriptions",
+    component: Subscriptions,
   }
 ];
 

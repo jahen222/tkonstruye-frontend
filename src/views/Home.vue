@@ -1032,7 +1032,7 @@
 import Header from "../components/layouts/Header";
 import StickyMenu from "../components/layouts/StickyMenu";
 import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
-import Slider from "../components/slider/Slider"
+import Slider from "../components/home/slider/Slider"
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
 

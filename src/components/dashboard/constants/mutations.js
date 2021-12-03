@@ -114,9 +114,7 @@ export const TICKETS_UPDATE_TICKET = gql`
   ) {
     updateTicket(
       input: {
-        where: {
-          id: $id
-        }
+        where: { id: $id }
         data: {
           subcategory: $subCategory
           users_permissions_user: $usersPermissionsUser
@@ -160,13 +158,61 @@ export const TICKETS_DELETE_TICKET = gql`
 export const CATEGORIES_UPDATE_USER_SUBCATEGORIES = gql`
   mutation updateUser($id: ID!, $subCategories: [ID]) {
     updateUser(
-      input: { where: { id: $id }, data: { subcategories: $subCategories} }
+      input: { where: { id: $id }, data: { subcategories: $subCategories } }
     ) {
       user {
         id
         subcategories {
           id
         }
+      }
+    }
+  }
+`;
+
+export const PAYMENT_CREATE_CARD = gql`
+  mutation createCard(
+    $usersPermissionsUser: ID!
+    $firstname: String!
+    $lastname: String!
+    $cardNumber: String!
+    $expirationMonth: Int!
+    $expirationYear: Int!
+    $cvv: Int!
+    $zip: String!
+    $type: String!
+  ) {
+    createCard(
+      input: {
+        data: {
+          users_permissions_user: $usersPermissionsUser
+          firstname: $firstname
+          lastname: $lastname
+          cardNumber: $cardNumber
+          expirationMonth: $expirationMonth
+          expirationYear: $expirationYear
+          cvv: $cvv
+          zip: $zip
+          type: $type
+        }
+      }
+    ) {
+      card {
+        id
+        users_permissions_user {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const PAYMENT_DELETE_CARD = gql`
+  mutation deleteCard($id: ID!) {
+    deleteCard(input: { where: { id: $id } }) {
+      card {
+        id
       }
     }
   }

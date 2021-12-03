@@ -277,3 +277,39 @@ export const PROPOSALS_GET_ME = gql`
     }
   }
 `;
+
+export const PAYMENT_GET_CARDS = gql`
+  query cards($user: ID!, $contains: String) {
+    cards(
+      sort: "created_at:desc"
+      where: {
+        users_permissions_user: $user
+        _or: [
+          { id_contains: $contains }
+          { firstname_contains: $contains }
+          { lastname_contains: $contains }
+          { cardNumber_contains: $contains }
+          { expirationMonth_contains: $contains }
+          { expirationYear_contains: $contains }
+          { cvv_contains: $contains }
+          { zip_contains: $contains }
+          { type_contains: $contains }
+        ]
+      }
+    ) {
+      id
+      firstname
+      lastname
+      cardNumber
+      expirationMonth
+      expirationYear
+      cvv
+      zip
+      type
+      users_permissions_user {
+        id
+        name
+      }
+    }
+  }
+`;
