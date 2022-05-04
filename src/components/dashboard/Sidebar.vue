@@ -84,6 +84,13 @@
           <a
             class="nav-link customNavLink"
             href="#"
+            @click="handleGeneralOption('subscriptions')"
+            v-if="me.detail.role.name === 'Professional'"
+            ><i class="fa fa-plus"></i> Subscripciones</a
+          >
+          <a
+            class="nav-link customNavLink"
+            href="#"
             @click="handleGeneralOption('payment')"
           >
             <i class="fas fa-dollar-sign"></i> Payment</a

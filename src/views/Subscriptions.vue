@@ -38,8 +38,18 @@
                     <div class="serv-box-inner">
                       <h3 class="mb-0">
                         <a
-                          v-if="getUser"
-                          href="services-detail.html"
+                          v-if="getUser && getUser.role.name === 'Professional'"
+                          type="button"
+                          aria-hidden="true"
+                          @click="handleOpenProfessionalModal(subscription)"
+                          >{{ subscription.name }}</a
+                        >
+                        <a
+                          v-else-if="
+                            getUser && getUser.role.name === 'Authenticated'
+                          "
+                          href="#nonProfessionalModal"
+                          data-toggle="modal"
                           title=""
                           >{{ subscription.name }}</a
                         >
@@ -55,7 +65,7 @@
                         {{ subscription.description }}
                       </p>
                       <span class="d-block"
-                        ><i class="thm-clr">Precio: </i>
+                        ><i class="thm-clr">Precio Mensual: </i>
                         {{ subscription.price }} $<br />
                         <i class="thm-clr">Descuento: </i>
                         {{ subscription.discount }} %</span
@@ -73,12 +83,117 @@
       <!-- Footer -->
       <Copyright />
       <!-- Copyright -->
+      <!-- Non Professional Modal -->
+      <div
+        id="nonProfessionalModal"
+        ref="nonProfessionalModal"
+        class="modal fade"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <i class="fas fa-user"></i> Bienvenido
+              </h4>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+                @click="handleCloseModal"
+              >
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="post-detail wizard-form w-100">
+                <div class="row pb-50 pb-custom">
+                  <div class="col-md-12 col-sm-12 col-lg-12 center">
+                    <div class="field-wrap w-100">
+                      <label
+                        >Solo los usuarios registrados como profesionales pueden
+                        adquirir subscripciones</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                    <button
+                      class="thm-btn thm-bg"
+                      type="button"
+                      data-dismiss="modal"
+                      aria-hidden="true"
+                      @click="handleCloseModal"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Professional Modal -->
+      <div id="professionalModal" ref="professionalModal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <i class="fas fa-user"></i> Bienvenido
+              </h4>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+                @click="handleCloseModal"
+              >
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="post-detail wizard-form w-100">
+                <div class="row pb-50 pb-custom">
+                  <div class="col-md-12 col-sm-12 col-lg-12 center">
+                    <div class="field-wrap w-100">
+                      <label>¿deseas adquirir esta subscripción?</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-lg-6 pt-50 center">
+                    <button
+                      class="thm-btn thm-bg"
+                      type="button"
+                      data-dismiss="modal"
+                      aria-hidden="true"
+                      @click="handleCloseModal"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-lg-6 pt-50 center">
+                    <button
+                      class="thm-btn thm-bg"
+                      type="button"
+                      data-dismiss="modal"
+                      aria-hidden="true"
+                      @click="handleSetSubcriptionToUser"
+                    >
+                      Adquirir
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
     <!-- Main Wrapper -->
   </div>
 </template>
 
 <script>
+import $ from "jquery";
 import Header from "../components/layouts/Header";
 import StickyMenu from "../components/layouts/StickyMenu";
 import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
@@ -86,9 +201,12 @@ import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
 import {
   FIND_WORK_GET_ME,
-  SUBSCRIPTIONS_GET_SUBCRIPTIONS
+  SUBSCRIPTIONS_GET_SUBCRIPTIONS,
 } from "./constants/querys";
 import Cookies from "js-cookie";
+import {
+  SUBSCRIPTIONS_SET_USER
+} from "./constants/mutations";
 
 export default {
   name: "Subscriptions",
@@ -98,11 +216,12 @@ export default {
         detail: {
           id: "",
           role: {
-            name: ""
-          }
-        }
+            name: "",
+          },
+        },
       },
-      subscriptions: []
+      subscriptions: [],
+      selectSubscription: "",
     };
   },
   components: {
@@ -110,17 +229,61 @@ export default {
     StickyMenu,
     ResponsiveHeader,
     Footer,
-    Copyright
+    Copyright,
   },
   apollo: {
     me: {
-      query: FIND_WORK_GET_ME
+      query: FIND_WORK_GET_ME,
     },
     subscriptions: {
-      query: SUBSCRIPTIONS_GET_SUBCRIPTIONS
-    }
+      query: SUBSCRIPTIONS_GET_SUBCRIPTIONS,
+    },
   },
-  methods: {},
+  methods: {
+    handleCloseModal() {},
+    handleOpenProfessionalModal(subscription) {
+      this.selectSubscription = subscription;
+      $("#professionalModal").modal("show");
+    },
+    async handleSetSubcriptionToUser(e) {
+      e.preventDefault();
+
+      if (Cookies.get("user") && this.selectSubscription) {
+        await this.$apollo
+          .mutate({
+            mutation: SUBSCRIPTIONS_SET_USER,
+            variables: {
+              userId: JSON.parse(Cookies.get("user")).id,
+              subscriptionId: this.selectSubscription.id
+            },
+          })
+          .then(() => {
+            $("#professionalModal").modal("hide");
+            this.selectSubscription = "";
+            this.$toast.open({
+              message: "Subscripción adquirida exitosamente.",
+              type: "success",
+              duration: 3000,
+            });
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map((error) =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000,
+              })
+            );
+          });
+      } else {
+        this.$toast.open({
+          message: "Usuario o subscripcion inválidas",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    },
+  },
   computed: {
     getUser() {
       let user = "";
@@ -129,8 +292,8 @@ export default {
         return user;
       }
       return user;
-    }
-  }
+    },
+  },
 };
 </script>
 

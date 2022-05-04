@@ -18,6 +18,7 @@
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
           <p class="marginPs price">
             {{ ticket ? handleFormatPrice(ticket.subcategory.price) : "" }}
+            {{ subscription ? " - " + subscription.discount + "%" : "" }}
           </p>
           <button
             type="button"
@@ -269,6 +270,7 @@
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
           <p class="marginPs price">
             {{ ticket ? handleFormatPrice(ticket.subcategory.price) : "" }}
+            {{ subscription ? " - " + subscription.discount + "%" : "" }}
           </p>
           <button
             type="button"
@@ -389,17 +391,17 @@
 import $ from "jquery";
 import {
   FINDWORK_CREATE_PROPOSAL,
-  FINDWORK_UPLOAD_PHOTO
+  FINDWORK_UPLOAD_PHOTO,
 } from "./constants/mutations";
 import Cookies from "js-cookie";
 import {
   FIND_WORK_GET_TICKETS,
-  CREATE_PROPOSAL_GET_VULGARITIES
+  CREATE_PROPOSAL_GET_VULGARITIES,
 } from "../../views/constants/querys";
 
 export default {
   name: "CreateProposal",
-  props: ["ticket", "role"],
+  props: ["ticket", "role", "subscription"],
   data() {
     return {
       coverLetter: "",
@@ -408,13 +410,13 @@ export default {
       config: {},
       file: "",
       fileName: "",
-      fileId: ""
+      fileId: "",
     };
   },
   apollo: {
     config: {
-      query: CREATE_PROPOSAL_GET_VULGARITIES
-    }
+      query: CREATE_PROPOSAL_GET_VULGARITIES,
+    },
   },
   methods: {
     handleValidation(e) {
@@ -428,7 +430,7 @@ export default {
           message:
             "La carta de presentación debe tener entre 128 y 512 caracteres.",
           type: "error",
-          duration: 3000
+          duration: 3000,
         });
       } else if (coverLetter) {
         for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
@@ -438,7 +440,7 @@ export default {
             this.$toast.open({
               message: "La carta de presentación tiene contenido ofensivo.",
               type: "error",
-              duration: 3000
+              duration: 3000,
             });
             break;
           }
@@ -452,7 +454,7 @@ export default {
           message:
             "La descripción del trabajo debe tener entre 10 y 256 caracteres.",
           type: "error",
-          duration: 3000
+          duration: 3000,
         });
       } else if (jobDetail) {
         for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
@@ -462,7 +464,7 @@ export default {
             this.$toast.open({
               message: "La descripción del trabajo tiene contenido ofensivo.",
               type: "error",
-              duration: 3000
+              duration: 3000,
             });
             break;
           }
@@ -485,7 +487,7 @@ export default {
           message:
             "La carta de presentación debe tener entre 128 y 512 caracteres.",
           type: "error",
-          duration: 3000
+          duration: 3000,
         });
       } else if (coverLetter) {
         for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
@@ -495,7 +497,7 @@ export default {
             this.$toast.open({
               message: "La carta de presentación tiene contenido ofensivo.",
               type: "error",
-              duration: 3000
+              duration: 3000,
             });
             break;
           }
@@ -509,7 +511,7 @@ export default {
           message:
             "La descripción del trabajo debe tener entre 10 y 256 caracteres.",
           type: "error",
-          duration: 3000
+          duration: 3000,
         });
       } else if (jobDetail) {
         for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
@@ -519,7 +521,7 @@ export default {
             this.$toast.open({
               message: "La descripción del trabajo tiene contenido ofensivo.",
               type: "error",
-              duration: 3000
+              duration: 3000,
             });
             break;
           }
@@ -531,19 +533,19 @@ export default {
           .mutate({
             mutation: FINDWORK_UPLOAD_PHOTO,
             variables: {
-              file
-            }
+              file,
+            },
           })
-          .then(data => {
+          .then((data) => {
             this.fileId = data.data.upload.id;
           })
           .catch(({ graphQLErrors }) => {
             validate = false;
-            graphQLErrors.map(error =>
+            graphQLErrors.map((error) =>
               this.$toast.open({
                 message: error.message,
                 type: "error",
-                duration: 3000
+                duration: 3000,
               })
             );
           });
@@ -558,17 +560,17 @@ export default {
               usersPermissionsUser: JSON.parse(Cookies.get("user")).id,
               coverLetter: coverLetter,
               jobDetail: jobDetail,
-              file: this.fileId
+              file: this.fileId,
             },
             refetchQueries: [
               {
                 query: FIND_WORK_GET_TICKETS,
                 variables: {
                   limit: this.limit,
-                  contains: ""
-                }
-              }
-            ]
+                  contains: "",
+                },
+              },
+            ],
           })
           .then(() => {
             this.coverLetter = "";
@@ -579,15 +581,15 @@ export default {
             this.$toast.open({
               message: "Propuesta creada exitosamente.",
               type: "success",
-              duration: 3000
+              duration: 3000,
             });
           })
           .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(error =>
+            graphQLErrors.map((error) =>
               this.$toast.open({
                 message: error.message,
                 type: "error",
-                duration: 3000
+                duration: 3000,
               })
             );
           });
@@ -610,7 +612,7 @@ export default {
         this.$toast.open({
           message: "Seleccione un archivo con un formato válido.",
           type: "error",
-          duration: 3000
+          duration: 3000,
         });
       }
     },
@@ -625,12 +627,12 @@ export default {
       const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-        minimumFractionDigits: 0
+        minimumFractionDigits: 0,
       });
 
       return formatter.format(price).replace(",", ".");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -707,7 +709,7 @@ export default {
 .link:hover {
   color: #ff5e15;
 }
-.buttonClose{
-    margin: -1rem -1rem -1rem 2rem !important;
+.buttonClose {
+  margin: -1rem -1rem -1rem 2rem !important;
 }
 </style>

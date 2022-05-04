@@ -3,7 +3,14 @@
     <div class="topbar bg-color1 w-100">
       <div class="container">
         <div
-          class="topbar-inner d-flex flex-wrap justify-content-between align-items-center w-100"
+          class="
+            topbar-inner
+            d-flex
+            flex-wrap
+            justify-content-between
+            align-items-center
+            w-100
+          "
         >
           <ul class="topbar-info-list mb-0 list-unstyled d-inline-flex">
             <li v-if="config.address">
@@ -23,7 +30,12 @@
             </li>
           </ul>
           <ul
-            class="topbar-info-list topbar-links-custom mb-0 list-unstyled d-inline-flex"
+            class="
+              topbar-info-list topbar-links-custom
+              mb-0
+              list-unstyled
+              d-inline-flex
+            "
             v-if="getUsername"
           >
             <li>
@@ -46,7 +58,12 @@
             </li>
           </ul>
           <ul
-            class="topbar-info-list topbar-links-custom mb-0 list-unstyled d-inline-flex"
+            class="
+              topbar-info-list topbar-links-custom
+              mb-0
+              list-unstyled
+              d-inline-flex
+            "
             v-else
           >
             <li>
@@ -71,10 +88,23 @@
     <div class="logo-info-bar-wrap w-100">
       <div class="container">
         <div
-          class="logo-info-bar-inner w-100 d-flex flex-wrap justify-content-between align-items-center"
+          class="
+            logo-info-bar-inner
+            w-100
+            d-flex
+            flex-wrap
+            justify-content-between
+            align-items-center
+          "
         >
           <div
-            class="logo-social d-inline-flex flex-wrap justify-content-between align-items-center"
+            class="
+              logo-social
+              d-inline-flex
+              flex-wrap
+              justify-content-between
+              align-items-center
+            "
           >
             <div class="logo">
               <h1 class="mb-0">
@@ -104,7 +134,13 @@
             </div>
           </div>
           <div
-            class="top-info-wrap d-inline-flex flex-wrap justify-content-between align-items-center"
+            class="
+              top-info-wrap
+              d-inline-flex
+              flex-wrap
+              justify-content-between
+              align-items-center
+            "
           >
             <div class="call-us">
               <i class="thm-clr flaticon-phone-call"></i>
@@ -138,7 +174,13 @@
     <div class="menu-wrap">
       <div class="container">
         <nav
-          class="d-inline-flex justify-content-between align-items-center w-100 bg-color1"
+          class="
+            d-inline-flex
+            justify-content-between
+            align-items-center
+            w-100
+            bg-color1
+          "
         >
           <div class="header-left">
             <ul class="mb-0 list-unstyled d-inline-flex">
@@ -722,14 +764,14 @@ import { mapMutations } from "vuex";
 import {
   HEADER_GET_LOGO,
   HEADER_GET_ROLES,
-  HEADER_GET_PHOTO
+  HEADER_GET_PHOTO,
 } from "./constants/querys";
 import { HEADER_USER_LOGIN, HEADER_USER_REGISTER } from "./constants/mutations";
 import Wizard from "../common/Wizard";
 
 export default {
   name: "Header",
-  data() {
+  data() { 
     return {
       api_url: process.env.VUE_APP_STRAPI_API_URL,
       config: {
@@ -737,8 +779,8 @@ export default {
         address: "",
         phone: "",
         logo: {
-          url: ""
-        }
+          url: "",
+        },
       },
       role: "",
       roles: [],
@@ -752,33 +794,33 @@ export default {
         detail: {
           id: "",
           photo: {
-            url: ""
-          }
-        }
-      }
+            url: "",
+          },
+        },
+      },
     };
   },
   components: {
-    Wizard
+    Wizard,
   },
   apollo: {
     config: {
-      query: HEADER_GET_LOGO
+      query: HEADER_GET_LOGO,
     },
     roles: {
-      query: HEADER_GET_ROLES
+      query: HEADER_GET_ROLES,
     },
     me: {
       query: HEADER_GET_PHOTO,
       skip() {
         return !this.getUsername;
-      }
-    }
+      },
+    },
   },
   methods: {
     ...mapMutations({
       setUser: "setUser",
-      logout: "logout"
+      logout: "logout",
     }),
     handleLogin(e) {
       e.preventDefault();
@@ -799,14 +841,14 @@ export default {
             mutation: HEADER_USER_LOGIN,
             variables: {
               email,
-              password
-            }
+              password,
+            },
           })
-          .then(data => {
+          .then((data) => {
             this.$toast.open({
               message: "Bienvenido, " + data.data.login.user.username,
               type: "success",
-              duration: 3000
+              duration: 3000,
             });
             this.setUser(data.data.login);
             this.$router.go();
@@ -823,7 +865,8 @@ export default {
     handleRegister(e) {
       e.preventDefault();
       const { username, email, password, passwordConfirm, phone } = this.$data;
-      const role = this.roles.filter(rol => rol.name === "Authenticated")[0].id;
+      const role = this.roles.filter((rol) => rol.name === "Authenticated")[0]
+        .id;
       let validate = true;
 
       if (email.length < 7 || email.length > 32) {
@@ -855,8 +898,8 @@ export default {
               email,
               password,
               phone,
-              role
-            }
+              role,
+            },
           })
           .then(() => {
             this.handleLogin(e);
@@ -874,7 +917,8 @@ export default {
     handleProfessionalRegister(e) {
       e.preventDefault();
       const { username, email, password, passwordConfirm, phone } = this.$data;
-      const role = this.roles.filter(rol => rol.name === "Professional")[0].id;
+      const role = this.roles.filter((rol) => rol.name === "Professional")[0]
+        .id;
       let validate = true;
 
       if (email.length < 7 || email.length > 32) {
@@ -906,8 +950,8 @@ export default {
               email,
               password,
               phone,
-              role
-            }
+              role,
+            },
           })
           .then(() => {
             this.handleLogin(e);
@@ -1001,7 +1045,7 @@ export default {
           $(this.$refs.confirmProfessionalPassword).attr("type", "password");
         }
       }
-    }
+    },
   },
   computed: {
     getUsername() {
@@ -1014,7 +1058,7 @@ export default {
     },
     getLogo() {
       return this.api_url + this.config.logo.url;
-    }
+    },
   },
   mounted() {
     $(this.$refs.loginModal).on("hidden.bs.modal", this.handleCloseModal);
@@ -1026,7 +1070,7 @@ export default {
       "hidden.bs.modal",
       this.handleCloseModal
     );
-  }
+  },
 };
 </script>
 

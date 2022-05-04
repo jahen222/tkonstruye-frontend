@@ -217,3 +217,22 @@ export const PAYMENT_DELETE_CARD = gql`
     }
   }
 `;
+
+export const SUBSCRIPTIONS_DELETE_SUBCRIPTION = gql`
+  mutation updateUser(
+    $id: ID!
+  ) {
+    updateUser(
+      input: {
+        where: { id: $id }
+        data: {
+          subscription: null
+        }
+      }
+    ) {
+      user {
+        id
+      }
+    }
+  }
+`;

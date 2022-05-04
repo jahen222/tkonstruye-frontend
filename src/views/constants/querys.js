@@ -116,6 +116,11 @@ export const FIND_WORK_GET_ME = gql`
           id
           name
         }
+        subscription{
+          id
+          name
+          discount
+        }
       }
     }
   }

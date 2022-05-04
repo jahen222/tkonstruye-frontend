@@ -73,6 +73,19 @@
           </div>
           <div
             class="page-top-wrap w-100"
+            v-else-if="generalOption === 'subscriptions'"
+          >
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="#" @click="handleGeneralOption('')" title=""
+                  >Dashboard</a
+                >
+              </li>
+              <li class="breadcrumb-item active">Subscriptions</li>
+            </ol>
+          </div>
+          <div
+            class="page-top-wrap w-100"
             v-else-if="generalOption === 'payment'"
           >
             <ol class="breadcrumb">
@@ -122,6 +135,9 @@
                 <div v-else-if="generalOption == 'payment'">
                   <Payment />
                 </div>
+                <div v-else-if="generalOption == 'subscriptions'">
+                  <Subscriptions />
+                </div>
                 <div v-else>
                   <Index />
                 </div>
@@ -153,6 +169,8 @@ import Index from "../components/dashboard/Index";
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
 import Payment from "../components/dashboard/Payment";
+import Subscriptions from "../components/dashboard/Subscriptions";
+import Cookies from "js-cookie";
 
 export default {
   name: "Dashboard",
@@ -169,24 +187,34 @@ export default {
     Footer,
     Copyright,
     Sidebar,
-    Payment
+    Subscriptions,
+    Payment,
   },
   data() {
     return {
       api_url: process.env.VUE_APP_STRAPI_API_URL,
-      generalOption: ""
+      generalOption: "",
     };
   },
   methods: {
-    handleGeneralOption: function(option) {
+    handleGeneralOption: function (option) {
       this.generalOption = option;
-    }
+    },
+  },
+  computed: {
+    getUserCookies() {
+      let user = "";
+      if (Cookies.get("user") !== undefined) {
+        user = JSON.parse(Cookies.get("user"));
+      }
+      return user;
+    },
   },
   mounted() {
     if (this.$route.params.option) {
       this.generalOption = this.$route.params.option;
     }
-  }
+  },
 };
 </script>
 

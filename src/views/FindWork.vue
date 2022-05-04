@@ -8,7 +8,11 @@
       <ResponsiveHeader />
       <!-- Responsive Header -->
       <section>
-        <CreateProposal :ticket="ticket" :role="me.detail.role.name" />
+        <CreateProposal
+          :ticket="ticket"
+          :role="me.detail.role.name"
+          :subscription="me.detail.subscription"
+        />
         <div class="w-100 pt-100 pb-100 position-relative">
           <div class="container">
             <div class="post-detail-wrap w-100">
@@ -215,7 +219,7 @@ import {
   FIND_WORK_FILTER_SUBCATEGORIES,
   FIND_WORK_GET_ME,
   FIND_WORK_GET_COMMUNES,
-  FIND_WORK_FILTER_COMMUNES
+  FIND_WORK_FILTER_COMMUNES,
 } from "./constants/querys";
 import moment from "moment";
 import Cookies from "js-cookie";
@@ -233,11 +237,11 @@ export default {
         detail: {
           id: "",
           role: {
-            name: ""
-          }
-        }
+            name: "",
+          },
+        },
       },
-      communes: []
+      communes: [],
     };
   },
   components: {
@@ -246,27 +250,27 @@ export default {
     ResponsiveHeader,
     Footer,
     Copyright,
-    CreateProposal
+    CreateProposal,
   },
   apollo: {
     categories: {
-      query: FIND_WORK_GET_CATEGORIES
+      query: FIND_WORK_GET_CATEGORIES,
     },
     tickets: {
       query: FIND_WORK_GET_TICKETS,
       variables() {
         return {
           limit: this.limit,
-          contains: this.contains
+          contains: this.contains,
         };
-      }
+      },
     },
     me: {
-      query: FIND_WORK_GET_ME
+      query: FIND_WORK_GET_ME,
     },
     communes: {
-      query: FIND_WORK_GET_COMMUNES
-    }
+      query: FIND_WORK_GET_COMMUNES,
+    },
   },
   methods: {
     handleMoreTickets(e) {
@@ -279,10 +283,10 @@ export default {
           query: FIND_WORK_FILTER_SUBCATEGORIES,
           variables: {
             limit: this.limit,
-            subCategoryId
-          }
+            subCategoryId,
+          },
         })
-        .then(data => {
+        .then((data) => {
           this.tickets = data.data.tickets;
         })
         .catch(({ graphQLErrors }) => {
@@ -321,10 +325,10 @@ export default {
           query: FIND_WORK_FILTER_COMMUNES,
           variables: {
             limit: this.limit,
-            communeId
-          }
+            communeId,
+          },
         })
-        .then(data => {
+        .then((data) => {
           this.tickets = data.data.tickets;
         })
         .catch(({ graphQLErrors }) => {
@@ -334,7 +338,7 @@ export default {
             )
           );
         });
-    }
+    },
   },
   computed: {
     getUser() {
@@ -344,8 +348,8 @@ export default {
         return user;
       }
       return user;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -8,6 +8,10 @@ export const HEADER_USER_LOGIN = gql`
         id
         username
         email
+        role {
+          id
+          name
+        }
       }
     }
   }

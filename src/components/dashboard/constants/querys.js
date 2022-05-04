@@ -313,3 +313,16 @@ export const PAYMENT_GET_CARDS = gql`
     }
   }
 `;
+
+export const SUBSCRIPTIONS_GET_SUBCRIPTION = gql`
+  query subscriptions($user: ID!) {
+    subscriptions (where: {users: $user}){
+      id
+      name
+      description
+      price
+      discount
+      icon
+    }
+  }
+`;
