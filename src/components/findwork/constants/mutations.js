@@ -1,14 +1,14 @@
 import gql from "graphql-tag";
 
 export const FINDWORK_CREATE_PROPOSAL = gql`
-  mutation createProposal(
+  mutation createProposalMe(
     $ticket: ID!
     $usersPermissionsUser: ID!
     $coverLetter: String!
     $jobDetail: String,
     $file: ID
   ) {
-    createProposal(
+    createProposalMe(
       input: {
         data: {
           ticket: $ticket

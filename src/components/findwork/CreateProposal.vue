@@ -215,7 +215,13 @@
                                         {{
                                           ticket
                                             ? handleFormatPrice(
-                                                ticket.subcategory.price
+                                                ticket.subcategory.price -
+                                                  (subscription
+                                                    ? (ticket.subcategory
+                                                        .price *
+                                                        subscription.discount) /
+                                                      100
+                                                    : 0)
                                               )
                                             : ""
                                         }}
