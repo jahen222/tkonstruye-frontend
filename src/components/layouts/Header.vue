@@ -150,6 +150,7 @@
             </div>
             <div class="add-cart" v-if="getUsername">
               <router-link
+                style="display: flex; important!"
                 :to="{ name: 'Dashboard', params: { option: 'profile' } }"
               >
                 <img
@@ -164,7 +165,13 @@
                   alt="About Image"
                   v-else
                 />
-                {{ getUsername }}
+                <div style="padding-top: 3px; margin-left: 10px">
+                  {{ getUsername }}
+                  <br />
+                  <div style="color: #777; font-size: 0.875rem">
+                    {{ getUsername ? " $:" + me.detail.balance : null }}
+                  </div>
+                </div>
               </router-link>
             </div>
           </div>
@@ -771,7 +778,7 @@ import Wizard from "../common/Wizard";
 
 export default {
   name: "Header",
-  data() { 
+  data() {
     return {
       api_url: process.env.VUE_APP_STRAPI_API_URL,
       config: {
@@ -793,6 +800,7 @@ export default {
       me: {
         detail: {
           id: "",
+          balance: "",
           photo: {
             url: "",
           },
@@ -904,13 +912,14 @@ export default {
           .then(() => {
             this.handleLogin(e);
           })
-          .catch(() => {
-            this.error = "Nombre de usuario o Correo no disponible.";
-            /* graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
+          .catch(({ graphQLErrors }) => {
+            //this.error = "Nombre de usuario o Correo no disponible.";
+            graphQLErrors.map(
+              ({ extensions }) => console.log(extensions)
+              /* extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
-              )
-            ); */
+              ) */
+            );
           });
       }
     },

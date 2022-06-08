@@ -38,6 +38,12 @@ export const HEADER_USER_REGISTER = gql`
     ) {
       user {
         id
+        username
+        email
+        role {
+          id
+          name
+        }
       }
     }
   }

@@ -126,6 +126,26 @@ export const FIND_WORK_GET_ME = gql`
   }
 `;
 
+export const SUBSCRIPTIONS_GET_ME = gql`
+  query me {
+    me {
+      detail {
+        id
+        balance
+        role {
+          id
+          name
+        }
+        subscription{
+          id
+          name
+          discount
+        }
+      }
+    }
+  }
+`;
+
 export const CREATE_PROPOSAL_GET_VULGARITIES = gql`
   query config {
     config {

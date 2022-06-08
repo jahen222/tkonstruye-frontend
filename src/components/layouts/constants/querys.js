@@ -50,6 +50,7 @@ export const HEADER_GET_PHOTO = gql`
     me {
       detail {
         id
+        balance
         photo {
           id
           url

@@ -17,8 +17,16 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Propuesta</h5>
           <p class="marginPs price">
-            {{ ticket ? handleFormatPrice(ticket.subcategory.price) : "" }}
-            {{ subscription ? " - " + subscription.discount + "%" : "" }}
+            {{
+              ticket
+                ? subscription
+                  ? handleFormatPrice(
+                      ticket.subcategory.price -
+                        (ticket.subcategory.price * subscription.discount) / 100
+                    )
+                  : handleFormatPrice(ticket.subcategory.price)
+                : ""
+            }}
           </p>
           <button
             type="button"
@@ -252,9 +260,69 @@
                                 </table>
                               </div>
                             </div>
-                            <button class="thm-btn thm-bg" type="submit">
-                              Confirmar
-                            </button>
+
+                            <div class="row" style="text-align: center;">
+                              <div class="col-md-6 col-sm-6 col-lg-6">
+                                <button
+                                  class="thm-btn thm-bg"
+                                  type="submit"
+                                  title=""
+                                >
+                                  Con Saldo
+                                </button>
+                              </div>
+                              <div class="col-md-6 col-sm-6 col-lg-6">
+                                <button
+                                  class="thm-btn thm-bg"
+                                  type="submit"
+                                  title=""
+                                >
+                                  Comprar
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- success modal -->
+              <div
+                class="modal fade"
+                id="successModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">
+                        Propuesta enviada exitosamente.
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div
+                        id="dashboardProfile"
+                        class="post-detail wizard-form w-100"
+                      >
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12 col-lg-12">
+                            <div class="field-wrap w-100">
+                              <div class="table-responsive">
+                                <h4>Propuesta enviada exitosamente.</h4>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -582,13 +650,14 @@ export default {
             this.coverLetter = "";
             this.jobDetail = "";
             $("#confirmationModal").modal("hide");
-            $("#createProposalModal").modal("hide");
 
             this.$toast.open({
               message: "Propuesta creada exitosamente.",
               type: "success",
               duration: 3000,
             });
+
+            $("#successModal").modal("show");
           })
           .catch(({ graphQLErrors }) => {
             graphQLErrors.map((error) =>

@@ -157,6 +157,10 @@
                   <div class="col-md-12 col-sm-12 col-lg-12 center">
                     <div class="field-wrap w-100">
                       <label>¿deseas adquirir esta subscripción?</label>
+                      <label
+                        >Saldo disponible:
+                        {{ me.detail.balance ? me.detail.balance : "0" }}</label
+                      >
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-6 col-lg-6 pt-50 center">
@@ -165,9 +169,10 @@
                       type="button"
                       data-dismiss="modal"
                       aria-hidden="true"
-                      @click="handleCloseModal"
+                      :disabled="me.detail.balance < this.selectSubscription.price"
+                      @click="handleSetSubcriptionToUser"
                     >
-                      Cerrar
+                      Con Saldo
                     </button>
                   </div>
                   <div class="col-md-6 col-sm-6 col-lg-6 pt-50 center">
@@ -178,7 +183,54 @@
                       aria-hidden="true"
                       @click="handleSetSubcriptionToUser"
                     >
-                      Adquirir
+                      Comprar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Success Modal -->
+      <div id="successModal" ref="successModal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <i class="fas fa-user"></i> Compra realizada con éxito
+              </h4>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+                @click="handleCloseModal"
+              >
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="post-detail wizard-form w-100">
+                <div class="row pb-50 pb-custom">
+                  <div class="col-md-12 col-sm-12 col-lg-12 center">
+                    <div class="field-wrap w-100">
+                      <label
+                        >Has adquirido una subscripción, para eliminar esta
+                        subscripción ve a la sección subscripciones en tu panel
+                        de ajustes</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                    <button
+                      class="thm-btn thm-bg"
+                      type="button"
+                      data-dismiss="modal"
+                      aria-hidden="true"
+                      @click="handleCloseModal"
+                    >
+                      Cerrar
                     </button>
                   </div>
                 </div>
@@ -200,13 +252,11 @@ import ResponsiveHeader from "../components/layouts/ResponsiveHeader";
 import Footer from "../components/layouts/Footer";
 import Copyright from "../components/layouts/Copyright";
 import {
-  FIND_WORK_GET_ME,
+  SUBSCRIPTIONS_GET_ME,
   SUBSCRIPTIONS_GET_SUBCRIPTIONS,
 } from "./constants/querys";
 import Cookies from "js-cookie";
-import {
-  SUBSCRIPTIONS_SET_USER
-} from "./constants/mutations";
+import { SUBSCRIPTIONS_SET_USER } from "./constants/mutations";
 
 export default {
   name: "Subscriptions",
@@ -215,6 +265,7 @@ export default {
       me: {
         detail: {
           id: "",
+          balance: "",
           role: {
             name: "",
           },
@@ -233,7 +284,7 @@ export default {
   },
   apollo: {
     me: {
-      query: FIND_WORK_GET_ME,
+      query: SUBSCRIPTIONS_GET_ME,
     },
     subscriptions: {
       query: SUBSCRIPTIONS_GET_SUBCRIPTIONS,
@@ -254,11 +305,12 @@ export default {
             mutation: SUBSCRIPTIONS_SET_USER,
             variables: {
               userId: JSON.parse(Cookies.get("user")).id,
-              subscriptionId: this.selectSubscription.id
+              subscriptionId: this.selectSubscription.id,
             },
           })
           .then(() => {
             $("#professionalModal").modal("hide");
+            $("#successModal").modal("show");
             this.selectSubscription = "";
             this.$toast.open({
               message: "Subscripción adquirida exitosamente.",
