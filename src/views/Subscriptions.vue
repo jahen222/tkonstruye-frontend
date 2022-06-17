@@ -169,7 +169,9 @@
                       type="button"
                       data-dismiss="modal"
                       aria-hidden="true"
-                      :disabled="me.detail.balance < this.selectSubscription.price"
+                      :disabled="
+                        me.detail.balance < this.selectSubscription.price
+                      "
                       @click="handleSetSubcriptionToUser"
                     >
                       Con Saldo
@@ -181,7 +183,7 @@
                       type="button"
                       data-dismiss="modal"
                       aria-hidden="true"
-                      @click="handleSetSubcriptionToUser"
+                      @click="handleSetPaymentSubscriptionWithFlow"
                     >
                       Comprar
                     </button>
@@ -194,6 +196,53 @@
       </div>
       <!-- Success Modal -->
       <div id="successModal" ref="successModal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <i class="fas fa-user"></i> Compra realizada con éxito
+              </h4>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+                @click="handleCloseModal"
+              >
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="post-detail wizard-form w-100">
+                <div class="row pb-50 pb-custom">
+                  <div class="col-md-12 col-sm-12 col-lg-12 center">
+                    <div class="field-wrap w-100">
+                      <label
+                        >Has adquirido una subscripción, para eliminar esta
+                        subscripción ve a la sección subscripciones en tu panel
+                        de ajustes</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-lg-12 pt-50 center">
+                    <button
+                      class="thm-btn thm-bg"
+                      type="button"
+                      data-dismiss="modal"
+                      aria-hidden="true"
+                      @click="handleCloseModal"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Success Modal -->
+      <div id="successModal2" ref="successModal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -256,7 +305,10 @@ import {
   SUBSCRIPTIONS_GET_SUBCRIPTIONS,
 } from "./constants/querys";
 import Cookies from "js-cookie";
-import { SUBSCRIPTIONS_SET_USER } from "./constants/mutations";
+import {
+  SUBSCRIPTIONS_SET_USER,
+  CREATE_SUBSCRIPTION_SET_PAYMENT_TO_FLOW,
+} from "./constants/mutations";
 
 export default {
   name: "Subscriptions",
@@ -307,6 +359,11 @@ export default {
               userId: JSON.parse(Cookies.get("user")).id,
               subscriptionId: this.selectSubscription.id,
             },
+            refetchQueries: [
+              {
+                query: SUBSCRIPTIONS_GET_ME,
+              },
+            ],
           })
           .then(() => {
             $("#professionalModal").modal("hide");
@@ -335,6 +392,39 @@ export default {
         });
       }
     },
+    async handleSetPaymentSubscriptionWithFlow(e) {
+      e.preventDefault();
+
+      if (Cookies.get("user") && this.selectSubscription) {
+        await this.$apollo
+          .mutate({
+            mutation: CREATE_SUBSCRIPTION_SET_PAYMENT_TO_FLOW,
+            variables: {
+              userId: JSON.parse(Cookies.get("user")).id,
+              subscriptionId: this.selectSubscription.id,
+            },
+          })
+          .then((data) => {
+            window.location.href =
+              data.data.setpaymentsubscriptionwithflow.redirect;
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map((error) =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000,
+              })
+            );
+          });
+      } else {
+        this.$toast.open({
+          message: "Usuario o subscripcion inválidas",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    },
   },
   computed: {
     getUser() {
@@ -345,6 +435,11 @@ export default {
       }
       return user;
     },
+  },
+  updated() {
+    if (window.location.href.indexOf("finishpaysubscription") > -1) {
+      $("#successModal2").modal("show");
+    }
   },
 };
 </script>

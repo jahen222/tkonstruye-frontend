@@ -36,12 +36,25 @@ const routes = [
   },
   {
     path: "/finishpay",
-    name: "FinisPay",
+    name: "FindWork",
     component: FindWork,
     meta: {
       requiresAuth: true,
     },
   },
+  {
+    path: "/finishpaysubscription",
+    name: "Subscriptions",
+    component: Subscriptions,
+  },
+  {
+    path: "/finishpaybalance",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
+  }
 ];
 
 const router = new VueRouter({

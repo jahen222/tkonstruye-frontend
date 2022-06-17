@@ -92,6 +92,7 @@
             class="nav-link customNavLink"
             href="#"
             @click="handleGeneralOption('payment')"
+            v-if="me.detail.role.name === 'Professional'"
           >
             <i class="fas fa-dollar-sign"></i> Payment</a
           >

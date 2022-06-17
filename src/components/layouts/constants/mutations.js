@@ -24,6 +24,7 @@ export const HEADER_USER_REGISTER = gql`
     $password: String!
     $phone: String!
     $role: ID!
+    $balance: Float!
   ) {
     createUser(
       input: {
@@ -33,17 +34,12 @@ export const HEADER_USER_REGISTER = gql`
           password: $password
           phone: $phone
           role: $role
+          balance: $balance
         }
       }
     ) {
       user {
         id
-        username
-        email
-        role {
-          id
-          name
-        }
       }
     }
   }

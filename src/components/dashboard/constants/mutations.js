@@ -236,3 +236,17 @@ export const SUBSCRIPTIONS_DELETE_SUBCRIPTION = gql`
     }
   }
 `;
+
+export const CREATE_BALANCE_SET_PAYMENT_TO_FLOW = gql`
+  mutation setpaymentbalancewithflow (
+    $userId: ID!, 
+    $balance: Int!, 
+  ) {
+    setpaymentbalancewithflow (
+      userId: $userId
+      balance: $balance
+    ) {
+      redirect
+    }
+  }
+`;

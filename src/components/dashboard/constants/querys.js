@@ -278,37 +278,32 @@ export const PROPOSALS_GET_ME = gql`
   }
 `;
 
-export const PAYMENT_GET_CARDS = gql`
-  query cards($user: ID!, $contains: String) {
-    cards(
+export const PAYMENT_GET_PAYMENTS = gql`
+  query payments($user: ID!, $contains: String) {
+    payments(
       sort: "created_at:desc"
       where: {
         users_permissions_user: $user
         _or: [
           { id_contains: $contains }
-          { firstname_contains: $contains }
-          { lastname_contains: $contains }
-          { cardNumber_contains: $contains }
-          { expirationMonth_contains: $contains }
-          { expirationYear_contains: $contains }
-          { cvv_contains: $contains }
-          { zip_contains: $contains }
-          { type_contains: $contains }
+          { amount_contains: $contains }
+          { currency_contains: $contains }
+          { subject_contains: $contains }
+          { commerceOrder_contains: $contains }
         ]
       }
     ) {
       id
-      firstname
-      lastname
-      cardNumber
-      expirationMonth
-      expirationYear
-      cvv
-      zip
-      type
-      users_permissions_user {
+      amount
+      currency
+      subject
+      status
+      commerceOrder
+      ticket {
         id
-        name
+      }
+      subscription {
+        id
       }
     }
   }

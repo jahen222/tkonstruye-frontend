@@ -527,10 +527,7 @@ export default {
         this.ticketBuy = data.data.proposal.ticket;
         if (Cookies.get("user") !== undefined) {
           user = JSON.parse(Cookies.get("user"));
-          console.log("user1: ", user);
-          console.log("user2: ", data.data.proposal.users_permissions_user.id);
           if (data.data.proposal.users_permissions_user.id == user.id) {
-            console.log("ticket: ", this.ticketBuy);
             $("#successModal2").modal("show");
           }
         }

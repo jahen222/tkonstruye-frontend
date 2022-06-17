@@ -909,6 +909,7 @@ export default {
               password,
               phone,
               role,
+              balance: 0
             },
           })
           .then(() => {
@@ -961,12 +962,15 @@ export default {
               password,
               phone,
               role,
+              balance: 0
             },
           })
-          .then(() => {
+          .then((data) => {
+            console.log(data)
             this.handleLogin(e);
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log("aqui: ", e)
             this.error = "Nombre de usuario o Correo no disponible.";
             /* graphQLErrors.map(({ extensions }) =>
               extensions.exception.data.message.map(({ messages }) =>
