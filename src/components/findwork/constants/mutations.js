@@ -34,3 +34,25 @@ export const FINDWORK_UPLOAD_PHOTO = gql`
     }
   }
 `;
+
+export const CREATE_PROPOSAL_SET_PAYMENT_TO_FLOW = gql`
+  mutation setpaymentproposalwithflow (
+    $userId: ID!, 
+    $price: Int!, 
+    $coverLetter: String!
+    $jobDetail: String,
+    $file: ID,
+    $ticketId: ID!, 
+  ) {
+    setpaymentproposalwithflow (
+      userId: $userId
+      price: $price
+      coverLetter: $coverLetter
+      jobDetail: $jobDetail
+      file: $file
+      ticketId: $ticketId
+    ) {
+      redirect
+    }
+  }
+`;

@@ -40,7 +40,7 @@
         </div>
         <div class="modal-body">
           <div id="dashboardProfile" class="post-detail wizard-form w-100">
-            <form class="w-100 pb-50 pb-custom" @submit="handleProposal">
+            <form class="w-100 pb-50 pb-custom">
               <div class="row">
                 <div class="col-md-6 col-sm-12 col-lg-6">
                   <div class="table-responsive">
@@ -218,6 +218,12 @@
                                 <table class="table">
                                   <thead>
                                     <tr>
+                                      <th scope="col">Saldo Disponible:</th>
+                                      <th scope="col">
+                                        {{ handleFormatPrice(this.me.balance) }}
+                                      </th>
+                                    </tr>
+                                    <tr>
                                       <th scope="col">Total:</th>
                                       <th scope="col">
                                         {{
@@ -260,12 +266,11 @@
                                 </table>
                               </div>
                             </div>
-
-                            <div class="row" style="text-align: center;">
+                            <div class="row" style="text-align: center">
                               <div class="col-md-6 col-sm-6 col-lg-6">
                                 <button
                                   class="thm-btn thm-bg"
-                                  type="submit"
+                                  @click="handleProposal"
                                   title=""
                                 >
                                   Con Saldo
@@ -274,7 +279,7 @@
                               <div class="col-md-6 col-sm-6 col-lg-6">
                                 <button
                                   class="thm-btn thm-bg"
-                                  type="submit"
+                                  @click="handleBuy"
                                   title=""
                                 >
                                   Comprar
@@ -296,11 +301,11 @@
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
               >
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="exampleModalLabel">
-                        Propuesta enviada exitosamente.
+                        Felicitaciones
                       </h5>
                       <button
                         type="button"
@@ -312,15 +317,102 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                      <div
-                        id="dashboardProfile"
-                        class="post-detail wizard-form w-100"
-                      >
+                      <div class="container-fluid" style="padding: 50px">
+                        <div class="row" style="margin-bottom: 30px">
+                          <div class="col-md-7">
+                            HAS COMPRADO EL SIGUIENTE AVISO:
+                          </div>
+                          <div class="col-md-5 ml-auto">
+                            DATOS DE LA TRANSACCIÓN:
+                          </div>
+                          <div class="col-md-7" style="margin-top: 1px">
+                            <ul class="comments-thread mb-0 list-unstyled">
+                              <li>
+                                <div
+                                  class="comment"
+                                  style="margin-top: 0.125rem"
+                                >
+                                  <div
+                                    class="comment-detail"
+                                    style="padding: 0px"
+                                  >
+                                    <h4 class="mb-0">
+                                      {{ ticket.subcategory.category.name }}
+                                      <i
+                                        class="fas fa-greater-than smaller"
+                                      ></i>
+                                      {{ ticket.subcategory.name }}
+                                    </h4>
+                                    <span class="d-inline-block"
+                                      ><i class="fas fa-map-marker-alt"></i>
+                                      {{ ticket.commune.name }},
+                                      {{ ticket.commune.city.name }},
+                                      {{ ticket.commune.city.region.name }}
+                                    </span>
+                                    <p class="mb-0">
+                                      {{ ticket.description }}
+                                    </p>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="col-5">
+                            <div class="row">
+                              <div class="col-12">
+                                Saldo anterior:
+                                {{
+                                  handleFormatPrice(
+                                    this.me.balance +
+                                      (ticket
+                                        ? ticket.subcategory.price -
+                                          (subscription
+                                            ? (ticket.subcategory.price *
+                                                subscription.discount) /
+                                              100
+                                            : 0)
+                                        : 0)
+                                  )
+                                }}
+                              </div>
+                              <div class="col-12">
+                                Costo aviso:
+                                {{
+                                  ticket
+                                    ? handleFormatPrice(
+                                        ticket.subcategory.price -
+                                          (subscription
+                                            ? (ticket.subcategory.price *
+                                                subscription.discount) /
+                                              100
+                                            : 0)
+                                      )
+                                    : ""
+                                }}
+                              </div>
+                              <div class="col-12">
+                                Saldo actual:
+                                {{ handleFormatPrice(this.me.balance) }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <br />
                         <div class="row">
-                          <div class="col-md-12 col-sm-12 col-lg-12">
-                            <div class="field-wrap w-100">
-                              <div class="table-responsive">
-                                <h4>Propuesta enviada exitosamente.</h4>
+                          <div class="col-12">
+                            DATOS DEL CLIENTE:
+                            <div class="row">
+                              <div class="col-12">
+                                Nombre:
+                                {{ ticket.users_permissions_user.username }}
+                              </div>
+                              <div class="col-12">
+                                Correo:
+                                {{ ticket.users_permissions_user.email }}
+                              </div>
+                              <div class="col-12">
+                                Celular:
+                                {{ ticket.users_permissions_user.phone }}
                               </div>
                             </div>
                           </div>
@@ -466,16 +558,18 @@ import $ from "jquery";
 import {
   FINDWORK_CREATE_PROPOSAL,
   FINDWORK_UPLOAD_PHOTO,
+  CREATE_PROPOSAL_SET_PAYMENT_TO_FLOW,
 } from "./constants/mutations";
 import Cookies from "js-cookie";
 import {
   FIND_WORK_GET_TICKETS,
   CREATE_PROPOSAL_GET_VULGARITIES,
+  FIND_WORK_GET_ME,
 } from "../../views/constants/querys";
 
 export default {
   name: "CreateProposal",
-  props: ["ticket", "role", "subscription"],
+  props: ["ticket", "role", "subscription", "me"],
   data() {
     return {
       coverLetter: "",
@@ -485,6 +579,7 @@ export default {
       file: "",
       fileName: "",
       fileId: "",
+      proposal: "",
     };
   },
   apollo: {
@@ -644,20 +739,22 @@ export default {
                   contains: "",
                 },
               },
+              {
+                query: FIND_WORK_GET_ME,
+              },
             ],
           })
           .then(() => {
             this.coverLetter = "";
             this.jobDetail = "";
             $("#confirmationModal").modal("hide");
+            $("#successModal").modal("show");
 
             this.$toast.open({
               message: "Propuesta creada exitosamente.",
               type: "success",
               duration: 3000,
             });
-
-            $("#successModal").modal("show");
           })
           .catch(({ graphQLErrors }) => {
             graphQLErrors.map((error) =>
@@ -706,6 +803,117 @@ export default {
       });
 
       return formatter.format(price).replace(",", ".");
+    },
+    async handleBuy(e) {
+      e.preventDefault();
+      let validate = true;
+      const { coverLetter, jobDetail } = this.$data;
+      const file = this.file;
+      const price =
+        this.ticket.subcategory.price -
+        (this.subscription
+          ? (this.ticket.subcategory.price * this.subscription.discount) / 100
+          : 0);
+
+      if (coverLetter.length < 128 || coverLetter.length > 512) {
+        validate = false;
+        this.$toast.open({
+          message:
+            "La carta de presentación debe tener entre 128 y 512 caracteres.",
+          type: "error",
+          duration: 3000,
+        });
+      } else if (coverLetter) {
+        for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
+          const vulgarity = Object.values(this.config.vulgarity)[i];
+          if (coverLetter.toLowerCase().search(vulgarity.toString()) != -1) {
+            validate = false;
+            this.$toast.open({
+              message: "La carta de presentación tiene contenido ofensivo.",
+              type: "error",
+              duration: 3000,
+            });
+            break;
+          }
+        }
+      } else if (
+        jobDetail &&
+        (jobDetail.length < 10 || jobDetail.length > 256)
+      ) {
+        validate = false;
+        this.$toast.open({
+          message:
+            "La descripción del trabajo debe tener entre 10 y 256 caracteres.",
+          type: "error",
+          duration: 3000,
+        });
+      } else if (jobDetail) {
+        for (let i = 0; i < Object.values(this.config.vulgarity).length; i++) {
+          const vulgarity = Object.values(this.config.vulgarity)[i];
+          if (jobDetail.toLowerCase().search(vulgarity.toString()) != -1) {
+            validate = false;
+            this.$toast.open({
+              message: "La descripción del trabajo tiene contenido ofensivo.",
+              type: "error",
+              duration: 3000,
+            });
+            break;
+          }
+        }
+      }
+
+      if (file) {
+        await this.$apollo
+          .mutate({
+            mutation: FINDWORK_UPLOAD_PHOTO,
+            variables: {
+              file,
+            },
+          })
+          .then((data) => {
+            this.fileId = data.data.upload.id;
+          })
+          .catch(({ graphQLErrors }) => {
+            validate = false;
+            graphQLErrors.map((error) =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000,
+              })
+            );
+          });
+      }
+
+      if (validate) {
+        await this.$apollo
+          .mutate({
+            mutation: CREATE_PROPOSAL_SET_PAYMENT_TO_FLOW,
+            variables: {
+              userId: JSON.parse(Cookies.get("user")).id,
+              price: price,
+              coverLetter: coverLetter,
+              jobDetail: jobDetail,
+              file: this.fileId,
+              ticketId: this.ticket.id,
+            },
+            fetchPolicy: "no-cache",
+          })
+          .then((data) => {
+            window.location.href =
+              data.data.setpaymentproposalwithflow.redirect;
+            //window.open(data.data.setpaymentproposalwithflow.redirect, '_blank');
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map((error) =>
+              this.$toast.open({
+                message: error.message,
+                type: "error",
+                duration: 3000,
+              })
+            );
+          });
+      }
     },
   },
 };

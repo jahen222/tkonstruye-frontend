@@ -169,7 +169,9 @@
                   {{ getUsername }}
                   <br />
                   <div style="color: #777; font-size: 0.875rem">
-                    {{ getUsername ? " $:" + me.detail.balance : null }}
+                    {{
+                      getUsername ? handleFormatPrice(me.detail.balance) : null
+                    }}
                   </div>
                 </div>
               </router-link>
@@ -914,11 +916,10 @@ export default {
           })
           .catch(({ graphQLErrors }) => {
             //this.error = "Nombre de usuario o Correo no disponible.";
-            graphQLErrors.map(
-              ({ extensions }) => console.log(extensions)
-              /* extensions.exception.data.message.map(({ messages }) =>
+            graphQLErrors.map(({ extensions }) =>
+              extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
-              ) */
+              )
             );
           });
       }
@@ -1054,6 +1055,15 @@ export default {
           $(this.$refs.confirmProfessionalPassword).attr("type", "password");
         }
       }
+    },
+    handleFormatPrice(price) {
+      const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0,
+      });
+
+      return formatter.format(price).replace(",", ".");
     },
   },
   computed: {

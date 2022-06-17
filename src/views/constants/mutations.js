@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const SUBSCRIPTIONS_SET_USER = gql`
-  mutation setsubscriptiontouser(
+  query setsubscriptiontouser(
         $userId: ID!
         $subscriptionId: ID!
     ) 

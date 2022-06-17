@@ -33,7 +33,15 @@ const routes = [
     path: "/subscriptions",
     name: "Subscriptions",
     component: Subscriptions,
-  }
+  },
+  {
+    path: "/finishpay",
+    name: "FinisPay",
+    component: FindWork,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = new VueRouter({

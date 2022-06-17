@@ -41,6 +41,8 @@ export const FIND_WORK_GET_TICKETS = gql`
       users_permissions_user {
         id
         username
+        email
+        phone
       }
       commune {
         id
@@ -112,6 +114,7 @@ export const FIND_WORK_GET_ME = gql`
     me {
       detail {
         id
+        balance
         role {
           id
           name
@@ -214,4 +217,62 @@ export const SUBSCRIPTIONS_GET_SUBCRIPTIONS = gql`
       icon
     }
   }
+`;
+
+export const CREATE_PROPOSAL_GET_PROPOSAL = gql`
+query proposal($id: ID!) {
+  proposal(
+    id: $id
+  ) {
+    id
+    users_permissions_user {
+      id
+      username
+      email
+      phone
+      balance
+    }
+    ticket {
+      id
+      subcategory {
+        id
+        name
+        price
+        category {
+          name
+        }
+      }
+      users_permissions_user {
+        id
+        username
+        email
+        phone
+        balance
+      }
+      commune {
+        id
+        name
+        map
+        city {
+          id
+          name
+          region {
+            id
+            name
+          }
+        }
+      }
+      requirements
+      description
+      created_at
+    }
+    coverLetter
+    jobDetail
+    file {
+      id
+      url
+      name
+    }
+  }
+}
 `;

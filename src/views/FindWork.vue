@@ -12,6 +12,7 @@
           :ticket="ticket"
           :role="me.detail.role.name"
           :subscription="me.detail.subscription"
+          :me="me.detail"
         />
         <div class="w-100 pt-100 pb-100 position-relative">
           <div class="container">
@@ -191,6 +192,155 @@
                     <!-- Comments -->
                   </div>
                 </div>
+                <!-- success modal 2 -->
+                <div>
+                  <div
+                    class="modal fade"
+                    id="successModal2"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                    v-if="this.ticketBuy"
+                  >
+                    <div
+                      class="modal-dialog modal-lg modal-dialog-centered"
+                      style="z-index: 2 !important"
+                    >
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            Felicitaciones
+                          </h5>
+                          <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="container-fluid" style="padding: 50px">
+                            <div class="row" style="margin-bottom: 30px">
+                              <div class="col-md-7">
+                                HAS COMPRADO EL SIGUIENTE AVISO:
+                              </div>
+                              <div class="col-md-5 ml-auto">
+                                DATOS DE LA TRANSACCIÓN:
+                              </div>
+                              <div class="col-md-7" style="margin-top: 1px">
+                                <ul class="comments-thread mb-0 list-unstyled">
+                                  <li>
+                                    <div
+                                      class="comment"
+                                      style="margin-top: 0.125rem"
+                                    >
+                                      <div
+                                        class="comment-detail"
+                                        style="padding: 0px"
+                                      >
+                                        <h4 class="mb-0">
+                                          {{
+                                            ticketBuy.subcategory.category.name
+                                          }}
+                                          <i
+                                            class="fas fa-greater-than smaller"
+                                          ></i>
+                                          {{ ticketBuy.subcategory.name }}
+                                        </h4>
+                                        <span class="d-inline-block"
+                                          ><i class="fas fa-map-marker-alt"></i>
+                                          {{ ticketBuy.commune.name }},
+                                          {{ ticketBuy.commune.city.name }},
+                                          {{
+                                            ticketBuy.commune.city.region.name
+                                          }}
+                                        </span>
+                                        <p class="mb-0">
+                                          {{ ticketBuy.description }}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div class="col-5">
+                                <div class="row">
+                                  <div class="col-12">
+                                    Saldo anterior:
+                                    {{
+                                      handleFormatPrice(
+                                        proposalBuy.users_permissions_user
+                                          .balance +
+                                          (ticketBuy
+                                            ? ticketBuy.subcategory.price -
+                                              (me.detail.subscription
+                                                ? (ticketBuy.subcategory.price *
+                                                    me.detail.subscription
+                                                      .discount) /
+                                                  100
+                                                : 0)
+                                            : 0)
+                                      )
+                                    }}
+                                  </div>
+                                  <div class="col-12">
+                                    Costo aviso:
+                                    {{
+                                      ticketBuy
+                                        ? handleFormatPrice(
+                                            ticketBuy.subcategory.price -
+                                              (me.detail.subscription
+                                                ? (ticketBuy.subcategory.price *
+                                                    me.detail.subscription
+                                                      .discount) /
+                                                  100
+                                                : 0)
+                                          )
+                                        : ""
+                                    }}
+                                  </div>
+                                  <div class="col-12">
+                                    Saldo actual:
+                                    {{
+                                      handleFormatPrice(
+                                        proposalBuy.users_permissions_user
+                                          .balance
+                                      )
+                                    }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                              <div class="col-12">
+                                DATOS DEL CLIENTE:
+                                <div class="row">
+                                  <div class="col-12">
+                                    Nombre:
+                                    {{
+                                      ticketBuy.users_permissions_user.username
+                                    }}
+                                  </div>
+                                  <div class="col-12">
+                                    Correo:
+                                    {{ ticketBuy.users_permissions_user.email }}
+                                  </div>
+                                  <div class="col-12">
+                                    Celular:
+                                    {{ ticketBuy.users_permissions_user.phone }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <!-- Blog Detail Wrap -->
@@ -220,9 +370,11 @@ import {
   FIND_WORK_GET_ME,
   FIND_WORK_GET_COMMUNES,
   FIND_WORK_FILTER_COMMUNES,
+  CREATE_PROPOSAL_GET_PROPOSAL,
 } from "./constants/querys";
 import moment from "moment";
 import Cookies from "js-cookie";
+import $ from "jquery";
 
 export default {
   name: "FindWork",
@@ -236,12 +388,14 @@ export default {
       me: {
         detail: {
           id: "",
+          balance: "",
           role: {
             name: "",
           },
         },
       },
       communes: [],
+      ticketBuy: "",
     };
   },
   components: {
@@ -339,6 +493,15 @@ export default {
           );
         });
     },
+    handleFormatPrice(price) {
+      const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0,
+      });
+
+      return formatter.format(price).replace(",", ".");
+    },
   },
   computed: {
     getUser() {
@@ -349,6 +512,29 @@ export default {
       }
       return user;
     },
+  },
+  updated() {
+    let user = "";
+    this.$apollo
+      .query({
+        query: CREATE_PROPOSAL_GET_PROPOSAL,
+        variables: {
+          id: this.$route.query.q,
+        },
+      })
+      .then((data) => {
+        this.proposalBuy = data.data.proposal;
+        this.ticketBuy = data.data.proposal.ticket;
+        if (Cookies.get("user") !== undefined) {
+          user = JSON.parse(Cookies.get("user"));
+          console.log("user1: ", user);
+          console.log("user2: ", data.data.proposal.users_permissions_user.id);
+          if (data.data.proposal.users_permissions_user.id == user.id) {
+            console.log("ticket: ", this.ticketBuy);
+            $("#successModal2").modal("show");
+          }
+        }
+      });
   },
 };
 </script>

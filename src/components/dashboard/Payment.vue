@@ -971,10 +971,6 @@ export default {
           }
         })
         .then(data => {
-          /*           console.log("getWizardFields: ", this.getWizardFields);
-          console.log("get1: ", data.data.wizardFields);
-          console.log("requirements: ", this.selectTicket.requirements); */
-
           data.data.wizardFields.map(wizardField => {
             delete wizardField.value;
             Object.entries(this.selectTicket.requirements).map(requirement => {
@@ -986,7 +982,6 @@ export default {
           });
         });
 
-      /* console.log("wizardFields: ", wizardFields); */
       return wizardFields;
     }
   }
