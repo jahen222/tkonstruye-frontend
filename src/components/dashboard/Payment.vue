@@ -193,6 +193,9 @@ export default {
         });
       }
     },
+    handleCloseModal() {
+      this.balance= "";
+    },
   },
 };
 </script>

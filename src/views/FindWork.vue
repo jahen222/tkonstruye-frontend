@@ -20,12 +20,12 @@
               <div class="row">
                 <div class="col-md-6 col-sm-12 col-lg-4">
                   <aside class="sidebar-wrap w-100">
-                    <div class="widget2 search_widget brd-rd5 w-100">
+                    <div class="widget2 widget3 search_widget brd-rd5 w-100">
                       <h3>Buscar</h3>
                       <form class="w-100">
                         <input
                           type="text"
-                          placeholder="Buscar tickets..."
+                          placeholder="Buscar trabajos..."
                           v-model="contains"
                         />
                         <button type="submit">
@@ -33,7 +33,15 @@
                         </button>
                       </form>
                     </div>
-                    <div class="widget2 category_widget brd-rd5 w-100">
+                    <div class="widget2 widget3 category_widget brd-rd5 w-100">
+                      <button
+                        class="thm-btn thm-bg resetFilter"
+                        @click="handleResetFilter()"
+                      >
+                        X Reiniciar Filtros
+                      </button>
+                    </div>
+                    <div class="widget2 widget3 category_widget brd-rd5 w-100">
                       <h3>Categorías</h3>
                       <ul class="mb-0 list-unstyled w-100">
                         <li
@@ -71,7 +79,7 @@
                         </li>
                       </ul>
                     </div>
-                    <div class="widget2 category_widget brd-rd5 w-100">
+                    <div class="widget2 widget3 category_widget brd-rd5 w-100">
                       <h3>Comunas</h3>
                       <ul class="mb-0 list-unstyled w-100">
                         <li
@@ -93,15 +101,20 @@
                   <!-- Sidebar Wrap -->
                 </div>
                 <div class="col-md-6 col-sm-12 col-lg-8">
+                  <h3 style="padding-bottom: 2%">Trabajos disponibles</h3>
                   <div class="post-detail w-100">
                     <div class="w-100">
                       <ul class="comments-thread mb-0 list-unstyled">
                         <li
                           class="pb-20"
+                          style="display: flex"
                           v-for="(ticket, index) in tickets"
                           v-bind:key="index"
                         >
-                          <div class="comment w-100">
+                          <div
+                            class="comment"
+                            style="width: 80% !important; margin-right: -10px"
+                          >
                             <div class="comment-detail">
                               <h4 class="mb-0">
                                 {{ ticket.subcategory.category.name }}
@@ -178,6 +191,26 @@
                               >
                             </div>
                           </div>
+                          <div class="comment">
+                            <div class="comment-detail">
+                              <p class="price">
+                                {{
+                                  ticket
+                                    ? me.detail.subscription
+                                      ? handleFormatPrice(
+                                          ticket.subcategory.price -
+                                            (ticket.subcategory.price *
+                                              me.detail.subscription.discount) /
+                                              100
+                                        )
+                                      : handleFormatPrice(
+                                          ticket.subcategory.price
+                                        )
+                                    : ""
+                                }}
+                              </p>
+                            </div>
+                          </div>
                         </li>
                         <div class="col-md-12 col-sm-12 col-lg-12 center">
                           <button
@@ -200,12 +233,10 @@
                     tabindex="-1"
                     aria-labelledby="exampleModalLabel"
                     aria-hidden="true"
+                    style="z-index: 10000 !important"
                     v-if="this.ticketBuy"
                   >
-                    <div
-                      class="modal-dialog modal-lg modal-dialog-centered"
-                      style="z-index: 2 !important"
-                    >
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title" id="exampleModalLabel">
@@ -451,6 +482,26 @@ export default {
           );
         });
     },
+    handleResetFilter() {
+      this.$apollo
+        .query({
+          query: FIND_WORK_GET_TICKETS,
+          variables: {
+            limit: this.limit,
+            contains: this.contains,
+          },
+        })
+        .then((data) => {
+          this.tickets = data.data.tickets;
+        })
+        .catch(({ graphQLErrors }) => {
+          graphQLErrors.map(({ extensions }) =>
+            extensions.exception.data.message.map(({ messages }) =>
+              messages.map(({ message }) => (this.error = message))
+            )
+          );
+        });
+    },
     handleContactTicket(ticket) {
       this.ticket = ticket;
     },
@@ -514,24 +565,26 @@ export default {
     },
   },
   updated() {
-    let user = "";
-    this.$apollo
-      .query({
-        query: CREATE_PROPOSAL_GET_PROPOSAL,
-        variables: {
-          id: this.$route.query.q,
-        },
-      })
-      .then((data) => {
-        this.proposalBuy = data.data.proposal;
-        this.ticketBuy = data.data.proposal.ticket;
-        if (Cookies.get("user") !== undefined) {
-          user = JSON.parse(Cookies.get("user"));
-          if (data.data.proposal.users_permissions_user.id == user.id) {
-            $("#successModal2").modal("show");
+    if (this.$route.query.q) {
+      let user = "";
+      this.$apollo
+        .query({
+          query: CREATE_PROPOSAL_GET_PROPOSAL,
+          variables: {
+            id: this.$route.query.q,
+          },
+        })
+        .then((data) => {
+          this.proposalBuy = data.data.proposal;
+          this.ticketBuy = data.data.proposal.ticket;
+          if (Cookies.get("user") !== undefined) {
+            user = JSON.parse(Cookies.get("user"));
+            if (data.data.proposal.users_permissions_user.id == user.id) {
+              $("#successModal2").modal("show");
+            }
           }
-        }
-      });
+        });
+    }
   },
 };
 </script>
@@ -562,5 +615,17 @@ export default {
 }
 .smaller {
   font-size: smaller;
+}
+.price {
+  font-size: x-large;
+  color: #ff5e15;
+  padding-top: 3%;
+  padding-right: 3%;
+}
+.resetFilter {
+  padding: 2px;
+}
+.widget3 {
+  margin-top: 0 !important;
 }
 </style>

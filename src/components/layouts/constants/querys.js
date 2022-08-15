@@ -26,6 +26,9 @@ export const HEADER_GET_ROLES = gql`
 export const RESPONSIVEHEADER_GET_LOGO = gql`
   query config {
     config {
+      email
+      address
+      phone
       logo_mobile {
         id
         url

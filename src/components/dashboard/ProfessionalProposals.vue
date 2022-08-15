@@ -60,7 +60,11 @@
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div
+        class="
+          modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable
+        "
+      >
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
@@ -87,16 +91,20 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">Número:</th>
-                          <th scope="col">
-                            #{{ selectProposal ? selectProposal.id : "" }}
-                          </th>
+                          <th scope="col" style="border-bottom: 0px!important"></th>
+                          <th scope="col" style="border-bottom: 0px!important"></th>
+                          <th scope="col" style="border-bottom: 0px!important"></th>
+                          <th scope="col" style="border-bottom: 0px!important"></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <th scope="row">Número del ticket:</th>
-                          <td>
+                          <th style="border-top: 0px!important">Número:</th>
+                          <td style="border-top: 0px!important">
+                            #{{ selectProposal ? selectProposal.id : "" }}
+                          </td>
+                          <th style="border-top: 0px!important">Número del ticket:</th>
+                          <td style="border-top: 0px!important">
                             <p>
                               {{
                                 selectProposal ? selectProposal.ticket.id : ""
@@ -106,7 +114,7 @@
                         </tr>
                         <tr>
                           <th scope="row">Datos del Cliente:</th>
-                          <td>
+                          <td colspan="3">
                             {{ "Nombre de Usuario" }}
                             :
                             <p class="italic">
@@ -122,7 +130,8 @@
                             <p class="italic">
                               {{
                                 selectProposal
-                                  ? selectProposal.ticket.users_permissions_user.email
+                                  ? selectProposal.ticket.users_permissions_user
+                                      .email
                                   : ""
                               }}
                             </p>
@@ -131,7 +140,8 @@
                             <p class="italic">
                               {{
                                 selectProposal
-                                  ? selectProposal.ticket.users_permissions_user.phone
+                                  ? selectProposal.ticket.users_permissions_user
+                                      .phone
                                   : ""
                               }}
                             </p>
@@ -139,7 +149,7 @@
                         </tr>
                         <tr>
                           <th scope="row">Carta de Presentación:</th>
-                          <td>
+                          <td colspan="3">
                             <p>
                               {{
                                 selectProposal ? selectProposal.coverLetter : ""
@@ -149,7 +159,7 @@
                         </tr>
                         <tr>
                           <th scope="row">Descripción:</th>
-                          <td>
+                          <td colspan="3">
                             <p>
                               {{
                                 selectProposal ? selectProposal.jobDetail : ""
@@ -176,9 +186,7 @@
 <script>
 import $ from "jquery";
 import Cookies from "js-cookie";
-import {
-  PROPOSALS_GET_PROFESSIONAL_PROPOSALS,
-} from "./constants/querys";
+import { PROPOSALS_GET_PROFESSIONAL_PROPOSALS } from "./constants/querys";
 
 export default {
   name: "ProfessionalProposals",
@@ -196,9 +204,9 @@ export default {
       variables() {
         return {
           user: Cookies.get("user") ? JSON.parse(Cookies.get("user")).id : null,
-          contains: this.contains
+          contains: this.contains,
         };
-      }
+      },
     },
   },
   methods: {
@@ -214,8 +222,8 @@ export default {
     closeModal() {
       this.selectProposal = "";
       this.error = "";
-    }
-  }
+    },
+  },
 };
 </script>
 

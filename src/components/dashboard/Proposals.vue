@@ -39,7 +39,9 @@
                         v-if="proposal.file"
                         class="view iconTable"
                         title=""
-                        :href="proposal.file ? api_url+proposal.file.url : null"
+                        :href="
+                          proposal.file ? api_url + proposal.file.url : null
+                        "
                         target="_blank"
                         ><i class="fas fa-download"></i
                       ></a>
@@ -71,7 +73,11 @@
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div
+        class="
+          modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable
+        "
+      >
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
@@ -98,16 +104,34 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">Número:</th>
-                          <th scope="col">
-                            #{{ selectProposal ? selectProposal.id : "" }}
-                          </th>
+                          <th
+                            scope="col"
+                            style="border-bottom: 0px !important"
+                          ></th>
+                          <th
+                            scope="col"
+                            style="border-bottom: 0px !important"
+                          ></th>
+                          <th
+                            scope="col"
+                            style="border-bottom: 0px !important"
+                          ></th>
+                          <th
+                            scope="col"
+                            style="border-bottom: 0px !important"
+                          ></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <th scope="row">Número del ticket:</th>
-                          <td>
+                          <th style="border-top: 0px !important">Número:</th>
+                          <td style="border-top: 0px !important">
+                            #{{ selectProposal ? selectProposal.id : "" }}
+                          </td>
+                          <td style="border-top: 0px !important">
+                            Número del ticket:
+                          </td>
+                          <td style="border-top: 0px !important">
                             <p>
                               {{
                                 selectProposal ? selectProposal.ticket.id : ""
@@ -117,7 +141,7 @@
                         </tr>
                         <tr>
                           <th scope="row">Datos del Profesional:</th>
-                          <td>
+                          <td colspan="3">
                             {{ "Nombre de Usuario" }}
                             :
                             <p class="italic">
@@ -150,7 +174,7 @@
                         </tr>
                         <tr>
                           <th scope="row">Carta de Presentación:</th>
-                          <td>
+                          <td colspan="3">
                             <p>
                               {{
                                 selectProposal ? selectProposal.coverLetter : ""
@@ -160,7 +184,7 @@
                         </tr>
                         <tr>
                           <th scope="row">Descripción:</th>
-                          <td>
+                          <td colspan="3">
                             <p>
                               {{
                                 selectProposal ? selectProposal.jobDetail : ""
@@ -197,7 +221,7 @@ export default {
       proposals: [],
       selectProposal: "",
       error: "",
-      contains: ""
+      contains: "",
     };
   },
   apollo: {
@@ -206,10 +230,10 @@ export default {
       variables() {
         return {
           user: Cookies.get("user") ? JSON.parse(Cookies.get("user")).id : null,
-          contains: this.contains
+          contains: this.contains,
         };
-      }
-    }
+      },
+    },
   },
   methods: {
     handleShowProposalModal(proposal) {
@@ -224,8 +248,8 @@ export default {
     closeModal() {
       this.selectProposal = "";
       this.error = "";
-    }
-  }
+    },
+  },
 };
 </script>
 

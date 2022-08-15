@@ -18,13 +18,36 @@ export const HEADER_USER_LOGIN = gql`
 `;
 
 export const HEADER_USER_REGISTER = gql`
-  mutation createUser(
+  mutation createUser2(
     $username: String!
     $email: String!
     $password: String!
     $phone: String!
     $role: ID!
     $balance: Float!
+  ) {
+    createuser2(
+      username: $username
+      email: $email
+      password: $password
+      phone: $phone
+      role: $role
+      balance: $balance
+    ) {
+      users_permissions_user {
+        id
+      }
+    }
+  }
+`;
+
+export const HEADER_USER_REGISTER_BK = gql`
+  mutation createUser(
+    $username: String!
+    $email: String!
+    $password: String!
+    $phone: String!
+    $role: ID!
   ) {
     createUser(
       input: {
@@ -34,7 +57,6 @@ export const HEADER_USER_REGISTER = gql`
           password: $password
           phone: $phone
           role: $role
-          balance: $balance
         }
       }
     ) {

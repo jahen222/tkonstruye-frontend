@@ -81,6 +81,7 @@ export const FIND_WORK_FILTER_SUBCATEGORIES = gql`
       subcategory {
         id
         name
+        price
         category {
           name
         }

@@ -145,6 +145,24 @@
                         </option>
                       </select>
                     </div>
+
+                    <div class="flexBox" v-if="wizardField.type === 'radio'">
+                      <div
+                        v-for="(option, index2) in wizardField.isRadio"
+                        v-bind:key="index2"
+                        class="center"
+                      >
+                        <input
+                          class="radioButton"
+                          type="radio"
+                          :name="wizardField.label + index"
+                          :value="option"
+                          :checked="index2 == 1"
+                        />
+                        <h6 class="radioLabel" for="isradio">{{ option }}</h6>
+                      </div>
+                    </div>
+
                     <div
                       class="input-group"
                       v-if="wizardField.type === 'textarea'"
@@ -201,7 +219,7 @@ import {
   WIZARD_GET_SUBCATEGORIES,
   WIZARD_GET_WIZARDFIELDS,
   WIZARD_GET_COMMUNES,
-  WIZARD_GET_VULGARITIES
+  WIZARD_GET_VULGARITIES,
 } from "./constants/querys";
 import { WIZARD_CREATE_TICKET } from "./constants/mutations";
 import { TICKETS_GET_TICKETS } from "../dashboard/constants/querys";
@@ -216,19 +234,19 @@ export default {
       communes: [],
       commune: "",
       secondQuestion: false,
-      description: ""
+      description: "",
     };
   },
   apollo: {
     categories: {
-      query: WIZARD_GET_CATEGORIES
+      query: WIZARD_GET_CATEGORIES,
     },
     communes: {
-      query: WIZARD_GET_COMMUNES
+      query: WIZARD_GET_COMMUNES,
     },
     config: {
-      query: WIZARD_GET_VULGARITIES
-    }
+      query: WIZARD_GET_VULGARITIES,
+    },
   },
   methods: {
     async handleWizardData(e) {
@@ -247,9 +265,10 @@ export default {
         var validate = true;
 
         this.getWizardFields.map((wizardField, index) => {
-          requirements[wizardField.label] = document.getElementById(
-            wizardField.label + index
-          ).value;
+          requirements[wizardField.label] =
+            wizardField.type == "radio "
+              ? document.getElementByName(wizardField.label + index).value
+              : document.getElementById(wizardField.label + index).value;
         });
 
         if (this.description) {
@@ -266,14 +285,14 @@ export default {
               this.$toast.open({
                 message: "La descripción tiene contenido ofensivo.",
                 type: "error",
-                duration: 3000
+                duration: 3000,
               });
               break;
             }
           }
         }
 
-        if (validate) {
+        if (validate || false) {
           await this.$apollo
             .mutate({
               mutation: WIZARD_CREATE_TICKET,
@@ -281,10 +300,10 @@ export default {
                 subCategory: this.subCategory,
                 usersPermissionsUser: JSON.parse(Cookies.get("user")).id,
                 commune: this.getCommunes
-                  .filter(commune => commune.name === this.commune)
+                  .filter((commune) => commune.name === this.commune)
                   .shift().id,
                 requirements: requirements,
-                description: this.description
+                description: this.description,
               },
               refetchQueries: [
                 {
@@ -293,10 +312,10 @@ export default {
                     user: Cookies.get("user")
                       ? JSON.parse(Cookies.get("user")).id
                       : null,
-                    contains: ""
-                  }
-                }
-              ]
+                    contains: "",
+                  },
+                },
+              ],
             })
             .then(() => {
               $("#wizardModal").modal("hide");
@@ -308,15 +327,15 @@ export default {
               this.$toast.open({
                 message: "Ticket creado exitosamente.",
                 type: "success",
-                duration: 3000
+                duration: 3000,
               });
             })
             .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(error =>
+              graphQLErrors.map((error) =>
                 this.$toast.open({
                   message: error.message,
                   type: "error",
-                  duration: 3000
+                  duration: 3000,
                 })
               );
             });
@@ -325,19 +344,19 @@ export default {
         this.$toast.open({
           message: "Seleccione una comuna, categoría y subcategoría válidas",
           type: "error",
-          duration: 3000
+          duration: 3000,
         });
       }
     },
     handleSecondQuestion() {
       this.secondQuestion = true;
-    }
+    },
   },
   computed: {
     getCommunes() {
       const communes = [];
 
-      this.communes.map(commune => {
+      this.communes.map((commune) => {
         const cat = {
           id: commune.id,
           name:
@@ -345,31 +364,31 @@ export default {
             ", " +
             commune.city.name +
             ", " +
-            commune.city.region.name
+            commune.city.region.name,
         };
 
         communes.push(cat);
       });
 
       return communes;
-    }
+    },
   },
   asyncComputed: {
     async getSubCategories() {
       let subCategories = [];
       this.subCategory = "";
 
-      if (this.categories.some(category => category.name === this.category)) {
+      if (this.categories.some((category) => category.name === this.category)) {
         await this.$apollo
           .query({
             query: WIZARD_GET_SUBCATEGORIES,
             variables: {
               category: this.categories
-                .filter(category => category.name === this.category)
-                .shift().id
-            }
+                .filter((category) => category.name === this.category)
+                .shift().id,
+            },
           })
-          .then(data => {
+          .then((data) => {
             subCategories = data.data.subcategories;
           });
       }
@@ -383,16 +402,16 @@ export default {
         .query({
           query: WIZARD_GET_WIZARDFIELDS,
           variables: {
-            subCategory: this.subCategory
-          }
+            subCategory: this.subCategory,
+          },
         })
-        .then(data => {
+        .then((data) => {
           wizardFields = data.data.wizardFields;
         });
 
       return wizardFields;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -406,5 +425,18 @@ export default {
 }
 .center {
   text-align: center;
+}
+.flexBox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.radioLabel {
+  font-size: 14px;
+  color: #777;
+}
+.radioButton {
+  width: 13px !important;
+  height: 13px !important;
 }
 </style>

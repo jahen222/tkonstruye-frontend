@@ -863,12 +863,13 @@ export default {
             this.setUser(data.data.login);
             this.$router.go();
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
+          .catch((/* { graphQLErrors } */) => {
+            this.error = "Nombre de usuario o Correo no disponible.";
+            /* graphQLErrors.map(({ extensions }) =>
               extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
               )
-            );
+            ); */
           });
       }
     },
@@ -915,13 +916,13 @@ export default {
           .then(() => {
             this.handleLogin(e);
           })
-          .catch(({ graphQLErrors }) => {
-            //this.error = "Nombre de usuario o Correo no disponible.";
-            graphQLErrors.map(({ extensions }) =>
+          .catch((/* { graphQLErrors } */) => {
+            this.error = "Nombre de usuario o Correo no disponible.";
+            /* graphQLErrors.map(({ extensions }) =>
               extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
               )
-            );
+            ); */
           });
       }
     },
@@ -965,14 +966,12 @@ export default {
               balance: 0
             },
           })
-          .then((data) => {
-            console.log(data)
+          .then(() => {
             this.handleLogin(e);
           })
-          .catch((e) => {
-            console.log("aqui: ", e)
+          .catch((/* graphQLErrors */) => {
             this.error = "Nombre de usuario o Correo no disponible.";
-            /* graphQLErrors.map(({ extensions }) =>
+        /*     graphQLErrors.map(({ extensions }) =>
               extensions.exception.data.message.map(({ messages }) =>
                 messages.map(({ message }) => (this.error = message))
               )

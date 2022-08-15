@@ -37,7 +37,7 @@ export const WIZARD_GET_WIZARDFIELDS = gql`
 
 export const WIZARD_GET_COMMUNES = gql`
   query communes {
-    communes {
+    communes (limit: 1000) {
       id
       name
       city {

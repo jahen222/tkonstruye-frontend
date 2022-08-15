@@ -297,9 +297,10 @@
               <div
                 class="modal fade"
                 id="successModal"
-                tabindex="-1"
+                tabindex="10000"
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
+                v-if="ticket"
               >
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                   <div class="modal-content">
@@ -337,20 +338,32 @@
                                     style="padding: 0px"
                                   >
                                     <h4 class="mb-0">
-                                      {{ ticket.subcategory.category.name }}
+                                      {{
+                                        ticket
+                                          ? ticket.subcategory.category.name
+                                          : ""
+                                      }}
                                       <i
                                         class="fas fa-greater-than smaller"
                                       ></i>
-                                      {{ ticket.subcategory.name }}
+                                      {{
+                                        ticket ? ticket.subcategory.name : ""
+                                      }}
                                     </h4>
                                     <span class="d-inline-block"
                                       ><i class="fas fa-map-marker-alt"></i>
-                                      {{ ticket.commune.name }},
-                                      {{ ticket.commune.city.name }},
-                                      {{ ticket.commune.city.region.name }}
+                                      {{ ticket ? ticket.commune.name : "" }},
+                                      {{
+                                        ticket ? ticket.commune.city.name : ""
+                                      }},
+                                      {{
+                                        ticket
+                                          ? ticket.commune.city.region.name
+                                          : ""
+                                      }}
                                     </span>
                                     <p class="mb-0">
-                                      {{ ticket.description }}
+                                      {{ ticket ? ticket.description : "" }}
                                     </p>
                                   </div>
                                 </div>
@@ -748,6 +761,7 @@ export default {
             this.coverLetter = "";
             this.jobDetail = "";
             $("#confirmationModal").modal("hide");
+            //$("#createProposalModal").modal("hide");
             $("#successModal").modal("show");
 
             this.$toast.open({
